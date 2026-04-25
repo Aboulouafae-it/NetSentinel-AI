@@ -53,8 +53,29 @@ wait_for_url() {
   return 1
 }
 
+ensure_shared_memory() {
+  local mode
+  mode="$(stat -c '%a' /dev/shm 2>/dev/null || true)"
+
+  if [ "$mode" = "1777" ]; then
+    return 0
+  fi
+
+  log "Fixing /dev/shm permissions for Electron renderer. Current mode: ${mode:-unknown}"
+
+  if chmod 1777 /dev/shm >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if command -v pkexec >/dev/null 2>&1; then
+    pkexec chmod 1777 /dev/shm >> "$LOG_FILE" 2>&1 || true
+  fi
+}
+
 launch_desktop() {
   cd "$DESKTOP_DIR" || exit 1
+
+  ensure_shared_memory
 
   export ELECTRON_DISABLE_GPU=1
   export ELECTRON_OZONE_PLATFORM_HINT=x11
