@@ -6,7 +6,7 @@ Uses ARQ (Async Redis Queue) for fast, async-native background tasks.
 from arq import worker
 from arq.connections import RedisSettings
 import logging
-from app.core.config import get_settings
+from app.config import get_settings
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -34,6 +34,6 @@ async def evaluate_alert_rules(ctx):
 class WorkerSettings:
     functions = [process_telemetry_batch]
     cron_jobs = [] # Add cron jobs for periodic tasks (e.g. ARQ cron)
-    redis_settings = RedisSettings.from_dsn(settings.REDIS_URL)
+    redis_settings = RedisSettings.from_dsn(settings.redis_url)
     on_startup = startup
     on_shutdown = shutdown

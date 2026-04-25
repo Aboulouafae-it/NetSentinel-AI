@@ -17,6 +17,7 @@ bcrypt==4.2.1
 
 # Redis
 redis[hiredis]==5.2.1
+arq==0.26.3
 
 # HTTP client (for AI service calls)
 httpx==0.28.1

@@ -22,10 +22,10 @@
 .logoIcon {
   width: 42px;
   height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-  border: 1px solid rgba(59, 130, 246, 0.6);
+  border-radius: 10px;
+  object-fit: contain;
+  box-shadow: 0 0 18px rgba(255, 31, 49, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .logoText {

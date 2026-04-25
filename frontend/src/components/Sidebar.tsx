@@ -26,7 +26,7 @@ export default function Sidebar() {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
-        <img src="/logo.png" alt="NetSentinel AI" className={styles.logoIcon} />
+        <img src="/logo.svg" alt="NetSentinel AI" className={styles.logoIcon} />
         <span className={styles.logoText}>NetSentinel AI</span>
       </div>
       

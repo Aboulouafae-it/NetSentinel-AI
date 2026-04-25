@@ -1,0 +1,41 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">NetSentinel AI logo</title>
+  <desc id="desc">A red sentinel eye with three inner nodes and a sharp white brow.</desc>
+  <defs>
+    <radialGradient id="irisGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(256 272) rotate(90) scale(118 178)">
+      <stop offset="0" stop-color="#FFB3B3"/>
+      <stop offset="0.24" stop-color="#FF3434"/>
+      <stop offset="0.62" stop-color="#C90018"/>
+      <stop offset="1" stop-color="#5B000A"/>
+    </radialGradient>
+    <linearGradient id="eyeEdge" x1="92" y1="238" x2="420" y2="238" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF1E2D"/>
+      <stop offset="0.5" stop-color="#FF5961"/>
+      <stop offset="1" stop-color="#A60014"/>
+    </linearGradient>
+    <linearGradient id="brow" x1="116" y1="146" x2="404" y2="190" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.5" stop-color="#DCE7F7"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <filter id="redGlow" x="26" y="125" width="460" height="309" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0.95 0 1 0 0 0.02 0 0 1 0 0.07 0 0 0 0.62 0"/>
+      <feBlend mode="screen" in2="BackgroundImageFix" result="effect"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect" result="shape"/>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="112" fill="#07090F"/>
+  <path d="M88 264C126 197 183 164 256 164C329 164 386 197 424 264C386 331 329 364 256 364C183 364 126 331 88 264Z" fill="#12070A"/>
+  <path d="M103 264C137 207 188 179 256 179C324 179 375 207 409 264C375 321 324 349 256 349C188 349 137 321 103 264Z" fill="url(#eyeEdge)" filter="url(#redGlow)"/>
+  <path d="M128 264C159 224 202 204 256 204C310 204 353 224 384 264C353 304 310 324 256 324C202 324 159 304 128 264Z" fill="#09070A"/>
+  <ellipse cx="256" cy="264" rx="86" ry="70" fill="url(#irisGlow)"/>
+  <circle cx="256" cy="264" r="34" fill="#07090F"/>
+  <circle cx="256" cy="264" r="16" fill="#FFEEF0"/>
+  <circle cx="216" cy="264" r="10" fill="#FFEEF0"/>
+  <circle cx="296" cy="264" r="10" fill="#FFEEF0"/>
+  <path d="M150 166C214 126 306 128 384 164C390 167 392 174 388 180L371 207C366 214 357 216 350 212C291 179 220 177 166 209C158 214 148 211 144 202L133 181C130 175 134 170 150 166Z" fill="url(#brow)"/>
+  <path d="M154 181C219 151 297 151 366 181" stroke="#FFFFFF" stroke-opacity="0.8" stroke-width="10" stroke-linecap="round"/>
+</svg>
