@@ -11,7 +11,7 @@ NetSentinel AI is a modular, API-first platform for network management, observab
 ```
 ┌─────────────────────────────────────────────────────┐
 │                   Presentation Layer                 │
-│              Next.js Dashboard (TypeScript)          │
+│        Electron Desktop Shell + Next.js Dashboard    │
 │         Pages │ Components │ API Client              │
 ├─────────────────────────────────────────────────────┤
 │                      API Gateway                     │
@@ -23,6 +23,9 @@ NetSentinel AI is a modular, API-first platform for network management, observab
 ├─────────────────────────────────────────────────────┤
 │                    Data Layer                         │
 │     SQLAlchemy ORM │ Alembic Migrations              │
+├─────────────────────────────────────────────────────┤
+│                  Worker Layer                         │
+│                  ARQ │ Redis Queue                    │
 ├─────────────────────────────────────────────────────┤
 │                  Infrastructure                      │
 │        PostgreSQL │ Redis │ Docker                    │
@@ -60,6 +63,13 @@ Router (API endpoints)
 | **Alerts**     | Security and health alerts with severity       |
 | **Incidents**  | Grouped alerts for investigation workflow      |
 | **AI Assistant** | AI-powered chat for troubleshooting          |
+| **Worker**     | Async background task processing with ARQ      |
+
+### Desktop Layer
+
+The desktop mode is an Electron shell that opens the local Next.js dashboard at `http://localhost:3000`.
+
+The Linux launcher script `Launch_NetSentinel.sh` starts Docker Compose services, waits for backend/frontend readiness, and then opens the desktop window. `NetSentinel-AI.desktop` registers the platform in the Linux application menu.
 
 ### Data Model
 
@@ -131,11 +141,12 @@ Network Agent → Redis Queue → Event Processor → PostgreSQL
 ### Phase 1 (Current — MVP)
 - Monolithic FastAPI backend
 - Single PostgreSQL instance
-- Redis for caching only
+- Redis for caching and ARQ background jobs
 - Docker Compose for local development
+- Electron desktop shell for local workstation use
 
 ### Phase 2 (Growth)
-- Add background task workers (Celery + Redis)
+- Expand background task workers and scheduled jobs
 - Add network scanning agents
 - Add WebSocket for real-time dashboard updates
 - Read replicas for PostgreSQL
@@ -163,8 +174,10 @@ Network Agent → Redis Queue → Event Processor → PostgreSQL
 | **FastAPI** | Async-native, auto OpenAPI docs, excellent type safety with Pydantic |
 | **SQLAlchemy 2.0** | Most mature Python ORM, async support, Alembic for migrations |
 | **Next.js 14** | React-based, SSR-ready, App Router for modern patterns |
+| **Electron** | Desktop wrapper for local operator workstations |
 | **PostgreSQL** | Rock-solid RDBMS, JSON support, full-text search, extensible |
-| **Redis** | Sub-millisecond caching, pub/sub for real-time, Celery-compatible |
+| **Redis** | Sub-millisecond caching, queue backend for ARQ workers |
+| **ARQ** | Async-native background jobs that match the FastAPI/async stack |
 | **Docker Compose** | One-command local development, mirrors production topology |
 | **JWT** | Stateless auth, works across services, no session storage needed |
 

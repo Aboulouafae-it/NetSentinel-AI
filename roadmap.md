@@ -15,6 +15,10 @@
 - [x] API documentation (Swagger/ReDoc)
 - [x] Docker Compose for local development
 - [x] Seed data for demo usage
+- [x] Unified red-eye brand logo
+- [x] Electron desktop shell
+- [x] Linux application menu launcher
+- [x] ARQ worker container wired to Redis
 
 ---
 
@@ -145,7 +149,8 @@
 
 | Version | Phase | Target     | Status    |
 |---------|-------|------------|-----------|
-| 0.1.0   | 1     | MVP        | ✅ Done   |
+| 0.1.0   | 1     | MVP        | ✅ Local runnable |
+| 0.1.1   | 1     | Desktop launcher + brand polish | ✅ Current |
 | 0.2.0   | 2     | Discovery  | 📋 Next   |
 | 0.3.0   | 3     | Observability | 📋 Planned |
 | 0.4.0   | 4     | Security   | 📋 Planned |
