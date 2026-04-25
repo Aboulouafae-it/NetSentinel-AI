@@ -1,44 +1,78 @@
-#!/bin/bash
-# ═══════════════════════════════════════════════════
-#  NetSentinel AI — Desktop Launcher v1.0
-# ═══════════════════════════════════════════════════
+#!/usr/bin/env bash
+set -u
 
+APP_NAME="NetSentinel AI"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+DESKTOP_DIR="$SCRIPT_DIR/desktop-client"
+LOG_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/netsentinel-ai/launcher.log"
 
-echo "═══════════════════════════════════════════════════"
-echo "  NetSentinel AI — Starting Platform..."
-echo "═══════════════════════════════════════════════════"
+mkdir -p "$(dirname "$LOG_FILE")"
+cd "$SCRIPT_DIR" || exit 1
 
-# Step 1: Start backend services via Docker
-echo "[1/3] Starting backend services (Docker)..."
-sudo docker compose up -d --build 2>&1 | tail -5
+log() {
+  printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >> "$LOG_FILE"
+}
 
-# Step 2: Wait for backend to be ready
-echo "[2/3] Waiting for backend API..."
-MAX_WAIT=60
-WAITED=0
-while [ $WAITED -lt $MAX_WAIT ]; do
-  if curl -s http://localhost:8000/health > /dev/null 2>&1; then
-    echo "  ✓ Backend ready (${WAITED}s)"
-    break
+notify() {
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send "$APP_NAME" "$1" >/dev/null 2>&1 || true
   fi
-  sleep 2
-  WAITED=$((WAITED + 2))
-  echo "  ... waiting (${WAITED}s)"
-done
+}
 
-if [ $WAITED -ge $MAX_WAIT ]; then
-  echo "  ⚠ Backend may still be starting. Proceeding anyway."
+start_platform() {
+  log "Starting Docker services"
+
+  if docker compose ps >/dev/null 2>&1; then
+    docker compose up -d --build >> "$LOG_FILE" 2>&1
+    return $?
+  fi
+
+  if command -v pkexec >/dev/null 2>&1; then
+    pkexec docker compose --project-directory "$SCRIPT_DIR" up -d --build >> "$LOG_FILE" 2>&1
+    return $?
+  fi
+
+  log "Docker is not accessible and pkexec is not installed"
+  return 1
+}
+
+wait_for_url() {
+  local url="$1"
+  local max_wait="$2"
+  local waited=0
+
+  while [ "$waited" -lt "$max_wait" ]; do
+    if curl -fsS "$url" >/dev/null 2>&1; then
+      return 0
+    fi
+
+    sleep 2
+    waited=$((waited + 2))
+  done
+
+  return 1
+}
+
+launch_desktop() {
+  cd "$DESKTOP_DIR" || exit 1
+
+  if [ ! -d node_modules ]; then
+    log "Installing desktop dependencies"
+    npm install >> "$LOG_FILE" 2>&1 || return 1
+  fi
+
+  log "Launching Electron desktop client"
+  exec npm start >> "$LOG_FILE" 2>&1
+}
+
+notify "Starting local platform services..."
+
+if ! start_platform; then
+  notify "Could not start Docker services. See $LOG_FILE"
+  exit 1
 fi
 
-# Step 3: Launch desktop client
-echo "[3/3] Launching desktop window..."
-cd "$SCRIPT_DIR/desktop-client"
+wait_for_url "http://127.0.0.1:8000/health" 90 || log "Backend health check timed out"
+wait_for_url "http://127.0.0.1:3000" 90 || log "Frontend check timed out"
 
-if [ ! -d "node_modules" ]; then
-  echo "  Installing desktop client dependencies..."
-  npm install --silent
-fi
-
-npm start
+launch_desktop

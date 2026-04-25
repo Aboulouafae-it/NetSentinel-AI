@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=NetSentinel AI
+Comment=Open the NetSentinel AI desktop platform
+Exec="/home/emorphi/Documents/NetSentinel AI/Launch_NetSentinel.sh"
+Icon=netsentinel-ai
+Terminal=false
+Categories=Network;Security;
+StartupNotify=true
+StartupWMClass=NetSentinel AI
