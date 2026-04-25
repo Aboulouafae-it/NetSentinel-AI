@@ -1,0 +1,123 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addButton {
+  background-color: var(--brand-primary);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.addButton:hover {
+  background-color: #2563eb;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.listItem {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  gap: 8px;
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.itemName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.itemDesc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge_critical { background-color: var(--status-critical); color: white; }
+.badge_high { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; }
+.badge_medium { background-color: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.badge_low { background-color: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+
+.ruleDetails {
+  display: flex;
+  gap: 12px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  background-color: rgba(0,0,0,0.2);
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.iocDetails {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.confidenceBar {
+  flex-grow: 1;
+  height: 6px;
+  background-color: var(--border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.confidenceFill {
+  height: 100%;
+  background-color: var(--status-critical);
+}

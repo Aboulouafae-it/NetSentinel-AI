@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetSentinel AI - Wireless Link Intelligence: Executive Decision Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0f172a;
+            --surface-color: #1e293b;
+            --surface-elevated: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --brand-primary: #10b981;
+            --brand-secondary: #3b82f6;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --status-critical: #ef4444;
+            --status-warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            transition: direction 0.3s ease;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            padding: 50px 40px;
+            background: linear-gradient(135deg, #0f172a 0%, rgba(16, 185, 129, 0.1) 100%);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 50px;
+        }
+
+        /* LTR / RTL specific borders for header */
+        #lang-en header { border-left: 6px solid var(--brand-primary); border-right: 1px solid var(--border-color); }
+        #lang-ar header { border-right: 6px solid var(--brand-primary); border-left: 1px solid var(--border-color); }
+
+        h1 {
+            font-size: 2.6rem;
+            margin: 0 0 10px 0;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 0;
+            font-weight: 500;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+
+        #lang-en h2::before {
+            content: "■";
+            color: var(--brand-primary);
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+
+        #lang-ar h2::before {
+            content: "■";
+            color: var(--brand-primary);
+            margin-left: 12px;
+            font-size: 1rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #lang-ar th, #lang-ar td {
+            text-align: right;
+        }
+
+        th {
+            background-color: var(--surface-elevated);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .mermaid {
+            background-color: var(--surface-color);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .note-box {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            color: var(--text-primary);
+        }
+
+        #lang-en .note-box { border-left: 4px solid var(--brand-secondary); border-radius: 0 8px 8px 0; }
+        #lang-ar .note-box { border-right: 4px solid var(--brand-secondary); border-radius: 8px 0 0 8px; }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        #lang-en .warning-box { border-left: 4px solid var(--status-critical); border-radius: 0 8px 8px 0; }
+        #lang-ar .warning-box { border-right: 4px solid var(--status-critical); border-radius: 8px 0 0 8px; }
+
+        ul, ol {
+            color: var(--text-secondary);
+        }
+
+        #lang-en ul, #lang-en ol { padding-left: 24px; }
+        #lang-ar ul, #lang-ar ol { padding-right: 24px; }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        strong {
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--surface-elevated);
+            color: var(--text-primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+
+        #lang-en .tag { margin-right: 6px; }
+        #lang-ar .tag { margin-left: 6px; }
+
+        .tag-green { color: var(--brand-primary); border-color: rgba(16, 185, 129, 0.3); }
+        .tag-red { color: var(--status-critical); border-color: rgba(239, 68, 68, 0.3); }
+        .tag-yellow { color: var(--status-warning); border-color: rgba(245, 158, 11, 0.3); }
+
+        .translate-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--surface-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .translate-btn:hover {
+            background-color: var(--brand-primary);
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="translate-btn" onclick="toggleLanguage()" id="translateBtn">
+        🌐 ترجمة للعربية
+    </button>
+
+    <!-- ============================================== -->
+    <!-- ENGLISH VERSION                                 -->
+    <!-- ============================================== -->
+    <div class="container" id="lang-en">
+        <header>
+            <h1>Wireless Link Intelligence</h1>
+            <p>Executive Decision & Implementation Strategy Document</p>
+            <p style="font-size: 0.85rem; margin-top: 10px; color: var(--brand-primary);">For Engineering Leadership, Architecture, and Product Management</p>
+        </header>
+
+        <section id="decision-summary">
+            <h2>1. Executive Decision Summary</h2>
+            <div class="note-box">
+                <p><strong>The Strategic Mandate:</strong> Wireless Link Intelligence (WLI) must be built as a highly normalized, hardware-agnostic subsystem within NetSentinel AI. It will translate analog RF physics into deterministic digital states.</p>
+                <p><strong>The Execution Posture:</strong> Implementation will aggressively favor data integrity and manual oversight over premature automation. We will build a rigid data schema first, simple deterministic alerting second, and AI-assisted likely-cause analysis third. Automated remediation is explicitly deferred to later phases to protect operator trust.</p>
+            </div>
+        </section>
+
+        <section id="priority-matrix">
+            <h2>2. Priority Matrix (Impact vs. Effort)</h2>
+            <div class="matrix-container" style="display: grid; grid-template-columns: 40px 1fr 1fr; grid-template-rows: 1fr 1fr 40px; gap: 15px; max-width: 800px; margin: 0 auto 40px auto; min-height: 400px;">
+                <div style="grid-column: 1; grid-row: 1 / span 2; display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; transform: rotate(180deg); color: var(--text-secondary); font-weight: 700; font-size: 0.95rem; letter-spacing: 2px;">BUSINESS IMPACT</div>
+                
+                <div style="grid-column: 2; grid-row: 1; background: rgba(16, 185, 129, 0.05); border: 2px dashed rgba(16, 185, 129, 0.4); border-radius: 8px; padding: 20px; position: relative; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.8rem; color: var(--brand-primary); font-weight: bold; text-transform: uppercase; margin-bottom: 20px;">High Impact / Low Effort (Quick Wins)</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: center;">
+                        <div style="background: var(--brand-primary); color: #000; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600;">Unified Telemetry Schema</div>
+                        <div style="background: var(--brand-primary); color: #000; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600;">Diagnostic Matrices</div>
+                    </div>
+                </div>
+                
+                <div style="grid-column: 3; grid-row: 1; background: rgba(59, 130, 246, 0.05); border: 2px dashed rgba(59, 130, 246, 0.4); border-radius: 8px; padding: 20px; position: relative; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.8rem; color: var(--brand-secondary); font-weight: bold; text-transform: uppercase; margin-bottom: 20px;">High Impact / High Effort (Strategic)</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: center;">
+                        <div style="background: var(--brand-secondary); color: #fff; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600;">SNMP Ingestion Agent</div>
+                        <div style="background: var(--brand-secondary); color: #fff; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600;">AI Copilot Integration</div>
+                    </div>
+                </div>
+                
+                <div style="grid-column: 2; grid-row: 2; background: rgba(148, 163, 184, 0.05); border: 2px dashed rgba(148, 163, 184, 0.3); border-radius: 8px; padding: 20px; position: relative; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin-bottom: 20px;">Low Impact / Low Effort (Fill-ins)</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: center;">
+                        <div style="background: var(--surface-elevated); color: var(--text-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 500;">Manual Field Logs</div>
+                    </div>
+                </div>
+                
+                <div style="grid-column: 3; grid-row: 2; background: rgba(239, 68, 68, 0.05); border: 2px dashed rgba(239, 68, 68, 0.4); border-radius: 8px; padding: 20px; position: relative; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.8rem; color: var(--status-critical); font-weight: bold; text-transform: uppercase; margin-bottom: 20px;">Low Impact / High Effort (Avoid)</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: center;">
+                        <div style="background: var(--status-critical); color: #fff; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600;">Auto Frequency Shifting</div>
+                    </div>
+                </div>
+                
+                <div style="grid-column: 2 / span 2; grid-row: 3; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-weight: 700; font-size: 0.95rem; letter-spacing: 2px;">ENGINEERING EFFORT</div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Initiative</th>
+                        <th>Business Impact</th>
+                        <th>Engineering Effort</th>
+                        <th>Execution Priority</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Unified Telemetry Schema</strong> (Decoupled from Vendors)</td>
+                        <td>High (Foundation)</td>
+                        <td>Medium</td>
+                        <td><span class="tag tag-green">P0 - Immediate</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deterministic Diagnostic Matrices</strong> (Rule-based)</td>
+                        <td>High (Avoids Truck Rolls)</td>
+                        <td>Medium</td>
+                        <td><span class="tag tag-green">P0 - Immediate</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>SNMP Ingestion Agent</strong></td>
+                        <td>High (Data Source)</td>
+                        <td>High</td>
+                        <td><span class="tag tag-green">P0 - Immediate</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Copilot Incident Summarization</strong></td>
+                        <td>Medium (UX/Differentiation)</td>
+                        <td>High</td>
+                        <td><span class="tag tag-yellow">P1 - Fast Follow</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vendor API Webhooks</strong> (Ubiquiti/TP-Link)</td>
+                        <td>Medium (Data Richness)</td>
+                        <td>High</td>
+                        <td><span class="tag tag-yellow">P1 - Fast Follow</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Automated Frequency Shifting</strong> (Remediation)</td>
+                        <td>High</td>
+                        <td>Very High (Risk)</td>
+                        <td><span class="tag tag-red">P3 - Deferred</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="mvp-scope">
+            <h2>3. MVP Inclusion vs. Exclusion Boundaries</h2>
+            <div class="grid-2">
+                <div class="card" style="border-top: 3px solid var(--brand-primary);">
+                    <h4>Include in MVP</h4>
+                    <ul>
+                        <li>PTP and PTMP link modeling logic.</li>
+                        <li>Ingestion of core 4 metrics: RSSI, SNR, CCQ, Tx/Rx Capacity.</li>
+                        <li>Calculation of "Expected RSSI" vs "Actual RSSI".</li>
+                        <li>Deterministic alerting (e.g., "SNR dropped > 10dB").</li>
+                        <li>Manual field visit logging (text notes & status).</li>
+                        <li>Read-only integration with global Incident system.</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-top: 3px solid var(--status-critical);">
+                    <h4>Exclude from MVP (Defer)</h4>
+                    <ul>
+                        <li>Automated topology discovery (LLDP/CDP parsing).</li>
+                        <li>Mesh Wi-Fi roaming analytics.</li>
+                        <li>Spectrum scan ingestion and visualization.</li>
+                        <li>AI Copilot generating physical configuration commands.</li>
+                        <li>Automated creation of links from Edge Agent scans.</li>
+                        <li>Mobile App for field technicians.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="dependency-map">
+            <h2>4. Domain Dependency Map</h2>
+            <p>What must exist in the NetSentinel AI core before WLI can function.</p>
+            <div class="mermaid">
+                graph TD
+                    subgraph NetSentinel Core Platform
+                        Org[Multi-Tenant Org & Sites]
+                        Asset[Core Asset Inventory]
+                        Alerts[Global Alert/Incident Bus]
+                        TSDB[(Time-Series Storage)]
+                    end
+
+                    subgraph Wireless Link Intelligence
+                        Device[Wireless Device Profile]
+                        Link[Wireless Link Topology]
+                        Metrics[RF Telemetry Normalizer]
+                        Diag[Deterministic Diagnostics]
+                    end
+
+                    Org -->|Required for| Device
+                    Asset -->|Extends to| Device
+                    Device --> Link
+                    Link --> Metrics
+                    TSDB -->|Hosts| Metrics
+                    Metrics --> Diag
+                    Diag -->|Pushes to| Alerts
+            </div>
+        </section>
+
+        <section id="implementation-sequence">
+            <h2>5. Recommended Implementation Sequence</h2>
+            <div class="mermaid">
+                graph TD
+                    classDef phase fill:#0f172a,stroke:#3b82f6,stroke-width:2px,color:#f8fafc,rx:8px,ry:8px;
+                    classDef task fill:#1e293b,stroke:#475569,stroke-width:1px,color:#cbd5e1,rx:4px,ry:4px;
+                    classDef milestone fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff,rx:4px,ry:4px;
+                    
+                    subgraph P1 [Phase 1: Foundation]
+                        A[Core DB Entities]:::task --> B[TSDB Hyper-tables]:::task
+                    end
+                    
+                    subgraph P2 [Phase 2: Data Pipe]
+                        B --> C[SNMP Poller Edge Agent]:::task
+                        B --> D[Normalization Worker]:::task
+                    end
+                    
+                    subgraph P3 [Phase 3: Deterministic Logic]
+                        C --> E[Rule-based Alert Matrices]:::task
+                        D --> E
+                        E --> F[Hold-down & Suppression]:::task
+                    end
+                    
+                    subgraph P4 [Phase 4: Intelligence]
+                        F --> G[AI Copilot Integration]:::task
+                        G --> H[Pre-visit Field Briefs]:::milestone
+                    end
+                    
+                    class P1,P2,P3,P4 phase;
+            </div>
+            <ol>
+                <li><strong>Phase 1: The Schema Foundation.</strong> Implement the core database entities (Sites, Assets -> Radio Interfaces -> Wireless Links). Define the TSDB hyper-tables for RF metrics.</li>
+                <li><strong>Phase 2: The Data Pipe.</strong> Build the generic SNMP poller in the Edge Agent. Build the normalization worker that translates vendor OIDs into the unified TSDB schema.</li>
+                <li><strong>Phase 3: The Deterministic Engine.</strong> Implement the rule-based alert matrices (Hold-down timers, topological suppression, Expected vs Actual RSSI deltas).</li>
+                <li><strong>Phase 4: The Intelligence Layer.</strong> Feed the deterministic outputs into the AI Copilot to generate plain-English likely-cause summaries and pre-visit field briefs.</li>
+            </ol>
+        </section>
+
+        <section id="core-entities">
+            <h2>6. Core Entities That Must Exist First</h2>
+            <p>Do not attempt to ingest data until these primitives are stable in the database:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Entity Primitive</th>
+                        <th>Core Attributes</th>
+                        <th>Architectural Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>PhysicalMount</code></td>
+                        <td>Elevation, Azimuth, Tower ID</td>
+                        <td>Differentiates devices on the same tower to isolate wind-sway vs global power failure.</td>
+                    </tr>
+                    <tr>
+                        <td><code>RadioInterface</code></td>
+                        <td>MAC, Frequency, TX Power, Channel Width</td>
+                        <td>Decouples the hardware from the link. Allows for radio swapping without losing historical link data.</td>
+                    </tr>
+                    <tr>
+                        <td><code>AntennaProfile</code></td>
+                        <td>Gain (dBi), Beamwidth, Polarization</td>
+                        <td>Essential math variable required to calculate theoretical Expected RSSI.</td>
+                    </tr>
+                    <tr>
+                        <td><code>WirelessLink</code></td>
+                        <td>Interface A, Interface B, Link Type (PTP/PTMP)</td>
+                        <td>The core logical relationship that the TSDB and AI Copilot bind telemetry to.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="telemetry-priorities">
+            <h2>7. Telemetry Sources That Can Wait</h2>
+            <p>Prioritize raw survival metrics. Advanced diagnostic data should be deferred to avoid ingestion bottlenecking.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ingest Immediately (MVP)</th>
+                        <th>Defer to Later Phases</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>RSSI (Rx Power)</td>
+                        <td>Live Spectrum Scans (FFT data arrays)</td>
+                    </tr>
+                    <tr>
+                        <td>Noise Floor</td>
+                        <td>Per-client airtime fairness percentages</td>
+                    </tr>
+                    <tr>
+                        <td>Tx/Rx MCS Index (Capacity)</td>
+                        <td>Deep packet drop reasons (Buffer overflow vs RF)</td>
+                    </tr>
+                    <tr>
+                        <td>CCQ / Retry Rates</td>
+                        <td>Hardware thermal metrics (unless critical)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="manual-features">
+            <h2>8. Operational Reality: What Stays Manual Early</h2>
+            <p>Automation requires absolute trust. We will rely on manual workflows to build that trust.</p>
+            <ul>
+                <li><strong>Link Topology Creation:</strong> Users will manually map Site A to Site B. Automated LLDP discovery is too brittle for MVP.</li>
+                <li><strong>Expected RSSI Baselines:</strong> Users will input theoretical targets based on their own link planners. System will not calculate complex free-space path loss (FSPL) internally yet.</li>
+                <li><strong>Field Visit Validation:</strong> Technicians manually click "Validate Repair." The system will not automatically close tickets just because RSSI improved.</li>
+            </ul>
+        </section>
+
+        <section id="avoid-early">
+            <h2>9. Anti-Patterns: What Not to Attempt Early</h2>
+            <div class="warning-box">
+                <ul style="color: var(--text-primary);">
+                    <li><strong>Automated Remediation:</strong> Never allow the system to automatically change frequencies, reboot radios, or alter channel widths in early phases. A mistake here drops a network offline and destroys operator trust permanently.</li>
+                    <li><strong>Direct AI Metric Analysis:</strong> Do not feed raw float streams directly to an LLM. It is slow, expensive, and prone to hallucination. Always use deterministic logic gates first.</li>
+                    <li><strong>Vendor-Specific DB Columns:</strong> Never add columns like <code>ubiquiti_quality</code> to the core schema. Normalize all vendor data into standard RF metrics in the ingestion pipeline.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="final-guidance">
+            <h2>10. Final Architectural Guidance</h2>
+            <div class="note-box">
+                <p><strong>Keep it Powerful Without Over-Engineering:</strong></p>
+                <p>The success of the Wireless Link Intelligence pillar depends entirely on <strong>Data Normalization</strong> and <strong>Stateful Alerting</strong>. If the system treats a MikroTik and a TP-Link identically in the database, the UI and AI layers become trivial to build.</p>
+                <p>Do not build complex machine learning models for anomaly detection yet. A simple threshold alert combined with a hold-down timer (e.g., "SNR < 20dB for > 5 minutes") covers 90% of operational use cases. Focus engineering effort on ensuring the Edge Agent never drops polling data, and the TimescaleDB handles the write-load efficiently. The intelligence of the system emerges from reliable data, not complex math.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- ARABIC VERSION                                  -->
+    <!-- ============================================== -->
+    <div class="container" id="lang-ar" style="display:none;" dir="rtl" lang="ar">
+        <header>
+            <h1>ذكاء الروابط اللاسلكية</h1>
+            <p>وثيقة القرار التنفيذي واستراتيجية التنفيذ</p>
+            <p style="font-size: 0.85rem; margin-top: 10px; color: var(--brand-primary);">مخصصة للقيادة الهندسية، هندسة النظم، وإدارة المنتجات</p>
+        </header>
+
+        <section id="decision-summary-ar">
+            <h2>1. ملخص القرار التنفيذي</h2>
+            <div class="note-box">
+                <p><strong>التفويض الاستراتيجي:</strong> يجب بناء "ذكاء الروابط اللاسلكية" (WLI) كنظام فرعي مستقل عن الأجهزة وموحد البيانات داخل NetSentinel AI. سيقوم بترجمة الفيزياء التناظرية للترددات الراديوية (RF) إلى حالات رقمية حتمية.</p>
+                <p><strong>موقف التنفيذ:</strong> سيفضل التنفيذ بقوة سلامة البيانات والإشراف اليدوي على الأتمتة المبكرة. سنقوم ببناء مخطط بيانات صارم أولاً، وتنبيهات حتمية بسيطة ثانياً، وتحليل الأسباب المحتملة بمساعدة الذكاء الاصطناعي ثالثاً. تم تأجيل المعالجة الآلية صراحةً للمراحل اللاحقة لحماية ثقة المشغلين.</p>
+            </div>
+        </section>
+
+        <section id="priority-matrix-ar">
+            <h2>2. مصفوفة الأولويات (التأثير مقابل الجهد)</h2>
+            <div class="matrix-container" style="display: grid; grid-template-columns: 40px 1fr 1fr; grid-template-rows: 1fr 1fr 40px; gap: 15px; max-width: 800px; margin: 0 auto 40px auto; min-height: 400px; direction: ltr;">
+                <div style="grid-column: 1; grid-row: 1 / span 2; display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; transform: rotate(180deg); color: var(--text-secondary); font-weight: 700; font-size: 0.95rem; letter-spacing: 2px;">BUSINESS IMPACT</div>
+                
+                <div style="grid-column: 2; grid-row: 1; background: rgba(16, 185, 129, 0.05); border: 2px dashed rgba(16, 185, 129, 0.4); border-radius: 8px; padding: 20px; position: relative; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.8rem; color: var(--brand-primary); font-weight: bold; text-transform: uppercase; margin-bottom: 20px; direction: rtl;">أثر عالي / جهد منخفض (مكاسب سريعة)</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: center;">
+                        <div style="background: var(--brand-primary); color: #000; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600; direction: rtl;">مخطط بيانات موحد</div>
+                        <div style="background: var(--brand-primary); color: #000; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600; direction: rtl;">مصفوفات تشخيصية حتمية</div>
+                    </div>
+                </div>
+                
+                <div style="grid-column: 3; grid-row: 1; background: rgba(59, 130, 246, 0.05); border: 2px dashed rgba(59, 130, 246, 0.4); border-radius: 8px; padding: 20px; position: relative; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.8rem; color: var(--brand-secondary); font-weight: bold; text-transform: uppercase; margin-bottom: 20px; direction: rtl;">أثر عالي / جهد عالي (استراتيجي)</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: center;">
+                        <div style="background: var(--brand-secondary); color: #fff; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600; direction: rtl;">وكيل استيعاب SNMP</div>
+                        <div style="background: var(--brand-secondary); color: #fff; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600; direction: rtl;">تكامل مساعد الذكاء الاصطناعي</div>
+                    </div>
+                </div>
+                
+                <div style="grid-column: 2; grid-row: 2; background: rgba(148, 163, 184, 0.05); border: 2px dashed rgba(148, 163, 184, 0.3); border-radius: 8px; padding: 20px; position: relative; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin-bottom: 20px; direction: rtl;">أثر منخفض / جهد منخفض (تكميلي)</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: center;">
+                        <div style="background: var(--surface-elevated); color: var(--text-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 500; direction: rtl;">سجلات ميدانية يدوية</div>
+                    </div>
+                </div>
+                
+                <div style="grid-column: 3; grid-row: 2; background: rgba(239, 68, 68, 0.05); border: 2px dashed rgba(239, 68, 68, 0.4); border-radius: 8px; padding: 20px; position: relative; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.8rem; color: var(--status-critical); font-weight: bold; text-transform: uppercase; margin-bottom: 20px; direction: rtl;">أثر منخفض / جهد عالي (تجنب)</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: center;">
+                        <div style="background: var(--status-critical); color: #fff; padding: 10px; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: 600; direction: rtl;">التبديل التلقائي للترددات</div>
+                    </div>
+                </div>
+                
+                <div style="grid-column: 2 / span 2; grid-row: 3; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-weight: 700; font-size: 0.95rem; letter-spacing: 2px;">ENGINEERING EFFORT</div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>المبادرة</th>
+                        <th>الأثر التجاري</th>
+                        <th>الجهد الهندسي</th>
+                        <th>أولوية التنفيذ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>مخطط القياس الموحد</strong> (مفصول عن الموردين)</td>
+                        <td>عالي (أساس)</td>
+                        <td>متوسط</td>
+                        <td><span class="tag tag-green">P0 - فوري</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>المصفوفات التشخيصية الحتمية</strong> (مبنية على القواعد)</td>
+                        <td>عالي (يمنع الزيارات الميدانية)</td>
+                        <td>متوسط</td>
+                        <td><span class="tag tag-green">P0 - فوري</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>وكيل استيعاب SNMP</strong></td>
+                        <td>عالي (مصدر البيانات)</td>
+                        <td>عالي</td>
+                        <td><span class="tag tag-green">P0 - فوري</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>تلخيص الحوادث عبر الذكاء الاصطناعي</strong></td>
+                        <td>متوسط (تجربة المستخدم)</td>
+                        <td>عالي</td>
+                        <td><span class="tag tag-yellow">P1 - تالي سريع</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>خطافات الويب API للموردين</strong> (Ubiquiti/TP-Link)</td>
+                        <td>متوسط (ثراء البيانات)</td>
+                        <td>عالي</td>
+                        <td><span class="tag tag-yellow">P1 - تالي سريع</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>التبديل التلقائي للتردد</strong> (علاج)</td>
+                        <td>عالي</td>
+                        <td>عالي جداً (مخاطرة)</td>
+                        <td><span class="tag tag-red">P3 - مؤجل</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="mvp-scope-ar">
+            <h2>3. حدود نطاق الحد الأدنى للمنتج (MVP)</h2>
+            <div class="grid-2">
+                <div class="card" style="border-top: 3px solid var(--brand-primary);">
+                    <h4>التضمين في المرحلة الأولى (MVP)</h4>
+                    <ul>
+                        <li>منطق نمذجة الروابط PTP و PTMP.</li>
+                        <li>استيعاب المقاييس الأساسية: RSSI، SNR، CCQ، سعة Tx/Rx.</li>
+                        <li>حساب "الـ RSSI المتوقع" مقابل "الـ RSSI الفعلي".</li>
+                        <li>التنبيهات الحتمية (مثل: "انخفض SNR بأكثر من 10dB").</li>
+                        <li>تسجيل الزيارات الميدانية يدوياً (ملاحظات نصية).</li>
+                        <li>تكامل للقراءة فقط مع نظام الحوادث العالمي.</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-top: 3px solid var(--status-critical);">
+                    <h4>الاستبعاد (مؤجل للمستقبل)</h4>
+                    <ul>
+                        <li>الاكتشاف الآلي لطبولوجيا الشبكة (LLDP/CDP).</li>
+                        <li>تحليلات التجوال في شبكات Wi-Fi المتداخلة (Mesh).</li>
+                        <li>استيعاب وعرض مسح الطيف الترددي مباشرة.</li>
+                        <li>توليد مساعد الذكاء الاصطناعي لأوامر تكوين مادية.</li>
+                        <li>الإنشاء الآلي للروابط عبر مسوحات وكيل الحافة.</li>
+                        <li>تطبيق هاتف محمول للفنيين الميدانيين.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="dependency-map-ar">
+            <h2>4. خريطة تبعيات المجال</h2>
+            <p>ما يجب أن يتوفر في نظام NetSentinel AI الأساسي قبل عمل ذكاء الروابط اللاسلكية.</p>
+            <div class="mermaid">
+                graph TD
+                    subgraph NetSentinel Core Platform
+                        Org[المنظمات والمواقع]
+                        Asset[مخزون الأصول الأساسي]
+                        Alerts[ناقل التنبيهات والحوادث]
+                        TSDB[(قاعدة بيانات السلاسل الزمنية)]
+                    end
+
+                    subgraph Wireless Link Intelligence
+                        Device[ملف تعريف الجهاز اللاسلكي]
+                        Link[طوبولوجيا الروابط اللاسلكية]
+                        Metrics[موحد بيانات القياس]
+                        Diag[التشخيصات الحتمية]
+                    end
+
+                    Org -->|مطلوب لـ| Device
+                    Asset -->|يمتد إلى| Device
+                    Device --> Link
+                    Link --> Metrics
+                    TSDB -->|يستضيف| Metrics
+                    Metrics --> Diag
+                    Diag -->|يدفع إلى| Alerts
+            </div>
+        </section>
+
+        <section id="implementation-sequence-ar">
+            <h2>5. التسلسل الموصى به للتنفيذ</h2>
+            <ol>
+                <li><strong>المرحلة 1: التأسيس.</strong> تنفيذ كيانات قاعدة البيانات الأساسية (المواقع، الأصول -> الواجهات الراديوية -> الروابط اللاسلكية). تحديد جداول TSDB.</li>
+                <li><strong>المرحلة 2: مسار البيانات.</strong> بناء وكيل استطلاع SNMP. بناء عامل التوحيد الذي يترجم بيانات الموردين إلى مخطط TSDB الموحد.</li>
+                <li><strong>المرحلة 3: المحرك الحتمي.</strong> تنفيذ مصفوفات التنبيه المبنية على القواعد (مؤقتات التثبيت، كبح التنبيهات الطوبولوجية، حسابات RSSI الفعلي والمتوقع).</li>
+                <li><strong>المرحلة 4: طبقة الذكاء.</strong> تغذية المخرجات الحتمية لمساعد الذكاء الاصطناعي لتوليد ملخصات الأسباب المحتملة بلغة بسيطة للفنيين.</li>
+            </ol>
+        </section>
+
+        <section id="core-entities-ar">
+            <h2>6. الكيانات الأساسية التي يجب توفرها أولاً</h2>
+            <p>لا تحاول استيعاب البيانات حتى تستقر هذه البديهيات في قاعدة البيانات:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>الكيان الأساسي</th>
+                        <th>السمات الأساسية</th>
+                        <th>الهدف المعماري</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>حامل التثبيت <code>PhysicalMount</code></td>
+                        <td>الارتفاع، الزاوية، معرف البرج</td>
+                        <td>يفصل بين الأجهزة على نفس البرج لعزل أعطال تمايل الرياح مقابل انقطاع الطاقة العالمي.</td>
+                    </tr>
+                    <tr>
+                        <td>الواجهة الراديوية <code>RadioInterface</code></td>
+                        <td>MAC، التردد، قوة البث، عرض القناة</td>
+                        <td>يفصل الأجهزة المادية عن الرابط، مما يسمح بتبديل الراديو دون فقدان البيانات التاريخية.</td>
+                    </tr>
+                    <tr>
+                        <td>ملف الهوائي <code>AntennaProfile</code></td>
+                        <td>الكسب (dBi)، عرض الشعاع، الاستقطاب</td>
+                        <td>متغير رياضي أساسي مطلوب لحساب الـ RSSI المتوقع النظري.</td>
+                    </tr>
+                    <tr>
+                        <td>الرابط اللاسلكي <code>WirelessLink</code></td>
+                        <td>الواجهة أ، الواجهة ب، نوع الرابط</td>
+                        <td>العلاقة المنطقية الأساسية التي ترتبط بها بيانات القياس ومساعد الذكاء الاصطناعي.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="telemetry-priorities-ar">
+            <h2>7. مصادر القياس التي يمكن تأجيلها</h2>
+            <p>أعط الأولوية لمقاييس البقاء الأساسية. يجب تأجيل بيانات التشخيص المتقدمة لتجنب اختناقات الاستيعاب.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>يُستوعب فوراً (MVP)</th>
+                        <th>يُؤجل للمراحل اللاحقة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>قوة الإشارة (RSSI)</td>
+                        <td>مسوحات الطيف المباشرة (FFT Arrays)</td>
+                    </tr>
+                    <tr>
+                        <td>مستوى الضوضاء (Noise Floor)</td>
+                        <td>نسب عدالة وقت البث لكل عميل</td>
+                    </tr>
+                    <tr>
+                        <td>سعة البث/الاستقبال (MCS Index)</td>
+                        <td>أسباب سقوط الحزم العميقة (فيضان الذاكرة مقابل الترددات)</td>
+                    </tr>
+                    <tr>
+                        <td>جودة الاتصال (CCQ / Retry Rates)</td>
+                        <td>المقاييس الحرارية للأجهزة (ما لم تكن حرجة)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="manual-features-ar">
+            <h2>8. الواقع التشغيلي: ما يبقى يدوياً في البداية</h2>
+            <p>تتطلب الأتمتة ثقة مطلقة. سنعتمد على مهام سير العمل اليدوية لبناء هذه الثقة.</p>
+            <ul>
+                <li><strong>إنشاء طوبولوجيا الروابط:</strong> سيقوم المستخدمون بتعيين الموقع أ إلى الموقع ب يدوياً.</li>
+                <li><strong>خطوط الأساس للـ RSSI:</strong> سيقوم المستخدمون بإدخال الأهداف النظرية بناءً على أدوات التخطيط الخاصة بهم.</li>
+                <li><strong>التحقق من الزيارة الميدانية:</strong> ينقر الفنيون يدوياً على "التحقق من الإصلاح". لن يغلق النظام التذاكر آلياً لمجرد تحسن الـ RSSI.</li>
+            </ul>
+        </section>
+
+        <section id="avoid-early-ar">
+            <h2>9. أنماط يجب تجنبها: ما لا يجب محاولته مبكراً</h2>
+            <div class="warning-box">
+                <ul style="color: var(--text-primary);">
+                    <li><strong>المعالجة التلقائية:</strong> لا تسمح أبداً للنظام بتغيير الترددات أو إعادة تشغيل أجهزة الراديو آلياً في المراحل المبكرة. خطأ واحد هنا سيؤدي إلى إسقاط الشبكة وتدمير الثقة.</li>
+                    <li><strong>التحليل المباشر للذكاء الاصطناعي:</strong> لا تقم بتغذية تيارات القيم الرقمية الخام مباشرة إلى نموذج لغوي (LLM). استخدم البوابات المنطقية الحتمية دائماً أولاً لتجنب "هلوسة" الذكاء الاصطناعي.</li>
+                    <li><strong>أعمدة بيانات مخصصة للموردين:</strong> لا تضف أبداً أعمدة مثل <code>ubiquiti_quality</code> إلى المخطط الأساسي. قم بتوحيد جميع البيانات إلى مقاييس قياسية في مسار الاستيعاب.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="final-guidance-ar">
+            <h2>10. التوجيه المعماري النهائي</h2>
+            <div class="note-box">
+                <p><strong>حافظ على القوة دون تعقيد هندسي مفرط:</strong></p>
+                <p>يعتمد نجاح ركيزة "ذكاء الروابط اللاسلكية" كلياً على <strong>توحيد البيانات</strong> و <strong>التنبيهات ذات الحالة</strong>. إذا تعامل النظام مع جهاز MikroTik وجهاز TP-Link بشكل متطابق في قاعدة البيانات، فإن بناء واجهات المستخدم وطبقات الذكاء الاصطناعي يصبح أمراً سهلاً وموثوقاً.</p>
+                <p>لا تبني نماذج تعلم آلي معقدة لاكتشاف الشذوذ بعد. إن التنبيه البسيط القائم على العتبة مع مؤقت التثبيت (مثل: "SNR < 20dB لأكثر من 5 دقائق") يغطي 90٪ من حالات الاستخدام التشغيلي. ركز الجهد الهندسي على ضمان عدم فقدان البيانات، وتعامل قاعدة TimescaleDB مع أحمال الكتابة بكفاءة. ذكاء النظام ينبع من البيانات الموثوقة، وليس الرياضيات المعقدة.</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function toggleLanguage() {
+            const en = document.getElementById('lang-en');
+            const ar = document.getElementById('lang-ar');
+            const btn = document.getElementById('translateBtn');
+            
+            if (en.style.display === 'none') {
+                en.style.display = 'block';
+                ar.style.display = 'none';
+                btn.innerHTML = '🌐 ترجمة للعربية';
+                document.body.dir = 'ltr';
+                document.documentElement.lang = 'en';
+                btn.style.right = '20px';
+                btn.style.left = 'auto';
+                localStorage.setItem('netSentinel_lang', 'en');
+            } else {
+                en.style.display = 'none';
+                ar.style.display = 'block';
+                btn.innerHTML = '🌐 Back to English';
+                document.body.dir = 'rtl';
+                document.documentElement.lang = 'ar';
+                btn.style.right = 'auto';
+                btn.style.left = '20px';
+                localStorage.setItem('netSentinel_lang', 'ar');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            mermaid.initialize({ startOnLoad: true, theme: 'dark', fontFamily: 'Inter' });
+            
+            if (localStorage.getItem('netSentinel_lang') === 'ar') {
+                toggleLanguage();
+            }
+        });
+    </script>
+</body>
+</html>

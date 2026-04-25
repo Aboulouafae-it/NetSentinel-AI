@@ -1,0 +1,146 @@
+version: "3.9"
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — Primary data store
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: netsentinel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-netsentinel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-netsentinel_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-netsentinel}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-netsentinel}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - netsentinel
+
+  # ---------------------------------------------------------------------------
+  # Redis — Cache and future message queue
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: netsentinel-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - netsentinel
+
+  # ---------------------------------------------------------------------------
+  # Backend — FastAPI application
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: netsentinel-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-netsentinel}:${POSTGRES_PASSWORD:-netsentinel_dev_password}@postgres:5432/${POSTGRES_DB:-netsentinel}
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production-immediately}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEBUG: ${DEBUG:-true}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - netsentinel
+
+  # ---------------------------------------------------------------------------
+  # Frontend — Next.js application
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: netsentinel-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    networks:
+      - netsentinel
+
+  # ---------------------------------------------------------------------------
+  # Worker — Background tasks
+  # ---------------------------------------------------------------------------
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: netsentinel-worker
+    restart: unless-stopped
+    command: arq app.worker.main.WorkerSettings
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-netsentinel}:${POSTGRES_PASSWORD:-netsentinel_dev_password}@postgres:5432/${POSTGRES_DB:-netsentinel}
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production-immediately}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - netsentinel
+
+  # ---------------------------------------------------------------------------
+  # Edge Agent — Telemetry poller (Demo)
+  # ---------------------------------------------------------------------------
+  edge-agent:
+    build:
+      context: ./edge-agent
+      dockerfile: Dockerfile
+    container_name: netsentinel-edge-agent
+    restart: unless-stopped
+    environment:
+      BACKEND_URL: http://backend:8000/api/v1
+    volumes:
+      - ./edge-agent:/app
+    depends_on:
+      - backend
+    networks:
+      - netsentinel
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  netsentinel:
+    driver: bridge

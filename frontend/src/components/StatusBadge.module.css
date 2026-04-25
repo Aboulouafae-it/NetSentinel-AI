@@ -1,0 +1,69 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  border: 1px solid transparent;
+}
+
+/* Asset Statuses */
+.online {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--status-online);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.offline {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--status-offline);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.degraded {
+  background-color: rgba(234, 179, 8, 0.1);
+  color: var(--status-degraded);
+  border-color: rgba(234, 179, 8, 0.2);
+}
+
+/* Alert Severities */
+.critical {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--status-critical);
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.high {
+  background-color: rgba(249, 115, 22, 0.1);
+  color: var(--status-high);
+  border-color: rgba(249, 115, 22, 0.2);
+}
+
+.medium {
+  background-color: rgba(234, 179, 8, 0.1);
+  color: var(--status-medium);
+  border-color: rgba(234, 179, 8, 0.2);
+}
+
+.low {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--status-low);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.info {
+  background-color: rgba(100, 116, 139, 0.1);
+  color: var(--status-info);
+  border-color: rgba(100, 116, 139, 0.2);
+}
+
+/* Defaults */
+.unknown, .default {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
+}

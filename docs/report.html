@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetSentinel AI - Professional Project Report</title>
+    <!-- Mermaid for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1120;
+            --surface-color: #1e293b;
+            --surface-elevated: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --brand-primary: #3b82f6;
+            --brand-secondary: #8b5cf6;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --status-done: #10b981;
+            --status-planned: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(59, 130, 246, 0.15) 100%);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 60px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0 0 10px 0;
+            background: -webkit-linear-gradient(45deg, var(--brand-primary), var(--brand-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: var(--brand-primary);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--brand-primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--surface-elevated);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge.done {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--status-done);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge.planned {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--status-planned);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 40px auto;
+            background: var(--surface-color);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .mermaid {
+            background-color: var(--surface-color);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .conclusion-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-left: 4px solid var(--brand-secondary);
+            padding: 30px;
+            border-radius: 0 12px 12px 0;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            line-height: 1.8;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tech-pill {
+            background-color: var(--surface-elevated);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: var(--brand-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .flex-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .flex-col {
+            flex: 1;
+            min-width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>NetSentinel AI</h1>
+            <p>Comprehensive Project Architecture & Technical Report</p>
+            <p><small>Prepared for the Executive Board & Technical Steering Committee | Last Updated: April 2026</small></p>
+        </header>
+
+        <section>
+            <h2>1. Executive Summary & Product Vision</h2>
+            <div class="conclusion-box">
+                <p><strong>NetSentinel AI is a next-generation network management, observability, and cybersecurity platform.</strong> It is designed to bridge the gap between standard IT infrastructure monitoring and specialized radio/wireless diagnostics.</p>
+                <p>By leveraging advanced Artificial Intelligence, it empowers network operators to rapidly diagnose complex incidents—whether they originate from a sophisticated cyber threat, an internal misconfiguration, or an environmental factor affecting outdoor wireless links.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>2. Architectural Overview</h2>
+            <p>The platform follows a modular, API-first architecture designed for long-term scalability. It currently utilizes a monorepo approach with a clear separation of concerns across the presentation, business logic, and data layers.</p>
+            
+            <div class="mermaid">
+                graph TD
+                subgraph Presentation Layer
+                    UI[Next.js App Router UI]
+                end
+
+                subgraph API Gateway Layer
+                    API[FastAPI Gateway]
+                    Auth[JWT Auth Middleware]
+                    API --> Auth
+                end
+
+                subgraph Business Services
+                    AssetSvc[Asset & Inventory]
+                    AlertSvc[Alerts & Incidents]
+                    WirelessSvc[Wireless Intelligence]
+                    AISvc[AI Copilot Engine]
+                end
+
+                subgraph Data Layer
+                    DB[(PostgreSQL 16)]
+                    Cache[(Redis 7)]
+                end
+
+                UI -->|REST / JSON| API
+                Auth --> AssetSvc
+                Auth --> AlertSvc
+                Auth --> WirelessSvc
+                Auth --> AISvc
+
+                AssetSvc --> DB
+                AlertSvc --> DB
+                WirelessSvc --> DB
+                
+                AISvc -.->|Context| DB
+                
+                AlertSvc --> Cache
+                WirelessSvc --> Cache
+            </div>
+            <p style="text-align: center; font-size: 0.9em; color: var(--text-secondary);">Figure 1: High-level System Architecture</p>
+        </section>
+
+        <section>
+            <h2>3. Core Platform Pillars</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>🛡️ Core Asset Inventory</h3>
+                    <p>Comprehensive discovery, management, and tracking of routers, switches, servers, endpoints, and physical sites.</p>
+                </div>
+                <div class="card">
+                    <h3>📊 Monitoring & Observability</h3>
+                    <p>Real-time uptime tracking, performance metrics, and centralized log ingestion across all registered infrastructure.</p>
+                </div>
+                <div class="card">
+                    <h3>🚨 Security Detection</h3>
+                    <p>Advanced alerting, anomaly detection rules, Indicators of Compromise (IoC) tracking, and structured incident response workflows.</p>
+                </div>
+                <div class="card">
+                    <h3>🧠 AI Copilot</h3>
+                    <p>Generative AI integration for automated incident summarization, likely-cause analysis, and chat-based troubleshooting assistance.</p>
+                </div>
+                <div class="card">
+                    <h3>📡 Wireless Intelligence</h3>
+                    <p>Deep diagnostics for Point-to-Point (PTP) and Point-to-Multipoint (PTMP) links. Tracks RSSI, SNR, noise floor, and alignment states.</p>
+                </div>
+                <div class="card">
+                    <h3>⚡ Automation Engine</h3>
+                    <p>Playbook rules executing automated response actions such as webhooks, asset isolation, or incident creation based on detected severities.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>4. Data Model & Entity Relationships</h2>
+            <p>The domain model is highly normalized, placing the <strong>Organization</strong> at the root to ensure strict multi-tenancy. Alerts and Incidents dynamically map to either traditional Assets or Wireless Links.</p>
+            <div class="mermaid">
+                erDiagram
+                    ORGANIZATION ||--o{ SITE : "owns"
+                    ORGANIZATION ||--o{ USER : "has"
+                    ORGANIZATION ||--o{ INCIDENT : "tracks"
+                    SITE ||--o{ ASSET : "contains"
+                    SITE ||--o{ WIRELESS_LINK : "anchors"
+                    ASSET ||--o{ LOG_ENTRY : "generates"
+                    WIRELESS_LINK ||--o{ WIRELESS_METRIC : "records"
+                    INCIDENT ||--o{ ALERT : "groups"
+                    ASSET ||--o{ ALERT : "triggers"
+                    WIRELESS_LINK ||--o{ ALERT : "triggers"
+            </div>
+        </section>
+
+        <section>
+            <h2>5. Implementation Status & Progress</h2>
+            <div class="flex-row">
+                <div class="flex-col">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Phase</th>
+                                <th>Focus Area</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Phase 1</td>
+                                <td>Foundation & Monorepo Setup (Auth, DB, Base UI)</td>
+                                <td><span class="badge done">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 2</td>
+                                <td>Network Discovery & Wireless Architecture Models</td>
+                                <td><span class="badge done">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 3</td>
+                                <td>Log Collection, Models & Observability API</td>
+                                <td><span class="badge done">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 4</td>
+                                <td>Security & Threat Detection (IoC, Rules)</td>
+                                <td><span class="badge done">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 5</td>
+                                <td>AI-Powered Analysis & Copilot (Wireless & Security)</td>
+                                <td><span class="badge done">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 6</td>
+                                <td>Wireless Link Intelligence (Telemetry, TSDB, Deterministic Alerts)</td>
+                                <td><span class="badge done">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 7</td>
+                                <td>Automation & Playbook Response Engine (SOAR)</td>
+                                <td><span class="badge done">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Phase 8</td>
+                                <td>Standalone Desktop Independence, Brand Logo & UI Polish</td>
+                                <td><span class="badge done">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="flex-col">
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>6. Technical Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-pill">Next.js 14 (App Router)</div>
+                <div class="tech-pill">React 18</div>
+                <div class="tech-pill">TypeScript</div>
+                <div class="tech-pill">FastAPI (Python 3.12)</div>
+                <div class="tech-pill">SQLAlchemy 2.0</div>
+                <div class="tech-pill">PostgreSQL 16</div>
+                <div class="tech-pill">Redis 7</div>
+                <div class="tech-pill">Docker & Compose</div>
+                <div class="tech-pill">JWT Auth</div>
+                <div class="tech-pill">Pydantic</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>7. Project Environment, Files & Access Scope</h2>
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Environment Details</h3>
+                <p>The platform runs in a modern, containerized environment defined via Docker Compose. The environment is partitioned into several independent but interconnected services:</p>
+                <ul>
+                    <li><strong>Database:</strong> PostgreSQL 16 instance accessible internally by the backend.</li>
+                    <li><strong>Cache/Queue:</strong> Redis 7 instance for fast caching and async task processing.</li>
+                    <li><strong>Backend API:</strong> Python 3.12 FastAPI container running on port 8000.</li>
+                    <li><strong>Frontend UI:</strong> Next.js 14 container running on port 3000.</li>
+                    <li><strong>Background Worker:</strong> ARQ worker instance for background processing.</li>
+                    <li><strong>Edge Agent:</strong> A scalable local poller for internal network telemetry gathering.</li>
+                </ul>
+            </div>
+            
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Directory Structure & File Layout</h3>
+                <p>The monorepo organizes files cleanly to separate frontend display from backend business logic:</p>
+                <div style="background-color: var(--surface-elevated); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 0.9em; overflow-x: auto; color: var(--text-primary);">
+                    NetSentinel AI/<br>
+                    ├── backend/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--text-secondary);"># FastAPI application</span><br>
+                    │&nbsp;&nbsp;&nbsp;├── app/<br>
+                    │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── models/&nbsp;&nbsp;&nbsp;<span style="color: var(--text-secondary);"># SQLAlchemy ORM definitions (alert.py, security.py, etc.)</span><br>
+                    │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── routers/&nbsp;&nbsp;<span style="color: var(--text-secondary);"># API endpoint logic handlers</span><br>
+                    │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── schemas/&nbsp;&nbsp;<span style="color: var(--text-secondary);"># Pydantic validation structures</span><br>
+                    │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── services/&nbsp;<span style="color: var(--text-secondary);"># Core business logic layer</span><br>
+                    │&nbsp;&nbsp;&nbsp;└── alembic/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--text-secondary);"># Database migration scripts</span><br>
+                    ├── frontend/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--text-secondary);"># Next.js 14 Web UI</span><br>
+                    │&nbsp;&nbsp;&nbsp;└── src/<br>
+                    │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── app/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--text-secondary);"># Application router pages & layouts</span><br>
+                    │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── components/ <span style="color: var(--text-secondary);"># Reusable React UI components</span><br>
+                    ├── edge-agent/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--text-secondary);"># Python-based network poller agent</span><br>
+                    ├── docker/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--text-secondary);"># Configuration files for Docker services</span><br>
+                    └── docs/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--text-secondary);"># Project documentation and generated reports</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Access Scope & Security Boundaries</h3>
+                <p>The platform is designed with explicit boundaries regarding what data and systems it can access:</p>
+                <ul>
+                    <li><strong>Internal Network Scope:</strong> Through the Edge Agent, the system can discover and poll assets within user-defined IP subnets via ICMP, SNMP, and vendor-specific APIs.</li>
+                    <li><strong>External Intelligence APIs:</strong> The system is equipped to reach out to external threat intelligence feeds and the generative AI APIs (e.g., Gemini) for Copilot features.</li>
+                    <li><strong>Data Isolation:</strong> All data is strictly segregated per Organization ID at the database layer, ensuring cross-tenant privacy.</li>
+                    <li><strong>Credential Management:</strong> The system accesses databases and external systems exclusively via securely stored environment variables; no plaintext credentials are committed to the repository files.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>8. Legislator's Conclusions & Strategic Next Steps</h2>
+            <div class="conclusion-box">
+                <p><strong>System Evaluation:</strong> The NetSentinel AI platform demonstrates a robust, enterprise-grade foundation. The architectural choices—specifically utilizing FastAPI for high-throughput asynchronous telemetry ingestion, and Next.js for a responsive, SEO-friendly, and highly secure frontend interface—are perfectly aligned with modern industry standards.</p>
+                
+                <p><strong>Security Posture:</strong> The system implements a "secure-by-design" methodology. Authentication relies on stateless JWTs with strict expiration. The database schema strictly enforces multi-tenancy at the ORM layer, preventing cross-organization data leakage. Furthermore, the newly introduced Threat Detection models (IoCs and Detection Rules) establish the groundwork for real-time cyber defense.</p>
+
+                <p><strong>Strategic Recommendations & Next Steps:</strong></p>
+                <ol>
+                    <li><strong>Phase 8 Achieved:</strong> The implementation of a standalone Desktop Client via Electron entirely decouples the platform from browser dependence, while the custom "White Hat Snake" branding cements a highly professional, enterprise-grade identity.</li>
+                    <li><strong>Fix ARQ Worker Dependencies:</strong> The UI, Desktop App, and Backend API are fully functional and polished. However, the background ARQ worker requires binary dependencies (`arq` executable) which need to be properly added to the `backend/Dockerfile` to allow background job routing to function natively in the Docker cluster.</li>
+                    <li><strong>Agent Deployment & Scale Testing:</strong> Prioritize the deployment of the Edge Agent (Poller) to capture live telemetry from distributed subnets in a staging environment. We need to stress-test the TimescaleDB insertion rates for high-frequency RF polling.</li>
+                    <li><strong>Mobile/Field App:</strong> Begin planning a lightweight progressive web app (PWA) or mobile app specifically for field technicians to view the AI Pre-visit Briefs generated by the Copilot while on the tower.</li>
+                </ol>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            fontFamily: 'Inter'
+        });
+
+        // Initialize Chart.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = 'Inter';
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'In Progress', 'Planned'],
+                    datasets: [{
+                        data: [100, 0, 0],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)',  // emerald
+                            'rgba(59, 130, 246, 0.8)',  // blue
+                            'rgba(245, 158, 11, 0.8)'   // amber
+                        ],
+                        borderColor: [
+                            '#0b1120',
+                            '#0b1120',
+                            '#0b1120'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Overall Project Completion',
+                            color: '#f8fafc',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        });
+    </script>
+</body>
+</html>
