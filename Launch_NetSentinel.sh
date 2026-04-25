@@ -56,6 +56,11 @@ wait_for_url() {
 launch_desktop() {
   cd "$DESKTOP_DIR" || exit 1
 
+  export ELECTRON_DISABLE_GPU=1
+  export ELECTRON_OZONE_PLATFORM_HINT=x11
+  export LIBGL_ALWAYS_SOFTWARE=1
+  unset ELECTRON_RUN_AS_NODE
+
   if [ ! -d node_modules ]; then
     log "Installing desktop dependencies"
     npm install >> "$LOG_FILE" 2>&1 || return 1
