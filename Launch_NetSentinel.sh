@@ -23,12 +23,12 @@ start_platform() {
   log "Starting Docker services"
 
   if docker compose ps >/dev/null 2>&1; then
-    docker compose up -d --build >> "$LOG_FILE" 2>&1
+    docker compose up -d >> "$LOG_FILE" 2>&1
     return $?
   fi
 
   if command -v pkexec >/dev/null 2>&1; then
-    pkexec docker compose --project-directory "$SCRIPT_DIR" up -d --build >> "$LOG_FILE" 2>&1
+    pkexec docker compose --project-directory "$SCRIPT_DIR" up -d >> "$LOG_FILE" 2>&1
     return $?
   fi
 
@@ -77,7 +77,7 @@ if ! start_platform; then
   exit 1
 fi
 
-wait_for_url "http://127.0.0.1:8000/health" 90 || log "Backend health check timed out"
-wait_for_url "http://127.0.0.1:3000" 90 || log "Frontend check timed out"
+log "Docker services requested. Launching desktop client."
+wait_for_url "http://127.0.0.1:3000" 8 || log "Frontend is not ready yet; Electron will keep retrying."
 
 launch_desktop
