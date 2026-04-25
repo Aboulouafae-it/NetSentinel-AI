@@ -5,7 +5,6 @@ let mainWindow;
 
 app.commandLine.appendSwitch('disable-gpu');
 app.commandLine.appendSwitch('disable-gpu-compositing');
-app.commandLine.appendSwitch('disable-dev-shm-usage');
 app.commandLine.appendSwitch('no-sandbox');
 
 const gotLock = app.requestSingleInstanceLock();
@@ -31,58 +30,13 @@ function createWindow() {
     show: true
   });
 
-  mainWindow.loadURL(
-    'data:text/html;charset=utf-8,' +
-      encodeURIComponent(`
-        <html>
-          <head>
-            <title>NetSentinel AI</title>
-            <style>
-              body {
-                margin: 0;
-                min-height: 100vh;
-                display: grid;
-                place-items: center;
-                background: #07090f;
-                color: #f8fafc;
-                font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-              }
-              .panel {
-                text-align: center;
-                max-width: 420px;
-              }
-              img {
-                width: 96px;
-                height: 96px;
-                margin-bottom: 22px;
-              }
-              h1 {
-                margin: 0 0 8px;
-                font-size: 26px;
-              }
-              p {
-                margin: 0;
-                color: #94a3b8;
-                line-height: 1.6;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="panel">
-              <img src="file://${path.join(__dirname, 'icon.png')}" alt="" />
-              <h1>NetSentinel AI</h1>
-              <p>Starting the local platform...</p>
-            </div>
-          </body>
-        </html>
-      `)
-  );
+  mainWindow.loadFile(path.join(__dirname, 'loading.html'));
 
   const loadFrontend = () => {
     if (!mainWindow) return;
 
-    mainWindow.loadURL('http://127.0.0.1:3000').catch(() => {
-      console.log("Waiting for NetSentinel UI to start... retrying in 3 seconds.");
+    mainWindow.loadURL('http://127.0.0.1:3000').catch((error) => {
+      console.log(`Waiting for NetSentinel UI to start: ${error.message}. Retrying in 3 seconds.`);
       setTimeout(loadFrontend, 3000);
     });
   };
