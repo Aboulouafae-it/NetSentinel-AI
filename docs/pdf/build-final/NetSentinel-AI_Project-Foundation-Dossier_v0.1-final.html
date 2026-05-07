@@ -1,0 +1,4482 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NetSentinel AI — Project Foundation Dossier</title>
+  <style>
+    :root {
+      --blue-950: #061526;
+      --blue-900: #0b1f3a;
+      --blue-800: #12345a;
+      --cyan-500: #00a3ff;
+      --cyan-300: #19d3ff;
+      --ink: #172033;
+      --muted: #5c6b7d;
+      --line: #d6e0ea;
+      --soft: #eef6ff;
+      --paper: #ffffff;
+      --warn: #fff4e5;
+      --danger: #fff1f2;
+      --success: #f0fdf4;
+    }
+
+    @page {
+      size: Letter;
+      margin: 0.72in 0.62in 0.78in 0.62in;
+    }
+
+    * { box-sizing: border-box; }
+    html { color: var(--ink); font-family: "Inter", "Segoe UI", "Noto Sans", Arial, sans-serif; font-size: 10.2pt; line-height: 1.48; }
+    body { margin: 0; background: var(--paper); }
+    a { color: var(--blue-800); text-decoration: none; }
+    p { margin: 0 0 0.58rem; }
+    strong { color: var(--blue-900); }
+
+    .cover {
+      page-break-after: always;
+      min-height: 9.05in;
+      padding: 0.2in 0 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .cover::before {
+      content: "";
+      position: absolute;
+      inset: -0.72in -0.62in auto -0.62in;
+      height: 2.15in;
+      background: linear-gradient(135deg, var(--blue-950), var(--blue-800));
+      z-index: -1;
+    }
+
+    .cover-kicker {
+      color: var(--cyan-300);
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-top: 0.1in;
+    }
+
+    .cover h1 {
+      margin: 0.68in 0 0.16in;
+      color: white;
+      font-size: 3.05rem;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      font-weight: 900;
+    }
+
+    .cover-subtitle {
+      color: #dbeafe;
+      font-size: 1.12rem;
+      max-width: 6.2in;
+      font-weight: 520;
+    }
+
+    .cover-card {
+      margin-top: 0.72in;
+      width: 5.45in;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cyan-500);
+      padding: 0.18in 0.22in;
+      background: #fbfdff;
+      border-radius: 9px;
+      box-shadow: 0 10px 24px rgba(6, 21, 38, 0.08);
+    }
+
+    .cover-card div { margin: 0.08in 0; font-size: 0.98rem; }
+    .confidential {
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      padding: 0.16in 0.2in;
+      border-radius: 9px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .toc-page {
+      page-break-after: always;
+      padding-top: 0.1in;
+      min-height: 9.05in;
+    }
+
+    .toc-page h1 {
+      color: var(--blue-900);
+      font-size: 1.85rem;
+      margin: 0 0 0.28in;
+      padding-bottom: 0.08in;
+      border-bottom: 3px solid var(--cyan-500);
+    }
+
+    #generated-toc { columns: 2; column-gap: 0.35in; }
+    .toc-group {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin: 0 0 0.06in;
+      padding-bottom: 0.045in;
+      border-bottom: 1px solid #eef2f7;
+    }
+    .toc-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.06in;
+      align-items: baseline;
+      color: var(--blue-900);
+      font-weight: 800;
+      font-size: 0.82rem;
+      line-height: 1.25;
+      margin: 0 0 0.02in;
+    }
+    .toc-row.level-2 {
+      color: var(--muted);
+      font-weight: 520;
+      font-size: 0.72rem;
+      margin-left: 0.12in;
+    }
+    .toc-title { overflow-wrap: anywhere; }
+    .toc-dots {
+      border-bottom: 1px dotted #b8c5d4;
+      transform: translateY(-0.12em);
+      min-width: 0.15in;
+    }
+    .toc-page-num {
+      color: var(--blue-800);
+      font-variant-numeric: tabular-nums;
+      min-width: 0.18in;
+      text-align: right;
+    }
+
+    main > h1 {
+      page-break-before: always;
+      margin: 0 0 0.18in;
+      padding: 0.22in 0.25in;
+      color: white;
+      background: linear-gradient(135deg, var(--blue-950), var(--blue-800));
+      border-radius: 8px;
+      font-size: 1.72rem;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    main > h1:first-child { page-break-before: auto; }
+    h2 {
+      color: var(--blue-900);
+      font-size: 1.14rem;
+      margin: 0.22in 0 0.075in;
+      padding-bottom: 0.035in;
+      border-bottom: 1px solid var(--line);
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+    h3 {
+      color: var(--blue-800);
+      font-size: 1rem;
+      margin: 0.16in 0 0.05in;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.12in 0 0.18in;
+      font-size: 0.82rem;
+      page-break-inside: auto;
+    }
+    thead { display: table-header-group; }
+    tr { page-break-inside: avoid; }
+    th {
+      background: var(--blue-900);
+      color: white;
+      text-align: left;
+      padding: 7px 8px;
+      border: 1px solid var(--blue-800);
+      font-weight: 800;
+    }
+    td {
+      vertical-align: top;
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+    }
+    tbody tr:nth-child(even) td { background: #f8fbff; }
+
+    blockquote.callout {
+      margin: 0.15in 0 0.2in;
+      padding: 0.13in 0.17in;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cyan-500);
+      border-radius: 8px;
+      background: var(--soft);
+      page-break-inside: avoid;
+    }
+    blockquote.callout p:last-child { margin-bottom: 0; }
+    blockquote.callout .callout-title {
+      display: block;
+      color: var(--blue-900);
+      font-weight: 900;
+      margin-bottom: 0.045in;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.78rem;
+    }
+    blockquote.security-note { background: var(--warn); border-left-color: #f59e0b; }
+    blockquote.mvp-limitation { background: var(--danger); border-left-color: #dc2626; }
+    blockquote.future-improvement { background: var(--success); border-left-color: #16a34a; }
+
+    pre {
+      margin: 0.1in 0 0.18in;
+      padding: 0.12in 0.14in;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0b1220;
+      color: #e5eefb;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 0.78rem;
+      line-height: 1.38;
+    }
+    code { font-family: "JetBrains Mono", "DejaVu Sans Mono", Consolas, monospace; font-size: 0.88em; }
+    p code, li code, td code, a {
+      background: #edf5ff;
+      color: var(--blue-900);
+      padding: 0.06rem 0.18rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      word-break: keep-all;
+    }
+
+    .mermaid-wrap {
+      margin: 0.15in 0 0.22in;
+      padding: 0.14in;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cyan-500);
+      border-radius: 10px;
+      background: #fbfdff;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      overflow: hidden;
+    }
+    .mermaid-title {
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: var(--blue-900);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.08in;
+    }
+    .mermaid { text-align: center; }
+    .mermaid svg {
+      max-width: 100% !important;
+      max-height: 6.65in !important;
+      height: auto !important;
+    }
+
+    .interface-shot {
+      display: block;
+      width: 100%;
+      max-height: 4.95in;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 0.14in 0 0.12in;
+      box-shadow: 0 10px 24px rgba(6, 21, 38, 0.12);
+      page-break-inside: avoid;
+    }
+
+    p:has(.interface-shot) {
+      page-break-inside: avoid;
+    }
+
+    ul, ol { margin-top: 0.04in; padding-left: 0.24in; }
+    li { margin: 0.025in 0; }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 0.2in 0; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div>
+      <div class="cover-kicker">Project Foundation Dossier</div>
+      <h1>NetSentinel AI</h1>
+      <div class="cover-subtitle">Local-First Network Observability, Cybersecurity &amp; Wireless Diagnostics Platform</div>
+      <div class="cover-card">
+        <div><strong>Version:</strong> MVP / Project Foundation Dossier</div>
+        <div><strong>Date:</strong> 2026-05-06</div>
+        <div><strong>Founder:</strong> Aboulouafae IT</div>
+        <div><strong>Classification:</strong> Confidential - Internal Project and Partner Evaluation</div>
+      </div>
+    </div>
+    <div class="confidential">
+      <strong>Confidentiality Notice:</strong> This document contains project strategy, architecture, technical design, product positioning, and security planning information for NetSentinel AI. It is intended for authorized evaluation by founders, engineers, cybersecurity professionals, network administrators, investors, public institutions, and enterprise reviewers.
+    </div>
+  </section>
+
+  <section class="toc-page">
+    <h1>Table of Contents</h1>
+    <nav id="generated-toc" aria-label="Table of Contents" data-static="true">
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">1. Executive Summary</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">3</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">2. Product Interface Preview</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">4</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">3. Project Vision</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">6</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">4. Problem Statement</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">7</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">5. Proposed Solution</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">8</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">6. Target Users</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">9</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">7. Core Platform Modules</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">10</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">8. Technical Architecture</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">15</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">9. Backend Documentation</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">25</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">10. Frontend Documentation</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">28</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">11. Database Documentation</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">30</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">12. Edge Agent Documentation</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">32</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">13. Wireless Diagnostics</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">33</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">14. Cybersecurity</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">36</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">15. Deployment Documentation</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">38</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">16. Desktop Client</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">40</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">17. AI Assistant</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">41</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">18. Automation</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">42</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">19. Current MVP Status</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">43</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">20. Roadmap</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">44</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">21. Testing Strategy</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">46</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">22. Security Hardening Checklist</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">47</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">23. Business and Product Positioning</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">48</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">24. Future Enterprise Features</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">49</span>
+        </div>
+      </div>
+    
+
+      <div class="toc-group">
+        <div class="toc-row level-1">
+          <span class="toc-title">25. Official Appendices</span>
+          <span class="toc-dots"></span>
+          <span class="toc-page-num">50</span>
+        </div>
+      </div>
+    </nav>
+  </section>
+
+  <main>
+    <h1 id="executive-summary">1. Executive Summary</h1>
+    <p>NetSentinel AI is a local-first network management,
+    observability, cybersecurity, and outdoor wireless radio diagnostics
+    platform. It is designed to help organizations monitor
+    infrastructure, manage assets, detect alerts and incidents, analyze
+    logs, run discovery scans, maintain security rules and indicators of
+    compromise, automate response playbooks, and diagnose outdoor
+    wireless radio links using real RF measurement data.</p>
+    <p>The project currently operates as an MVP / work in progress. Its
+    runtime model is local deployment with Docker Compose, supported by
+    a FastAPI backend, Next.js frontend, PostgreSQL database, Redis
+    queue/cache layer, ARQ background worker, Electron desktop shell,
+    and a Python-based edge agent for telemetry and wireless metric
+    collection.</p>
+    <p>NetSentinel AI exists because many organizations still operate
+    networks through fragmented tools: one system for assets, another
+    for logs, another for alerts, spreadsheets for incidents, separate
+    vendor portals for wireless devices, and informal technician notes
+    for RF diagnostics. This fragmentation slows response, hides root
+    causes, and makes operational knowledge hard to preserve.</p>
+    <p>The platform is intended for network administrators, Wireless ISP
+    teams, cybersecurity analysts, IT managers, field technicians, small
+    enterprises, municipalities, and public institutions that need
+    practical local infrastructure visibility without immediately
+    adopting a complex cloud SIEM, enterprise NMS, or multiple
+    disconnected vendor tools.</p>
+    <p>NetSentinel AI differs from normal monitoring tools by combining
+    network operations, security monitoring, field workflows,
+    AI-assisted explanation, and outdoor wireless diagnostics in a
+    single operational environment. Outdoor wireless diagnostics are
+    especially important because RF problems are frequently physical,
+    environmental, intermittent, and difficult to interpret from raw
+    numbers alone. Metrics such as RSSI, SNR, noise floor, CCQ, latency,
+    packet loss, frequency, channel width, antenna alignment, and
+    Fresnel zone clearance must be interpreted together.</p>
+    <blockquote>
+    <p><strong>MVP Limitation</strong><br>
+    NetSentinel AI should not currently be described as
+    production-ready. The codebase shows a runnable foundation, but
+    additional validation, tests, security hardening, RBAC, audit
+    logging, rate limiting, deployment hardening, and real integrations
+    are required before enterprise production use.</p>
+    </blockquote>
+    <h1 id="product-interface-preview">2. Product Interface Preview</h1>
+    <p>The following interface captures show the current MVP visual
+    direction. They demonstrate the desktop-style operations experience
+    and the field workflow surface for wireless measurements. These
+    screens should be understood as MVP / work-in-progress views, not
+    final production claims.</p>
+    <figure>
+    <img src="assets/operations-center-dashboard.png" class="interface-shot" alt="Operations Center dashboard showing the dark NOC-style navigation, operational cards, alert counters, discovery entry points, and module shortcuts.">
+    <figcaption aria-hidden="true">Operations Center dashboard showing
+    the dark NOC-style navigation, operational cards, alert counters,
+    discovery entry points, and module shortcuts.</figcaption>
+    </figure>
+    <p><strong>Figure: Operations Center Dashboard.</strong> This screen
+    demonstrates the unified operations landing page, including
+    navigation to discovery, assets, radio devices, field measurements,
+    alerts, incidents, security, logs, and automation.</p>
+    <figure>
+    <img src="assets/wireless-field-measurements.png" class="interface-shot" alt="Wireless Field Measurements page showing the technician-facing RF measurement surface and empty-state behavior when no measurements are recorded.">
+    <figcaption aria-hidden="true">Wireless Field Measurements page
+    showing the technician-facing RF measurement surface and empty-state
+    behavior when no measurements are recorded.</figcaption>
+    </figure>
+    <p><strong>Figure: Wireless Field Measurements.</strong> This screen
+    demonstrates the field data entry workflow for real wireless link
+    readings such as RSSI, SNR, CCQ, noise floor, packet loss, and
+    latency.</p>
+    <h1 id="project-vision">3. Project Vision</h1>
+    <p>The long-term vision for NetSentinel AI is to become a
+    local-first NOC/SOC platform for organizations that need operational
+    control, network visibility, security awareness, and field-grade
+    wireless diagnostics without surrendering all operational data to
+    external cloud services.</p>
+    <p>The platform vision includes:</p>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Vision</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Local-first operations</td>
+    <td>Run core infrastructure monitoring locally, on-premise, or
+    inside controlled private environments.</td>
+    </tr>
+    <tr class="even">
+    <td>Network visibility</td>
+    <td>Maintain a unified inventory of organizations, sites, assets,
+    wireless links, measurements, alerts, incidents, and logs.</td>
+    </tr>
+    <tr class="odd">
+    <td>Cybersecurity monitoring</td>
+    <td>Detect suspicious events using rules, IOCs, logs, and correlated
+    alerts.</td>
+    </tr>
+    <tr class="even">
+    <td>Wireless RF diagnostics</td>
+    <td>Translate raw RF measurements into technician-ready diagnostic
+    insight.</td>
+    </tr>
+    <tr class="odd">
+    <td>AI-assisted troubleshooting</td>
+    <td>Explain incidents, summarize logs, propose likely causes, and
+    recommend next steps based on internal evidence.</td>
+    </tr>
+    <tr class="even">
+    <td>Automation</td>
+    <td>Use playbooks and response actions to standardize incident
+    handling while preserving human approval.</td>
+    </tr>
+    <tr class="odd">
+    <td>Desktop-first experience</td>
+    <td>Provide a familiar local desktop launcher for operators who
+    prefer an installed NOC/SOC workstation experience.</td>
+    </tr>
+    </tbody>
+    </table>
+    <blockquote>
+    <p><strong>Future Improvement</strong><br>
+    The ideal mature version should support real-time updates, robust
+    agent management, scheduled discovery, role-based dashboards, SIEM
+    export, SNMP integrations, wireless vendor adapters, PDF reporting,
+    and compliance workflows.</p>
+    </blockquote>
+    <h1 id="problem-statement">4. Problem Statement</h1>
+    <p>Network and security teams often operate under pressure with
+    incomplete or disconnected information. In many small and medium
+    organizations, the operator must switch between router interfaces,
+    wireless controller portals, spreadsheets, manual notes, log files,
+    ticket systems, and messaging channels to understand a single
+    incident.</p>
+    <p>Key problems include:</p>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Problem</th>
+    <th>Operational Impact</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Fragmented tools</td>
+    <td>Slow troubleshooting and inconsistent incident records.</td>
+    </tr>
+    <tr class="even">
+    <td>Disconnected assets, alerts, logs, and incidents</td>
+    <td>Root cause analysis becomes manual and error-prone.</td>
+    </tr>
+    <tr class="odd">
+    <td>Limited local NOC/SOC affordability</td>
+    <td>Smaller organizations cannot justify large enterprise
+    platforms.</td>
+    </tr>
+    <tr class="even">
+    <td>Difficult outdoor wireless diagnosis</td>
+    <td>RF problems require specialized knowledge and field
+    context.</td>
+    </tr>
+    <tr class="odd">
+    <td>Weak historical context</td>
+    <td>Technician observations and measurements are not preserved in a
+    structured way.</td>
+    </tr>
+    <tr class="even">
+    <td>Limited automation</td>
+    <td>Teams repeat manual triage and response steps during recurring
+    incidents.</td>
+    </tr>
+    <tr class="odd">
+    <td>Security blind spots</td>
+    <td>IOCs, rules, and logs may not be connected to operational assets
+    and incidents.</td>
+    </tr>
+    </tbody>
+    </table>
+    <p>Outdoor wireless environments add a specialized layer of
+    difficulty. A link can degrade because of interference, antenna
+    misalignment, cable damage, water ingress, vegetation growth, tower
+    movement, Fresnel zone obstruction, thermal effects, frequency
+    reuse, or asymmetric endpoint conditions. Raw signal values alone
+    rarely tell the full story.</p>
+    <h1 id="proposed-solution">5. Proposed Solution</h1>
+    <p>NetSentinel AI proposes a unified local platform that connects
+    network operations, cybersecurity visibility, wireless diagnostics,
+    and automation into one operational workspace.</p>
+    <p>Core solution components include:</p>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Component</th>
+    <th>Contribution</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Centralized dashboard</td>
+    <td>Provides a single operations view for assets, alerts, incidents,
+    wireless links, logs, and security posture.</td>
+    </tr>
+    <tr class="even">
+    <td>Asset inventory</td>
+    <td>Maintains structured records of network devices, servers,
+    endpoints, and related sites.</td>
+    </tr>
+    <tr class="odd">
+    <td>Discovery scans</td>
+    <td>Performs network scan workflows and stores discovered host
+    results.</td>
+    </tr>
+    <tr class="even">
+    <td>Alerts and incidents</td>
+    <td>Converts operational or security findings into structured
+    workflows.</td>
+    </tr>
+    <tr class="odd">
+    <td>Security rules and IOCs</td>
+    <td>Supports security detection concepts and future threat
+    correlation.</td>
+    </tr>
+    <tr class="even">
+    <td>Logs</td>
+    <td>Provides storage and review surfaces for event and system
+    logs.</td>
+    </tr>
+    <tr class="odd">
+    <td>Automation playbooks</td>
+    <td>Supports future standardized response actions.</td>
+    </tr>
+    <tr class="even">
+    <td>Edge telemetry agent</td>
+    <td>Collects telemetry and wireless metrics near the monitored
+    environment.</td>
+    </tr>
+    <tr class="odd">
+    <td>Wireless measurement forms</td>
+    <td>Captures field measurements and RF diagnostics data.</td>
+    </tr>
+    <tr class="even">
+    <td>AI assistant</td>
+    <td>Explains alerts, incidents, and wireless problems using internal
+    evidence.</td>
+    </tr>
+    <tr class="odd">
+    <td>Docker deployment</td>
+    <td>Makes the MVP reproducible locally.</td>
+    </tr>
+    <tr class="even">
+    <td>Desktop launcher</td>
+    <td>Gives operators a native desktop entry point into the local
+    dashboard.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="target-users">6. Target Users</h1>
+    <h2 id="network-administrator">Network Administrator</h2>
+    <p><strong>Responsibilities:</strong> Maintain uptime, manage
+    infrastructure inventory, investigate connectivity problems, track
+    device status, and coordinate changes.</p>
+    <p><strong>Needs:</strong> Clear asset records, alerts, discovery
+    scans, logs, topology context, and practical troubleshooting
+    workflows.</p>
+    <h2 id="wireless-isp-technician">Wireless ISP Technician</h2>
+    <p><strong>Responsibilities:</strong> Install, align, maintain, and
+    troubleshoot outdoor PTP/PTMP links and customer-premise radios.</p>
+    <p><strong>Needs:</strong> RF metric history, field measurement
+    capture, diagnostic scoring, likely-cause hints, maintenance logs,
+    and technician action plans.</p>
+    <h2 id="cybersecurity-analyst">Cybersecurity Analyst</h2>
+    <p><strong>Responsibilities:</strong> Review suspicious events,
+    correlate alerts, maintain IOCs, investigate incidents, and
+    recommend remediation.</p>
+    <p><strong>Needs:</strong> Rules, IOCs, logs, incidents, evidence
+    trails, risk scoring, and safe automation controls.</p>
+    <h2 id="it-manager">IT Manager</h2>
+    <p><strong>Responsibilities:</strong> Oversee service quality, team
+    performance, incident response, risk management, and reporting.</p>
+    <p><strong>Needs:</strong> Executive dashboard, status summaries,
+    incident reports, SLA indicators, and roadmap confidence.</p>
+    <h2 id="field-technician">Field Technician</h2>
+    <p><strong>Responsibilities:</strong> Visit physical sites, inspect
+    cabling, align antennas, replace equipment, and record
+    measurements.</p>
+    <p><strong>Needs:</strong> Mobile-friendly forms, pre-visit briefs,
+    maintenance history, clear instructions, and offline-friendly
+    workflows.</p>
+    <h2 id="small-enterprise-owner">Small Enterprise Owner</h2>
+    <p><strong>Responsibilities:</strong> Maintain business continuity
+    with limited IT staff and limited budget.</p>
+    <p><strong>Needs:</strong> Local deployment, simple dashboard,
+    affordable monitoring, alerts, and practical reports.</p>
+    <h2 id="municipality-public-institution-it-team">Municipality /
+    Public Institution IT Team</h2>
+    <p><strong>Responsibilities:</strong> Maintain public networks,
+    remote sites, surveillance links, civic infrastructure, and service
+    continuity.</p>
+    <p><strong>Needs:</strong> Local data control, auditability,
+    operational visibility, wireless diagnostics, and future compliance
+    reporting.</p>
+    <h1 id="core-platform-modules">7. Core Platform Modules</h1>
+    <h2 id="dashboard-operations-center">Dashboard / Operations
+    Center</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Provide a unified operational starting point for network,
+    security, and wireless status.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Summary cards, navigation, recent alerts, incident visibility,
+    asset context, dark operations UI.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>API data from assets, alerts, incidents, logs, security,
+    wireless, discovery, and metrics.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Operator awareness, navigation into investigation pages,
+    high-level status indicators.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Frontend dashboard structure exists. Data wiring varies by
+    module.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Real-time updates, custom widgets, role-based views, SLA cards,
+    topology map.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="discovery-engine">Discovery Engine</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Identify reachable hosts on local network subnets.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>CIDR scan request, ICMP ping sweep, scan results, host import
+    concept.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Subnet/CIDR, scan parameters, authenticated user context.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Discovery scan records and discovered host records.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend includes real ICMP ping-based subnet scanning
+    service.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Scheduled scans, port detection, OS fingerprinting, SNMP
+    discovery, agent-based scanning.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="asset-inventory">Asset Inventory</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Maintain structured records for devices, servers, endpoints, and
+    network assets.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>List, create, update, delete, stats, site association.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Asset metadata, site context, discovery imports.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Asset records used by alerts, incidents, and dashboards.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend models, schemas, routes, and frontend page exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Lifecycle tracking, ownership, warranty, firmware, credentials
+    vault references, topology mapping.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="radio-devices">Radio Devices</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Track physical radio devices used in wireless networks.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Device inventory, vendor fields, adapter type, role, ping
+    operations, diagnostic entry points.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Radio metadata, IP addresses, vendor, role, field
+    measurements.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Radio device records and diagnostic reports.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend router and frontend page exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Vendor APIs, SNMP profiles, MikroTik/Ubiquiti/TP-Link adapters,
+    credential profiles.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="field-measurements">Field Measurements</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Capture technician observations and measured link conditions
+    from the field.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Measurement records, status stats, update and delete
+    operations.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Signal values, latency, packet loss, capacity, notes,
+    site/radio/link context.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Structured field evidence for diagnostics and reports.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend router and frontend page exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Mobile-first capture, photo attachments, GPS metadata, offline
+    draft mode.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="wireless-diagnostics">Wireless Diagnostics</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Interpret RF metrics and field evidence for outdoor wireless
+    links.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Wireless links, metrics, diagnostics, maintenance logs, AI field
+    brief endpoint.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>RSSI, SNR, noise floor, CCQ, latency, packet loss, capacity,
+    frequency, channel width, notes.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Health score, likely cause, technician action plan, alert
+    candidates.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Wireless models, routes, pages, metrics, diagnostics, and field
+    brief concepts exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Deterministic scoring engine, vendor-specific thresholds, trend
+    detection, spectrum analysis.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="alerts-thresholds">Alerts &amp; Thresholds</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Surface conditions that require attention.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Alert CRUD, severity, status, stats, asset or wireless link
+    association.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Rules, thresholds, telemetry, security events, manual
+    entries.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Alerts linked to incidents and dashboards.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend routes, schemas, models, and frontend page exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Rule builder, deduplication, suppression windows, notification
+    channels.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="incidents-workflows">Incidents &amp; Workflows</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Group related alerts into investigation and response
+    workflows.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Incident list, stats, status changes, severity, CRUD.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Alerts, manual incident creation, AI analysis, operator
+    updates.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Incident records, workflow state, investigation history.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend routes and frontend page exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Timeline, assignment, comments, SLA, escalation, post-incident
+    report.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="security-threat-engine">Security &amp; Threat Engine</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Support security rules, IOCs, and future threat detection
+    workflows.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Detection rules, IOCs, security page, threat engine service
+    concepts.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Logs, IOCs, rules, telemetry, asset context.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Security alerts, incident candidates, risk indicators.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend models/routes for rules and IOCs exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>MITRE mapping, correlation engine, risk score, vulnerability
+    integration.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="logs">Logs</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Store and expose log events for observability and
+    investigation.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Log ingestion/listing, filters, frontend log page.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Application events, device logs, future syslog, agent
+    telemetry.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Searchable operational evidence and security signals.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend log routes and frontend page exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Syslog collector, full-text search, retention policies,
+    export.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="automation">Automation</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Define response playbooks and track response actions.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>List playbooks, list recent response actions.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Alerts, incidents, operator approvals, playbook rules.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Response action records and future remediation execution.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend route is present; capabilities are early.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Action execution, approval workflow, rollback, integrations,
+    audit log.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="ai-assistant">AI Assistant</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Explain alerts, incidents, logs, and wireless degradation in
+    operational language.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Chat endpoint, incident analysis, alert analysis, capabilities
+    endpoint, wireless field brief concept.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>User prompt, incident/alert IDs, internal context, optional
+    Gemini API key.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Explanation, remediation suggestions, root cause hypotheses,
+    confidence metadata.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Backend AI endpoints exist with Gemini/fallback behavior.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Evidence citations, guarded tool use, prompt injection defenses,
+    audit trail.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="edge-agent">Edge Agent</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Collect telemetry and wireless metrics near the monitored
+    network.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>SNMP client concept, wireless polling, backend transport, demo
+    polling loop.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Device IPs, community strings, vendor profile, backend URL,
+    agent key.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Normalized telemetry and wireless metrics sent to backend.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Python agent entry point and polling structure exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Secure enrollment, offline queue, configuration sync, vendor
+    adapters, health reporting.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="desktop-client">Desktop Client</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Category</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Purpose</td>
+    <td>Provide a native desktop shell for local operators.</td>
+    </tr>
+    <tr class="even">
+    <td>Main features</td>
+    <td>Electron window opening local dashboard, Linux launcher script,
+    desktop entry.</td>
+    </tr>
+    <tr class="odd">
+    <td>Inputs</td>
+    <td>Local frontend URL and Docker Compose service status.</td>
+    </tr>
+    <tr class="even">
+    <td>Outputs</td>
+    <td>Desktop application experience.</td>
+    </tr>
+    <tr class="odd">
+    <td>Current MVP state</td>
+    <td>Electron client and launcher exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Future improvements</td>
+    <td>Tray icon, auto-start, local health indicator, packaging for
+    Linux and Windows.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="technical-architecture">8. Technical Architecture</h1>
+    <h2 id="high-level-architecture">High-Level Architecture</h2>
+    <p>NetSentinel AI follows a modular local-first architecture. The
+    MVP is deployed as a Docker Compose stack with a web dashboard, API
+    backend, relational database, queue/cache layer, worker process, and
+    edge telemetry agent.</p>
+    <pre class="mermaid"><code>flowchart TB
+    User[Operator / Analyst / Technician]
+    Desktop[Electron Desktop Client]
+    Frontend[Next.js 14 Frontend]
+    API[FastAPI Backend API]
+    DB[(PostgreSQL 16)]
+    Redis[(Redis 7)]
+    Worker[ARQ Worker]
+    Agent[Python Edge Agent]
+    Devices[Network Devices / Radios]
+
+    User --&gt; Desktop
+    User --&gt; Frontend
+    Desktop --&gt; Frontend
+    Frontend --&gt; API
+    API --&gt; DB
+    API --&gt; Redis
+    Redis --&gt; Worker
+    Worker --&gt; DB
+    Agent --&gt; API
+    Agent --&gt; Devices</code></pre>
+    <h2 id="frontend-architecture">Frontend Architecture</h2>
+    <p>The frontend is a Next.js 14 application using TypeScript, React
+    18, CSS modules, SWR, Recharts, and lucide-react icons. It provides
+    pages for the dashboard, assets, alerts, incidents, logs, security,
+    automation, discovery, wireless, diagnostics, radio devices, and
+    field measurements.</p>
+    <pre class="mermaid"><code>flowchart LR
+    Pages[App Router Pages]
+    Components[Reusable Components]
+    APIClient[API Client Layer]
+    Types[TypeScript Types]
+    Backend[FastAPI API]
+
+    Pages --&gt; Components
+    Pages --&gt; APIClient
+    Components --&gt; Types
+    APIClient --&gt; Backend</code></pre>
+    <h2 id="backend-architecture">Backend Architecture</h2>
+    <p>The backend is a FastAPI application with routers, schemas,
+    SQLAlchemy models, service modules, authentication dependencies, AI
+    modules, ingestion endpoints, and worker integration.</p>
+    <pre class="mermaid"><code>flowchart TB
+    Request[HTTP Request]
+    CORS[CORS Middleware]
+    Auth[JWT Dependency]
+    Router[API Router]
+    Schema[Pydantic Schema]
+    Service[Service Layer]
+    ORM[SQLAlchemy ORM]
+    DB[(PostgreSQL)]
+
+    Request --&gt; CORS --&gt; Auth --&gt; Router --&gt; Schema --&gt; Service --&gt; ORM --&gt; DB</code></pre>
+    <h2 id="database-architecture">Database Architecture</h2>
+    <p>PostgreSQL stores core operational data: organizations, users,
+    sites, assets, alerts, incidents, logs, security rules, IOCs, radio
+    devices, wireless links, metrics, field measurements, diagnostics,
+    automation playbooks, and response actions. SQLAlchemy models define
+    the persistence layer and Alembic is present for migrations.</p>
+    <h2 id="redis-queue-architecture">Redis / Queue Architecture</h2>
+    <p>Redis is used as a cache and queue foundation. The ARQ worker is
+    wired through Redis and is intended to support future scheduled
+    tasks, alert processing, telemetry processing, discovery jobs,
+    notification jobs, and automation workflows.</p>
+    <h2 id="edge-agent-architecture">Edge Agent Architecture</h2>
+    <p>The edge agent is a standalone Python process intended to run
+    near customer networks. It includes SNMP polling concepts, wireless
+    metric collection, and backend transport. The current implementation
+    includes demo wireless targets and a polling loop.</p>
+    <h2 id="desktop-client-architecture">Desktop Client
+    Architecture</h2>
+    <p>The Electron desktop client wraps the local dashboard. The Linux
+    launcher starts Docker Compose services, waits for frontend/backend
+    readiness, and opens the local interface.</p>
+    <h2 id="docker-compose-architecture">Docker Compose
+    Architecture</h2>
+    <pre class="mermaid"><code>flowchart TB
+    Compose[Docker Compose]
+    Postgres[postgres:16-alpine]
+    Redis[redis:7-alpine]
+    Backend[backend FastAPI container]
+    Frontend[frontend Next.js container]
+    Worker[worker ARQ container]
+    Edge[edge-agent container]
+
+    Compose --&gt; Postgres
+    Compose --&gt; Redis
+    Compose --&gt; Backend
+    Compose --&gt; Frontend
+    Compose --&gt; Worker
+    Compose --&gt; Edge
+    Backend --&gt; Postgres
+    Backend --&gt; Redis
+    Worker --&gt; Redis
+    Worker --&gt; Postgres
+    Frontend --&gt; Backend
+    Edge --&gt; Backend</code></pre>
+    <h2 id="api-communication-flow">API Communication Flow</h2>
+    <pre class="mermaid"><code>sequenceDiagram
+    participant UI as Next.js Frontend
+    participant API as FastAPI Backend
+    participant DB as PostgreSQL
+
+    UI-&gt;&gt;API: HTTP request to /api/v1/*
+    API-&gt;&gt;API: Validate request and auth dependency
+    API-&gt;&gt;DB: SQLAlchemy async query
+    DB--&gt;&gt;API: Result rows
+    API--&gt;&gt;UI: JSON response</code></pre>
+    <h2 id="data-ingestion-flow">Data Ingestion Flow</h2>
+    <pre class="mermaid"><code>flowchart LR
+    Device[Device / Radio / Network Source]
+    Agent[Edge Agent]
+    API[Telemetry Ingestion Endpoint]
+    DB[(PostgreSQL)]
+    Alerts[Alert Engine]
+    UI[Dashboard]
+
+    Device --&gt; Agent
+    Agent --&gt; API
+    API --&gt; DB
+    API --&gt; Alerts
+    Alerts --&gt; DB
+    DB --&gt; UI</code></pre>
+    <h2 id="authentication-flow">Authentication Flow</h2>
+    <pre class="mermaid"><code>sequenceDiagram
+    participant User
+    participant UI as Frontend
+    participant API as FastAPI Auth Router
+    participant DB as PostgreSQL
+
+    User-&gt;&gt;UI: Submit email and password
+    UI-&gt;&gt;API: POST /api/v1/auth/login
+    API-&gt;&gt;DB: Load user by email
+    DB--&gt;&gt;API: User record
+    API-&gt;&gt;API: Verify bcrypt password
+    API--&gt;&gt;UI: JWT access token and refresh token
+    UI-&gt;&gt;API: Request protected resource with Bearer token
+    API-&gt;&gt;API: Validate JWT
+    API--&gt;&gt;UI: Protected response</code></pre>
+    <h2 id="wireless-measurement-flow">Wireless Measurement Flow</h2>
+    <pre class="mermaid"><code>flowchart TB
+    Tech[Field Technician]
+    Form[Field Measurement Form]
+    API[Measurements API]
+    DB[(PostgreSQL)]
+    Diagnostics[Wireless Diagnostics Logic]
+    Report[Diagnostic Report]
+
+    Tech --&gt; Form
+    Form --&gt; API
+    API --&gt; DB
+    DB --&gt; Diagnostics
+    Diagnostics --&gt; Report</code></pre>
+    <h2 id="alert-generation-flow">Alert Generation Flow</h2>
+    <pre class="mermaid"><code>flowchart LR
+    Metric[Telemetry / Log / RF Metric]
+    Rule[Rule or Threshold]
+    Alert[Alert Record]
+    Incident[Incident Candidate]
+    Automation[Automation Playbook]
+
+    Metric --&gt; Rule
+    Rule --&gt; Alert
+    Alert --&gt; Incident
+    Alert --&gt; Automation</code></pre>
+    <h2 id="ai-assistant-flow">AI Assistant Flow</h2>
+    <pre class="mermaid"><code>sequenceDiagram
+    participant Operator
+    participant UI
+    participant API as AI Assistant API
+    participant DB as Internal Data
+    participant LLM as Optional LLM Provider
+
+    Operator-&gt;&gt;UI: Ask question or request analysis
+    UI-&gt;&gt;API: POST /api/v1/ai-assistant/chat
+    API-&gt;&gt;DB: Collect relevant internal context
+    alt API key configured
+        API-&gt;&gt;LLM: Send constrained prompt
+        LLM--&gt;&gt;API: Draft answer
+    else fallback mode
+        API-&gt;&gt;API: Generate fallback response
+    end
+    API--&gt;&gt;UI: Explanation with timestamp</code></pre>
+    <h2 id="conceptual-entity-relationship-diagram">Conceptual Entity
+    Relationship Diagram</h2>
+    <pre class="mermaid"><code>erDiagram
+    ORGANIZATION ||--o{ USER : has
+    ORGANIZATION ||--o{ SITE : contains
+    SITE ||--o{ ASSET : hosts
+    SITE ||--o{ WIRELESS_LINK : includes
+    ASSET ||--o{ ALERT : triggers
+    WIRELESS_LINK ||--o{ WIRELESS_METRIC : records
+    WIRELESS_LINK ||--o{ FIELD_DIAGNOSTIC : has
+    WIRELESS_LINK ||--o{ MAINTENANCE_LOG : has
+    ALERT }o--o{ INCIDENT : grouped_into
+    ORGANIZATION ||--o{ DETECTION_RULE : owns
+    ORGANIZATION ||--o{ IOC : owns
+    ORGANIZATION ||--o{ PLAYBOOK_RULE : owns
+    PLAYBOOK_RULE ||--o{ RESPONSE_ACTION : creates</code></pre>
+    <h2 id="incident-workflow-diagram">Incident Workflow Diagram</h2>
+    <pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; Open
+    Open --&gt; Investigating
+    Investigating --&gt; Mitigating
+    Mitigating --&gt; Resolved
+    Resolved --&gt; Closed
+    Investigating --&gt; Escalated
+    Escalated --&gt; Mitigating
+    Open --&gt; FalsePositive
+    FalsePositive --&gt; Closed</code></pre>
+    <h1 id="backend-documentation">9. Backend Documentation</h1>
+    <p>The FastAPI backend is the authoritative API layer for
+    NetSentinel AI. It exposes <code>/api/v1/*</code> routers, manages
+    application startup, initializes database tables during MVP runtime,
+    configures CORS, and provides a <code>/health</code> endpoint.</p>
+    <h2 id="api-structure">API Structure</h2>
+    <table>
+    <colgroup>
+    <col style="width: 33%">
+    <col style="width: 33%">
+    <col style="width: 33%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Endpoint Group</th>
+    <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Authentication</td>
+    <td><code>/api/v1/auth/*</code></td>
+    <td>Register, login, refresh, current user.</td>
+    </tr>
+    <tr class="even">
+    <td>Organizations</td>
+    <td><code>/api/v1/organizations/*</code></td>
+    <td>Multi-organization management.</td>
+    </tr>
+    <tr class="odd">
+    <td>Sites</td>
+    <td><code>/api/v1/sites/*</code></td>
+    <td>Physical/logical site records.</td>
+    </tr>
+    <tr class="even">
+    <td>Assets</td>
+    <td><code>/api/v1/assets/*</code></td>
+    <td>Device and infrastructure inventory.</td>
+    </tr>
+    <tr class="odd">
+    <td>Alerts</td>
+    <td><code>/api/v1/alerts/*</code></td>
+    <td>Alert lifecycle and stats.</td>
+    </tr>
+    <tr class="even">
+    <td>Incidents</td>
+    <td><code>/api/v1/incidents/*</code></td>
+    <td>Incident workflow and stats.</td>
+    </tr>
+    <tr class="odd">
+    <td>Logs</td>
+    <td><code>/api/v1/logs/*</code></td>
+    <td>Log creation and listing.</td>
+    </tr>
+    <tr class="even">
+    <td>Security</td>
+    <td><code>/api/v1/security/*</code></td>
+    <td>Detection rules and IOCs.</td>
+    </tr>
+    <tr class="odd">
+    <td>Automation</td>
+    <td><code>/api/v1/automation/*</code></td>
+    <td>Playbooks and response actions.</td>
+    </tr>
+    <tr class="even">
+    <td>Discovery</td>
+    <td><code>/api/v1/discovery/*</code></td>
+    <td>Scans and discovered hosts.</td>
+    </tr>
+    <tr class="odd">
+    <td>Wireless</td>
+    <td><code>/api/v1/wireless/*</code></td>
+    <td>Links, metrics, diagnostics, maintenance.</td>
+    </tr>
+    <tr class="even">
+    <td>Field Measurements</td>
+    <td><code>/api/v1/field-measurements/*</code></td>
+    <td>Field measurement records.</td>
+    </tr>
+    <tr class="odd">
+    <td>Radio Devices</td>
+    <td><code>/api/v1/radio-devices/*</code></td>
+    <td>Radio inventory and diagnostics.</td>
+    </tr>
+    <tr class="even">
+    <td>AI Assistant</td>
+    <td><code>/api/v1/ai-assistant/*</code></td>
+    <td>Chat, alert analysis, incident analysis.</td>
+    </tr>
+    <tr class="odd">
+    <td>Telemetry</td>
+    <td><code>/api/v1/metrics</code></td>
+    <td>Telemetry ingestion endpoint.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="authentication-and-jwt">Authentication and JWT</h2>
+    <p>The backend uses JWT access and refresh tokens. Password hashing
+    uses bcrypt. The MVP settings define access token and refresh token
+    lifetimes through environment variables.</p>
+    <blockquote>
+    <p><strong>Security Note</strong><br>
+    The default development secret key must be changed before any shared
+    or production-like deployment. JWT signing secrets should be
+    generated with high entropy and stored outside source control.</p>
+    </blockquote>
+    <h2 id="api-documentation-strategy">API Documentation Strategy</h2>
+    <p>FastAPI automatically exposes interactive documentation:</p>
+    <table>
+    <thead>
+    <tr class="header">
+    <th>Documentation</th>
+    <th>URL</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Swagger UI</td>
+    <td><code>http://localhost:8000/docs</code></td>
+    </tr>
+    <tr class="even">
+    <td>ReDoc</td>
+    <td><code>http://localhost:8000/redoc</code></td>
+    </tr>
+    </tbody>
+    </table>
+    <p>Recommended additions:</p>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Recommendation</th>
+    <th>Rationale</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Add endpoint descriptions and examples</td>
+    <td>Improves onboarding for engineers and external reviewers.</td>
+    </tr>
+    <tr class="even">
+    <td>Add error response models</td>
+    <td>Makes API behavior predictable.</td>
+    </tr>
+    <tr class="odd">
+    <td>Add authentication examples</td>
+    <td>Helps frontend and integrators use JWT correctly.</td>
+    </tr>
+    <tr class="even">
+    <td>Add versioning policy</td>
+    <td>Prevents future breaking changes from being ambiguous.</td>
+    </tr>
+    <tr class="odd">
+    <td>Export OpenAPI spec</td>
+    <td>Supports SDK generation and security review.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="error-handling-recommendations">Error Handling
+    Recommendations</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Recommendation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Validation errors</td>
+    <td>Return structured field-level messages.</td>
+    </tr>
+    <tr class="even">
+    <td>Authentication errors</td>
+    <td>Avoid leaking user existence or token internals.</td>
+    </tr>
+    <tr class="odd">
+    <td>Database errors</td>
+    <td>Log server-side details and return safe client messages.</td>
+    </tr>
+    <tr class="even">
+    <td>Telemetry ingestion</td>
+    <td>Return accepted/rejected status with correlation IDs.</td>
+    </tr>
+    <tr class="odd">
+    <td>AI endpoints</td>
+    <td>Distinguish provider errors, fallback responses, and policy
+    blocks.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="validation-recommendations">Validation Recommendations</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Recommendation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>IDs</td>
+    <td>Validate UUIDs consistently.</td>
+    </tr>
+    <tr class="even">
+    <td>CIDR input</td>
+    <td>Limit scan size and validate allowed ranges.</td>
+    </tr>
+    <tr class="odd">
+    <td>RF measurements</td>
+    <td>Validate numeric bounds for RSSI, SNR, noise floor, packet loss,
+    latency.</td>
+    </tr>
+    <tr class="even">
+    <td>Logs</td>
+    <td>Enforce max payload size and severity enums.</td>
+    </tr>
+    <tr class="odd">
+    <td>Automation</td>
+    <td>Validate action permissions and require approval for risky
+    actions.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="backend-security-recommendations">Backend Security
+    Recommendations</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Risk</th>
+    <th>Recommendation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Weak JWT secret</td>
+    <td>Use a generated production secret and rotate safely.</td>
+    </tr>
+    <tr class="even">
+    <td>Missing RBAC</td>
+    <td>Add roles, permissions, and organization isolation tests.</td>
+    </tr>
+    <tr class="odd">
+    <td>Exposed APIs</td>
+    <td>Add rate limiting, request size limits, and stricter CORS.</td>
+    </tr>
+    <tr class="even">
+    <td>Telemetry abuse</td>
+    <td>Require agent identity, signed payloads, and replay
+    protection.</td>
+    </tr>
+    <tr class="odd">
+    <td>AI misuse</td>
+    <td>Apply prompt injection controls and evidence-bound
+    responses.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="frontend-documentation">10. Frontend Documentation</h1>
+    <p>The frontend is a Next.js 14 application written in TypeScript.
+    It is the primary operator interface for the platform and provides
+    pages for dashboard operations, assets, alerts, incidents, logs,
+    security, automation, discovery, wireless links, diagnostics, radio
+    devices, and field measurements.</p>
+    <h2 id="ux-goals">UX Goals</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Goal</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Operational clarity</td>
+    <td>Present dense network/security data in a scannable way.</td>
+    </tr>
+    <tr class="even">
+    <td>Low friction</td>
+    <td>Minimize clicks required for common investigation
+    workflows.</td>
+    </tr>
+    <tr class="odd">
+    <td>Consistent navigation</td>
+    <td>Use stable sidebar navigation and predictable page layouts.</td>
+    </tr>
+    <tr class="even">
+    <td>Professional trust</td>
+    <td>Maintain serious visual tone suitable for NOC/SOC
+    environments.</td>
+    </tr>
+    <tr class="odd">
+    <td>Field usability</td>
+    <td>Support technicians recording wireless measurements
+    quickly.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="frontend-elements">Frontend Elements</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Element</th>
+    <th>Expected Behavior</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Dashboard UI</td>
+    <td>Summary cards, alerts, recent status, navigation into core
+    modules.</td>
+    </tr>
+    <tr class="even">
+    <td>Sidebar navigation</td>
+    <td>Persistent module access with clear labels.</td>
+    </tr>
+    <tr class="odd">
+    <td>Operational cards</td>
+    <td>Compact metrics, state counts, and urgent indicators.</td>
+    </tr>
+    <tr class="even">
+    <td>Empty states</td>
+    <td>Explain absence of data without implying system failure.</td>
+    </tr>
+    <tr class="odd">
+    <td>Forms</td>
+    <td>Validate input, show clear errors, protect destructive
+    actions.</td>
+    </tr>
+    <tr class="even">
+    <td>Tables</td>
+    <td>Sortable/filterable lists for assets, logs, alerts, incidents,
+    devices.</td>
+    </tr>
+    <tr class="odd">
+    <td>Wireless pages</td>
+    <td>Display RF metrics, diagnostics, maintenance history, and field
+    actions.</td>
+    </tr>
+    <tr class="even">
+    <td>Security pages</td>
+    <td>Expose rules, IOCs, risk states, and future detections.</td>
+    </tr>
+    <tr class="odd">
+    <td>Automation pages</td>
+    <td>Display playbooks, actions, and approval status.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="frontend-recommendations">Frontend Recommendations</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Recommendation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Loading states</td>
+    <td>Add skeleton rows/cards for all API-backed pages.</td>
+    </tr>
+    <tr class="even">
+    <td>Error states</td>
+    <td>Show actionable messages and retry controls.</td>
+    </tr>
+    <tr class="odd">
+    <td>Empty states</td>
+    <td>Provide contextual next actions, such as “Add asset” or “Run
+    scan”.</td>
+    </tr>
+    <tr class="even">
+    <td>Form validation</td>
+    <td>Use shared schemas or generated API types where possible.</td>
+    </tr>
+    <tr class="odd">
+    <td>Responsive layout</td>
+    <td>Ensure field technician pages work on tablets and small
+    laptops.</td>
+    </tr>
+    <tr class="even">
+    <td>Accessibility</td>
+    <td>Maintain keyboard navigation, focus states, semantic headings,
+    and contrast.</td>
+    </tr>
+    <tr class="odd">
+    <td>Design system</td>
+    <td>Standardize badges, severities, status colors, tables, forms,
+    and modals.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="database-documentation">11. Database Documentation</h1>
+    <p>PostgreSQL 16 is the primary data store. It stores operational
+    entities, security entities, wireless diagnostics data, user and
+    organization context, and automation records.</p>
+    <h2 id="main-entities">Main Entities</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Entity</th>
+    <th>Purpose</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Organization</td>
+    <td>Tenant or administrative owner of records.</td>
+    </tr>
+    <tr class="even">
+    <td>User</td>
+    <td>Authenticated platform user.</td>
+    </tr>
+    <tr class="odd">
+    <td>Site</td>
+    <td>Physical or logical location.</td>
+    </tr>
+    <tr class="even">
+    <td>Asset</td>
+    <td>Network device, server, endpoint, or managed infrastructure
+    item.</td>
+    </tr>
+    <tr class="odd">
+    <td>Alert</td>
+    <td>Operational or security condition requiring attention.</td>
+    </tr>
+    <tr class="even">
+    <td>Incident</td>
+    <td>Investigation workflow, usually grouping related alerts.</td>
+    </tr>
+    <tr class="odd">
+    <td>LogEntry</td>
+    <td>Event/log record for observability and security review.</td>
+    </tr>
+    <tr class="even">
+    <td>DetectionRule</td>
+    <td>Security rule definition.</td>
+    </tr>
+    <tr class="odd">
+    <td>IndicatorOfCompromise</td>
+    <td>IOC record for threat detection.</td>
+    </tr>
+    <tr class="even">
+    <td>RadioDevice</td>
+    <td>Physical wireless radio device.</td>
+    </tr>
+    <tr class="odd">
+    <td>WirelessLink</td>
+    <td>PTP/PTMP link record.</td>
+    </tr>
+    <tr class="even">
+    <td>WirelessMetric</td>
+    <td>Time-based RF/quality measurement.</td>
+    </tr>
+    <tr class="odd">
+    <td>FieldMeasurement</td>
+    <td>Technician measurement record.</td>
+    </tr>
+    <tr class="even">
+    <td>FieldDiagnostic</td>
+    <td>Diagnostic record tied to a wireless link.</td>
+    </tr>
+    <tr class="odd">
+    <td>MaintenanceLog</td>
+    <td>Maintenance history for wireless links.</td>
+    </tr>
+    <tr class="even">
+    <td>PlaybookRule</td>
+    <td>Automation rule/playbook definition.</td>
+    </tr>
+    <tr class="odd">
+    <td>ResponseAction</td>
+    <td>Recorded automation action.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="conceptual-erd">Conceptual ERD</h2>
+    <pre class="mermaid"><code>erDiagram
+    ORGANIZATION ||--o{ USER : owns
+    ORGANIZATION ||--o{ SITE : owns
+    ORGANIZATION ||--o{ ASSET : owns
+    ORGANIZATION ||--o{ ALERT : owns
+    ORGANIZATION ||--o{ INCIDENT : owns
+    SITE ||--o{ ASSET : contains
+    SITE ||--o{ RADIO_DEVICE : contains
+    RADIO_DEVICE ||--o{ FIELD_MEASUREMENT : measured_by
+    WIRELESS_LINK ||--o{ WIRELESS_METRIC : has
+    WIRELESS_LINK ||--o{ FIELD_DIAGNOSTIC : has
+    WIRELESS_LINK ||--o{ MAINTENANCE_LOG : has
+    ALERT }o--o{ INCIDENT : relates
+    DETECTION_RULE ||--o{ ALERT : may_generate
+    PLAYBOOK_RULE ||--o{ RESPONSE_ACTION : executes</code></pre>
+    <h1 id="edge-agent-documentation">12. Edge Agent Documentation</h1>
+    <p>The Python edge agent is intended to collect telemetry close to
+    the monitored environment. It can poll devices, normalize
+    measurements, and send data to the backend.</p>
+    <h2 id="current-purpose">Current Purpose</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Function</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Telemetry collection</td>
+    <td>Collect measurements from local devices and radios.</td>
+    </tr>
+    <tr class="even">
+    <td>Wireless metrics</td>
+    <td>Poll RSSI, SNR, CCQ, and related RF indicators where vendor
+    support exists.</td>
+    </tr>
+    <tr class="odd">
+    <td>Local discovery</td>
+    <td>Future role for agent-based scans inside protected
+    networks.</td>
+    </tr>
+    <tr class="even">
+    <td>Backend communication</td>
+    <td>Push normalized metrics to the NetSentinel API.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="agent-security-requirements">Agent Security
+    Requirements</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Requirement</th>
+    <th>Recommendation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Agent identity</td>
+    <td>Assign each agent a unique ID and organization binding.</td>
+    </tr>
+    <tr class="even">
+    <td>Agent authentication</td>
+    <td>Use signed tokens or mTLS rather than static development
+    keys.</td>
+    </tr>
+    <tr class="odd">
+    <td>Payload integrity</td>
+    <td>Sign telemetry payloads and reject replayed timestamps.</td>
+    </tr>
+    <tr class="even">
+    <td>Least privilege</td>
+    <td>Do not store broad device credentials in plain text.</td>
+    </tr>
+    <tr class="odd">
+    <td>Auditability</td>
+    <td>Log enrollment, configuration changes, and rejected
+    payloads.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="retry-and-offline-behavior">Retry and Offline Behavior</h2>
+    <p>The mature agent should queue events locally when the backend is
+    unavailable, retry with exponential backoff, preserve ordering where
+    required, and report its own health. Offline queues should have
+    retention limits, disk usage controls, and secure local storage.</p>
+    <h1 id="wireless-diagnostics-1">13. Wireless Diagnostics</h1>
+    <p>Outdoor wireless links require specialized diagnostic logic
+    because link quality is affected by RF physics, antenna placement,
+    weather, interference, channel planning, device configuration, and
+    physical installation quality.</p>
+    <h2 id="wireless-link-types">Wireless Link Types</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Type</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Point-to-point</td>
+    <td>A dedicated link between two sites, commonly used for
+    backhaul.</td>
+    </tr>
+    <tr class="even">
+    <td>Point-to-multipoint</td>
+    <td>One access point communicates with multiple stations or
+    CPEs.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="rf-and-quality-metrics">RF and Quality Metrics</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Metric</th>
+    <th>Meaning</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>RSSI</td>
+    <td>Received Signal Strength Indicator, commonly expressed in dBm.
+    Less negative is stronger.</td>
+    </tr>
+    <tr class="even">
+    <td>SNR</td>
+    <td>Signal-to-noise ratio. Higher values usually indicate cleaner
+    signal quality.</td>
+    </tr>
+    <tr class="odd">
+    <td>Noise floor</td>
+    <td>Background RF noise level. A high noise floor can reduce usable
+    signal quality.</td>
+    </tr>
+    <tr class="even">
+    <td>CCQ</td>
+    <td>Client Connection Quality or link quality indicator, often
+    reflecting retransmissions and stability.</td>
+    </tr>
+    <tr class="odd">
+    <td>Latency</td>
+    <td>Round-trip delay. High latency may indicate congestion,
+    retransmissions, or poor RF quality.</td>
+    </tr>
+    <tr class="even">
+    <td>Packet loss</td>
+    <td>Percentage of packets lost. Loss directly affects voice, video,
+    and data reliability.</td>
+    </tr>
+    <tr class="odd">
+    <td>TX/RX capacity</td>
+    <td>Estimated transmit and receive throughput capacity.</td>
+    </tr>
+    <tr class="even">
+    <td>Frequency</td>
+    <td>Operating frequency/channel. Poor frequency planning can cause
+    interference.</td>
+    </tr>
+    <tr class="odd">
+    <td>Channel width</td>
+    <td>RF channel width. Wider channels can improve throughput but
+    increase noise exposure.</td>
+    </tr>
+    <tr class="even">
+    <td>Antenna alignment</td>
+    <td>Physical aiming quality between endpoints. Misalignment reduces
+    RSSI and SNR.</td>
+    </tr>
+    <tr class="odd">
+    <td>Fresnel zone</td>
+    <td>Elliptical path around line-of-sight that should remain clear
+    for strong propagation.</td>
+    </tr>
+    <tr class="even">
+    <td>Interference</td>
+    <td>Competing RF energy that reduces signal quality and
+    stability.</td>
+    </tr>
+    <tr class="odd">
+    <td>Modulation</td>
+    <td>Encoding scheme used by radio link. Lower modulation often means
+    degraded link quality.</td>
+    </tr>
+    <tr class="even">
+    <td>Link degradation</td>
+    <td>Decline in performance caused by RF, physical, configuration, or
+    environmental problems.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="diagnostic-logic-table">Diagnostic Logic Table</h2>
+    <table>
+    <colgroup>
+    <col style="width: 25%">
+    <col style="width: 25%">
+    <col style="width: 25%">
+    <col style="width: 25%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Condition</th>
+    <th>Possible Cause</th>
+    <th>Severity</th>
+    <th>Recommended Technician Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Weak RSSI</td>
+    <td>Antenna misalignment, obstruction, cable loss, wrong antenna
+    gain, water ingress.</td>
+    <td>Medium to Critical</td>
+    <td>Inspect line of sight, verify Fresnel zone, check mounts,
+    perform alignment sweep, inspect connectors.</td>
+    </tr>
+    <tr class="even">
+    <td>Low SNR</td>
+    <td>Interference, high noise floor, weak signal, poor channel
+    selection.</td>
+    <td>High</td>
+    <td>Run spectrum scan, change frequency, reduce channel width,
+    improve alignment, verify shielding.</td>
+    </tr>
+    <tr class="odd">
+    <td>High noise floor</td>
+    <td>Congested spectrum, nearby transmitters, poor frequency
+    reuse.</td>
+    <td>High</td>
+    <td>Scan spectrum at both ends, select cleaner channel, adjust
+    channel width, coordinate frequency plan.</td>
+    </tr>
+    <tr class="even">
+    <td>Low CCQ</td>
+    <td>Retransmissions, interference, firmware issue, poor modulation
+    stability.</td>
+    <td>Medium to High</td>
+    <td>Check RF quality, review firmware, inspect error counters, test
+    alternate channel.</td>
+    </tr>
+    <tr class="odd">
+    <td>High packet loss</td>
+    <td>RF instability, congestion, duplex mismatch, queue saturation,
+    failing radio.</td>
+    <td>High</td>
+    <td>Run ping and throughput tests, check CPU/load, inspect RF
+    metrics, isolate traffic congestion.</td>
+    </tr>
+    <tr class="even">
+    <td>High latency</td>
+    <td>Congestion, retransmissions, overloaded radio, poor signal
+    quality.</td>
+    <td>Medium to High</td>
+    <td>Review traffic load, queue settings, RF quality, and endpoint
+    health.</td>
+    </tr>
+    <tr class="odd">
+    <td>Low capacity</td>
+    <td>Poor modulation, narrow channel, weak SNR, distance limits.</td>
+    <td>Medium</td>
+    <td>Review modulation rate, channel width, antenna gain, frequency,
+    and regulatory limits.</td>
+    </tr>
+    <tr class="even">
+    <td>Asymmetric throughput</td>
+    <td>One endpoint interference, TX power mismatch, antenna/cable
+    issue on one side.</td>
+    <td>Medium</td>
+    <td>Test both directions, inspect each endpoint separately, compare
+    local noise floor and RSSI.</td>
+    </tr>
+    <tr class="odd">
+    <td>Intermittent link</td>
+    <td>Loose mount, power issue, weather exposure, fading, cable fault,
+    interference pattern.</td>
+    <td>Critical if service-affecting</td>
+    <td>Check power, grounding, cable ingress, mounting stability, and
+    time-correlated RF trends.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="wireless-link-health-score-model">Wireless Link Health Score
+    Model</h2>
+    <p>The proposed health score ranges from 0 to 100. It should be
+    deterministic, explainable, and based on weighted RF and performance
+    indicators.</p>
+    <table>
+    <colgroup>
+    <col style="width: 33%">
+    <col style="width: 33%">
+    <col style="width: 33%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Score Range</th>
+    <th>Meaning</th>
+    <th>Operational Interpretation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>90-100</td>
+    <td>Excellent</td>
+    <td>Link is healthy with strong margin.</td>
+    </tr>
+    <tr class="even">
+    <td>75-89</td>
+    <td>Good</td>
+    <td>Link is usable with minor monitoring recommendations.</td>
+    </tr>
+    <tr class="odd">
+    <td>60-74</td>
+    <td>Degraded</td>
+    <td>Link needs review; performance risk is present.</td>
+    </tr>
+    <tr class="even">
+    <td>40-59</td>
+    <td>Poor</td>
+    <td>Field intervention likely required.</td>
+    </tr>
+    <tr class="odd">
+    <td>0-39</td>
+    <td>Critical</td>
+    <td>Service-impacting failure or imminent failure likely.</td>
+    </tr>
+    </tbody>
+    </table>
+    <p>Suggested scoring weights:</p>
+    <table>
+    <thead>
+    <tr class="header">
+    <th>Metric</th>
+    <th style="text-align: right;">Weight</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>RSSI versus expected baseline</td>
+    <td style="text-align: right;">20</td>
+    </tr>
+    <tr class="even">
+    <td>SNR</td>
+    <td style="text-align: right;">20</td>
+    </tr>
+    <tr class="odd">
+    <td>Noise floor</td>
+    <td style="text-align: right;">15</td>
+    </tr>
+    <tr class="even">
+    <td>CCQ / retransmission quality</td>
+    <td style="text-align: right;">15</td>
+    </tr>
+    <tr class="odd">
+    <td>Packet loss</td>
+    <td style="text-align: right;">15</td>
+    </tr>
+    <tr class="even">
+    <td>Latency</td>
+    <td style="text-align: right;">10</td>
+    </tr>
+    <tr class="odd">
+    <td>Capacity symmetry</td>
+    <td style="text-align: right;">5</td>
+    </tr>
+    </tbody>
+    </table>
+    <blockquote>
+    <p><strong>Important</strong><br>
+    RF thresholds must be vendor-aware and band-aware. A universal
+    threshold can be useful for MVP triage, but production diagnostics
+    should account for radio model, frequency band, link distance,
+    antenna gain, modulation, channel width, and environmental
+    profile.</p>
+    </blockquote>
+    <h1 id="cybersecurity">14. Cybersecurity</h1>
+    <p>NetSentinel AI aims to provide local-first security monitoring by
+    connecting logs, security rules, indicators of compromise, alerts,
+    incidents, and automation workflows.</p>
+    <h2 id="security-monitoring-goals">Security Monitoring Goals</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Goal</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Detect suspicious activity</td>
+    <td>Use rules, IOCs, logs, and telemetry to identify abnormal
+    events.</td>
+    </tr>
+    <tr class="even">
+    <td>Preserve local control</td>
+    <td>Keep sensitive operational data inside the local deployment by
+    default.</td>
+    </tr>
+    <tr class="odd">
+    <td>Connect security to operations</td>
+    <td>Link security events to assets, incidents, and response
+    workflows.</td>
+    </tr>
+    <tr class="even">
+    <td>Support analyst review</td>
+    <td>Provide evidence, timeline, severity, and remediation
+    context.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="risks-and-mitigations">Risks and Mitigations</h2>
+    <table>
+    <colgroup>
+    <col style="width: 33%">
+    <col style="width: 33%">
+    <col style="width: 33%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Risk</th>
+    <th>Impact</th>
+    <th>Mitigation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>JWT risks</td>
+    <td>Token theft can enable account compromise.</td>
+    <td>Short-lived access tokens, refresh rotation, secure storage,
+    revocation strategy.</td>
+    </tr>
+    <tr class="even">
+    <td>Weak secrets</td>
+    <td>Attackers can forge tokens or access services.</td>
+    <td>Strong generated secrets, secret rotation, external secret
+    store.</td>
+    </tr>
+    <tr class="odd">
+    <td>Exposed Docker ports</td>
+    <td>Local services may be reachable by unintended networks.</td>
+    <td>Bind to localhost where possible, firewall, reverse proxy,
+    TLS.</td>
+    </tr>
+    <tr class="even">
+    <td>Telemetry ingestion abuse</td>
+    <td>Attackers can flood or poison metrics.</td>
+    <td>Agent authentication, signed payloads, rate limits, schema
+    validation.</td>
+    </tr>
+    <tr class="odd">
+    <td>AI prompt injection</td>
+    <td>Malicious logs or prompts may influence AI output.</td>
+    <td>Prompt isolation, evidence filtering, policy guardrails, source
+    citations.</td>
+    </tr>
+    <tr class="even">
+    <td>Data leakage</td>
+    <td>Sensitive logs or topology data may be exposed.</td>
+    <td>RBAC, audit logs, encryption, redaction, least privilege.</td>
+    </tr>
+    <tr class="odd">
+    <td>Missing rate limiting</td>
+    <td>APIs can be abused or overloaded.</td>
+    <td>Add per-user and per-agent rate limits.</td>
+    </tr>
+    <tr class="even">
+    <td>Missing RBAC</td>
+    <td>Users may access data outside their role.</td>
+    <td>Implement roles, permissions, and organization isolation
+    tests.</td>
+    </tr>
+    <tr class="odd">
+    <td>Missing tests</td>
+    <td>Regressions can compromise reliability.</td>
+    <td>Add unit, integration, API, security, and E2E tests.</td>
+    </tr>
+    <tr class="even">
+    <td>Missing audit logs</td>
+    <td>Security actions lack traceability.</td>
+    <td>Record authentication, configuration, automation, and privileged
+    actions.</td>
+    </tr>
+    </tbody>
+    </table>
+    <blockquote>
+    <p><strong>Security Note</strong><br>
+    Local-first does not automatically mean secure. It reduces cloud
+    exposure, but the local deployment still requires secrets
+    management, least privilege, secure configuration, and regular
+    updates.</p>
+    </blockquote>
+    <h1 id="deployment-documentation">15. Deployment Documentation</h1>
+    <h2 id="local-deployment">Local Deployment</h2>
+    <p>The MVP runtime is Docker Compose. The stack includes PostgreSQL,
+    Redis, backend, frontend, worker, and edge-agent services.</p>
+    <h2 id="commands">Commands</h2>
+    <div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">`</span><span class="ex">docker</span> compose up <span class="at">--build</span> <span class="at">-d</span><span class="kw">`</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose exec backend python <span class="at">-m</span> app.seed</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./Launch_NetSentinel.sh</span></span></code></pre></div>
+    <h2 id="local-services">Local Services</h2>
+    <table>
+    <colgroup>
+    <col style="width: 33%">
+    <col style="width: 33%">
+    <col style="width: 33%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Service</th>
+    <th>URL / Port</th>
+    <th>Purpose</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Dashboard</td>
+    <td><code>http://localhost:3000</code></td>
+    <td>Next.js dashboard UI.</td>
+    </tr>
+    <tr class="even">
+    <td>Backend API</td>
+    <td><code>http://localhost:8000</code></td>
+    <td>FastAPI backend.</td>
+    </tr>
+    <tr class="odd">
+    <td>Swagger Docs</td>
+    <td><code>http://localhost:8000/docs</code></td>
+    <td>Interactive API documentation.</td>
+    </tr>
+    <tr class="even">
+    <td>PostgreSQL</td>
+    <td><code>localhost:5432</code></td>
+    <td>Primary database.</td>
+    </tr>
+    <tr class="odd">
+    <td>Redis</td>
+    <td><code>localhost:6379</code></td>
+    <td>Cache and queue backend.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="docker-services">Docker Services</h2>
+    <table>
+    <thead>
+    <tr class="header">
+    <th>Compose Service</th>
+    <th>Image / Build</th>
+    <th>Purpose</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>postgres</td>
+    <td><code>postgres:16-alpine</code></td>
+    <td>Main relational database.</td>
+    </tr>
+    <tr class="even">
+    <td>redis</td>
+    <td><code>redis:7-alpine</code></td>
+    <td>Cache and queue.</td>
+    </tr>
+    <tr class="odd">
+    <td>backend</td>
+    <td><code>./backend</code></td>
+    <td>FastAPI application.</td>
+    </tr>
+    <tr class="even">
+    <td>frontend</td>
+    <td><code>./frontend</code></td>
+    <td>Next.js application.</td>
+    </tr>
+    <tr class="odd">
+    <td>worker</td>
+    <td><code>./backend</code></td>
+    <td>ARQ background worker.</td>
+    </tr>
+    <tr class="even">
+    <td>edge-agent</td>
+    <td><code>./edge-agent</code></td>
+    <td>Telemetry and wireless polling agent.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="startup-checklist">Startup Checklist</h2>
+    <table>
+    <thead>
+    <tr class="header">
+    <th>Check</th>
+    <th>Expected Result</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td><code>.env</code> exists</td>
+    <td>Environment variables loaded.</td>
+    </tr>
+    <tr class="even">
+    <td>Docker is running</td>
+    <td>Compose can start containers.</td>
+    </tr>
+    <tr class="odd">
+    <td>Ports free</td>
+    <td>3000, 8000, 5432, and 6379 are available.</td>
+    </tr>
+    <tr class="even">
+    <td>Database healthy</td>
+    <td>PostgreSQL healthcheck passes.</td>
+    </tr>
+    <tr class="odd">
+    <td>Redis healthy</td>
+    <td>Redis responds to ping.</td>
+    </tr>
+    <tr class="even">
+    <td>Backend healthy</td>
+    <td><code>/health</code> returns healthy status.</td>
+    </tr>
+    <tr class="odd">
+    <td>Frontend reachable</td>
+    <td>Dashboard loads at port 3000.</td>
+    </tr>
+    <tr class="even">
+    <td>Seed data optional</td>
+    <td>Demo data available after seed command.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="troubleshooting-checklist">Troubleshooting Checklist</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Symptom</th>
+    <th>Suggested Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Port already in use</td>
+    <td>Stop conflicting service or change Compose ports.</td>
+    </tr>
+    <tr class="even">
+    <td>Docker permission denied</td>
+    <td>Use Docker group configuration or authorized <code>pkexec</code>
+    workflow.</td>
+    </tr>
+    <tr class="odd">
+    <td>Backend cannot connect to DB</td>
+    <td>Check <code>DATABASE_URL</code>, service name, and PostgreSQL
+    health.</td>
+    </tr>
+    <tr class="even">
+    <td>Frontend cannot call API</td>
+    <td>Check <code>NEXT_PUBLIC_API_URL</code> and CORS origins.</td>
+    </tr>
+    <tr class="odd">
+    <td>Desktop window opens early</td>
+    <td>Wait for Docker build and service readiness.</td>
+    </tr>
+    <tr class="even">
+    <td>AI returns fallback</td>
+    <td>Configure <code>GEMINI_API_KEY</code> if live provider behavior
+    is required.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="backup-recommendations">Backup Recommendations</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Asset</th>
+    <th>Recommendation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>PostgreSQL data</td>
+    <td>Schedule <code>pg_dump</code> backups and test restores.</td>
+    </tr>
+    <tr class="even">
+    <td>Environment secrets</td>
+    <td>Store outside Git and back up securely.</td>
+    </tr>
+    <tr class="odd">
+    <td>Uploaded reports</td>
+    <td>Store in versioned object/file storage if uploads are
+    added.</td>
+    </tr>
+    <tr class="even">
+    <td>Configuration</td>
+    <td>Export rules, IOCs, playbooks, and agent configs.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="production-hardening-recommendations">Production Hardening
+    Recommendations</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Recommendation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Network exposure</td>
+    <td>Do not expose database or Redis publicly.</td>
+    </tr>
+    <tr class="even">
+    <td>TLS</td>
+    <td>Terminate HTTPS through a reverse proxy.</td>
+    </tr>
+    <tr class="odd">
+    <td>Secrets</td>
+    <td>Use a secret manager or secure environment injection.</td>
+    </tr>
+    <tr class="even">
+    <td>Authentication</td>
+    <td>Add RBAC, audit logs, token revocation, and secure cookie
+    strategy.</td>
+    </tr>
+    <tr class="odd">
+    <td>Containers</td>
+    <td>Run non-root, pin images, scan dependencies, set resource
+    limits.</td>
+    </tr>
+    <tr class="even">
+    <td>Database</td>
+    <td>Use backups, migration discipline, least-privilege DB
+    users.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="desktop-client-1">16. Desktop Client</h1>
+    <p>Electron is used to provide a local desktop experience for
+    operators. Instead of requiring operators to remember URLs or
+    manually open a browser, the desktop shell launches the local
+    dashboard in a native window.</p>
+    <h2 id="advantages">Advantages</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Advantage</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Familiar application model</td>
+    <td>Operators can open NetSentinel AI from the Linux application
+    menu.</td>
+    </tr>
+    <tr class="even">
+    <td>Local workstation feel</td>
+    <td>Supports NOC/SOC workstation workflows.</td>
+    </tr>
+    <tr class="odd">
+    <td>Controlled entry point</td>
+    <td>Launcher can start services and open the dashboard.</td>
+    </tr>
+    <tr class="even">
+    <td>Future system integration</td>
+    <td>Can support tray status, notifications, and local service
+    health.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="future-improvements">Future Improvements</h2>
+    <table>
+    <thead>
+    <tr class="header">
+    <th>Feature</th>
+    <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Tray icon</td>
+    <td>Quick status and launch controls.</td>
+    </tr>
+    <tr class="even">
+    <td>Auto-start</td>
+    <td>Start monitoring environment after login.</td>
+    </tr>
+    <tr class="odd">
+    <td>Local status indicator</td>
+    <td>Show backend/frontend/database readiness.</td>
+    </tr>
+    <tr class="even">
+    <td>Update system</td>
+    <td>Support packaged updates.</td>
+    </tr>
+    <tr class="odd">
+    <td>Offline mode</td>
+    <td>Show cached status when services are unavailable.</td>
+    </tr>
+    <tr class="even">
+    <td>Packaged installers</td>
+    <td>Linux and Windows deployment packages.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="ai-assistant-1">17. AI Assistant</h1>
+    <p>The AI assistant is intended to help operators understand
+    incidents, alerts, wireless diagnostics, logs, and remediation
+    options. It should act as an explanation and decision-support layer,
+    not an autonomous authority.</p>
+    <h2 id="use-cases">Use Cases</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Use Case</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Incident explanation</td>
+    <td>Summarize what happened and why it matters.</td>
+    </tr>
+    <tr class="even">
+    <td>Wireless diagnostics</td>
+    <td>Explain RF degradation and suggest field actions.</td>
+    </tr>
+    <tr class="odd">
+    <td>Log summarization</td>
+    <td>Identify patterns and important events in logs.</td>
+    </tr>
+    <tr class="even">
+    <td>Root cause analysis</td>
+    <td>Generate hypotheses based on internal evidence.</td>
+    </tr>
+    <tr class="odd">
+    <td>Suggested remediation</td>
+    <td>Propose next steps while requiring human approval.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="ai-risks">AI Risks</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Risk</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Hallucination</td>
+    <td>AI may invent causes or remediation steps.</td>
+    </tr>
+    <tr class="even">
+    <td>Prompt injection</td>
+    <td>Malicious logs or user prompts may manipulate output.</td>
+    </tr>
+    <tr class="odd">
+    <td>Sensitive data exposure</td>
+    <td>Internal logs and topology may contain confidential
+    information.</td>
+    </tr>
+    <tr class="even">
+    <td>Overtrust</td>
+    <td>Operators may follow AI recommendations without
+    verification.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="mitigations">Mitigations</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Mitigation</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Evidence-based answers</td>
+    <td>Tie output to internal records and observed metrics.</td>
+    </tr>
+    <tr class="even">
+    <td>Source citations</td>
+    <td>Reference incident IDs, alert IDs, logs, and metrics used.</td>
+    </tr>
+    <tr class="odd">
+    <td>Confidence levels</td>
+    <td>Expose uncertainty and alternative explanations.</td>
+    </tr>
+    <tr class="even">
+    <td>Human approval</td>
+    <td>Require approval before automation or remediation actions.</td>
+    </tr>
+    <tr class="odd">
+    <td>Redaction</td>
+    <td>Remove secrets and sensitive fields before model calls.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="automation-1">18. Automation</h1>
+    <p>Automation should standardize recurring operational and security
+    responses without removing operator control.</p>
+    <h2 id="automation-concepts">Automation Concepts</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Concept</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Playbook</td>
+    <td>Rule or workflow describing when and how to respond.</td>
+    </tr>
+    <tr class="even">
+    <td>Action</td>
+    <td>Recorded or executed response step.</td>
+    </tr>
+    <tr class="odd">
+    <td>Human approval</td>
+    <td>Approval gate before risky changes.</td>
+    </tr>
+    <tr class="even">
+    <td>Incident response</td>
+    <td>Standard process for triage, containment, remediation, and
+    closure.</td>
+    </tr>
+    <tr class="odd">
+    <td>Alert handling</td>
+    <td>Deduplication, escalation, assignment, and notification.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="future-automated-remediation">Future Automated
+    Remediation</h2>
+    <p>Potential actions include creating tickets, sending
+    notifications, quarantining an asset, blocking an IP, restarting a
+    service, scheduling a field visit, or generating a PDF incident
+    report. High-risk actions must be approval-based and fully
+    audited.</p>
+    <h1 id="current-mvp-status">19. Current MVP Status</h1>
+    <table>
+    <colgroup>
+    <col style="width: 33%">
+    <col style="width: 33%">
+    <col style="width: 33%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Status</th>
+    <th>Notes</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Docker Compose local runtime</td>
+    <td>Implemented</td>
+    <td>Compose defines PostgreSQL, Redis, backend, frontend, worker,
+    and edge-agent.</td>
+    </tr>
+    <tr class="even">
+    <td>FastAPI backend</td>
+    <td>Implemented</td>
+    <td>Main app and routers exist.</td>
+    </tr>
+    <tr class="odd">
+    <td>Next.js frontend</td>
+    <td>Implemented</td>
+    <td>Multiple operational pages exist.</td>
+    </tr>
+    <tr class="even">
+    <td>PostgreSQL models</td>
+    <td>Implemented</td>
+    <td>Core models are present.</td>
+    </tr>
+    <tr class="odd">
+    <td>JWT authentication</td>
+    <td>Implemented</td>
+    <td>Register, login, refresh, and current user routes exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Asset inventory</td>
+    <td>Implemented</td>
+    <td>Backend routes and frontend page exist.</td>
+    </tr>
+    <tr class="odd">
+    <td>Alerts and incidents</td>
+    <td>Implemented</td>
+    <td>CRUD and stats endpoints exist.</td>
+    </tr>
+    <tr class="even">
+    <td>Logs</td>
+    <td>Partially implemented</td>
+    <td>Log creation/listing exists; advanced ingestion/search
+    planned.</td>
+    </tr>
+    <tr class="odd">
+    <td>Security rules and IOCs</td>
+    <td>Partially implemented</td>
+    <td>Basic routes exist; correlation and detection need
+    expansion.</td>
+    </tr>
+    <tr class="even">
+    <td>Automation</td>
+    <td>Early MVP</td>
+    <td>Playbooks/actions listing exists; execution workflow needs
+    expansion.</td>
+    </tr>
+    <tr class="odd">
+    <td>Discovery</td>
+    <td>Partially implemented</td>
+    <td>Real ICMP scan service exists; broader discovery planned.</td>
+    </tr>
+    <tr class="even">
+    <td>Wireless diagnostics</td>
+    <td>Partially implemented</td>
+    <td>Wireless entities and AI brief concepts exist; deterministic
+    scoring needs completion.</td>
+    </tr>
+    <tr class="odd">
+    <td>Edge agent</td>
+    <td>Early MVP</td>
+    <td>Polling structure exists with demo targets.</td>
+    </tr>
+    <tr class="even">
+    <td>Desktop launcher</td>
+    <td>Implemented</td>
+    <td>Electron shell and Linux launcher exist.</td>
+    </tr>
+    <tr class="odd">
+    <td>Tests</td>
+    <td>Missing / needs verification</td>
+    <td>No clear project test suite found in backend or frontend
+    source.</td>
+    </tr>
+    <tr class="even">
+    <td>Security hardening</td>
+    <td>Planned</td>
+    <td>RBAC, rate limiting, audit logs, and hardened deployment are
+    needed.</td>
+    </tr>
+    <tr class="odd">
+    <td>Production readiness</td>
+    <td>Not ready</td>
+    <td>MVP foundation only.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="roadmap">20. Roadmap</h1>
+    <h2 id="v0.1-mvp-stabilization">v0.1 MVP Stabilization</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Goals</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Features</td>
+    <td>Stabilize existing dashboard, APIs, seed data, desktop launcher,
+    and Docker runtime.</td>
+    </tr>
+    <tr class="even">
+    <td>Technical tasks</td>
+    <td>Add migrations discipline, API response consistency, shared
+    frontend types, error handling.</td>
+    </tr>
+    <tr class="odd">
+    <td>Security tasks</td>
+    <td>Replace dev secrets, document local-only assumptions, validate
+    auth flows.</td>
+    </tr>
+    <tr class="even">
+    <td>Documentation tasks</td>
+    <td>Maintain README, install guide, API overview, and this
+    foundation dossier.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="v0.2-real-data-diagnostics">v0.2 Real Data &amp;
+    Diagnostics</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Goals</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Features</td>
+    <td>Expand discovery, real wireless metric ingestion, diagnostic
+    reports, field workflows.</td>
+    </tr>
+    <tr class="even">
+    <td>Technical tasks</td>
+    <td>Add deterministic wireless health score and trend analysis.</td>
+    </tr>
+    <tr class="odd">
+    <td>Security tasks</td>
+    <td>Authenticate telemetry agents and validate payloads.</td>
+    </tr>
+    <tr class="even">
+    <td>Documentation tasks</td>
+    <td>Add wireless diagnostics guide and field technician
+    runbooks.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="v0.3-security-hardening">v0.3 Security Hardening</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Goals</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Features</td>
+    <td>Security dashboard improvements, rules, IOCs, incident
+    correlation.</td>
+    </tr>
+    <tr class="even">
+    <td>Technical tasks</td>
+    <td>Add rate limiting, audit logs, RBAC, organization isolation
+    tests.</td>
+    </tr>
+    <tr class="odd">
+    <td>Security tasks</td>
+    <td>Dependency scanning, threat model, secure deployment
+    profile.</td>
+    </tr>
+    <tr class="even">
+    <td>Documentation tasks</td>
+    <td>Security operations guide and hardening guide.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="v0.4-edge-agent-expansion">v0.4 Edge Agent Expansion</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Goals</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Features</td>
+    <td>Agent enrollment, SNMP profiles, vendor adapters, offline
+    queue.</td>
+    </tr>
+    <tr class="even">
+    <td>Technical tasks</td>
+    <td>Agent configuration sync, retry logic, health reporting.</td>
+    </tr>
+    <tr class="odd">
+    <td>Security tasks</td>
+    <td>Signed payloads, agent tokens, replay protection.</td>
+    </tr>
+    <tr class="even">
+    <td>Documentation tasks</td>
+    <td>Agent installation and troubleshooting manual.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="v0.5-automation-ai-copilot">v0.5 Automation &amp; AI
+    Copilot</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Goals</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Features</td>
+    <td>AI evidence citations, automation approval workflows,
+    remediation suggestions.</td>
+    </tr>
+    <tr class="even">
+    <td>Technical tasks</td>
+    <td>Playbook execution engine, AI context retrieval, confidence
+    scoring.</td>
+    </tr>
+    <tr class="odd">
+    <td>Security tasks</td>
+    <td>Prompt injection controls and automation audit trail.</td>
+    </tr>
+    <tr class="even">
+    <td>Documentation tasks</td>
+    <td>AI usage policy and automation playbook guide.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="v1.0-production-ready-release">v1.0 Production-Ready
+    Release</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Area</th>
+    <th>Goals</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Features</td>
+    <td>Role-based dashboards, reports, notifications, backup/restore,
+    compliance views.</td>
+    </tr>
+    <tr class="even">
+    <td>Technical tasks</td>
+    <td>E2E testing, observability, performance testing, installer
+    packages.</td>
+    </tr>
+    <tr class="odd">
+    <td>Security tasks</td>
+    <td>RBAC, SSO/OIDC option, hardened Docker/Kubernetes profile.</td>
+    </tr>
+    <tr class="even">
+    <td>Documentation tasks</td>
+    <td>Admin guide, operator guide, API reference, deployment guide,
+    security guide.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="testing-strategy">21. Testing Strategy</h1>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Test Type</th>
+    <th>Scope</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Backend unit tests</td>
+    <td>Services, auth utilities, validation logic, diagnostic
+    scoring.</td>
+    </tr>
+    <tr class="even">
+    <td>Backend integration tests</td>
+    <td>Database operations, router behavior, auth-protected
+    endpoints.</td>
+    </tr>
+    <tr class="odd">
+    <td>API tests</td>
+    <td>OpenAPI contract, expected errors, pagination, filtering, status
+    codes.</td>
+    </tr>
+    <tr class="even">
+    <td>Frontend component tests</td>
+    <td>Tables, forms, badges, cards, navigation, error states.</td>
+    </tr>
+    <tr class="odd">
+    <td>End-to-end tests</td>
+    <td>Login, asset creation, discovery scan, alert workflow, wireless
+    measurement.</td>
+    </tr>
+    <tr class="even">
+    <td>Security tests</td>
+    <td>JWT validation, organization isolation, rate limits, CORS, input
+    abuse.</td>
+    </tr>
+    <tr class="odd">
+    <td>Docker startup tests</td>
+    <td>Compose startup, health checks, seed command, service
+    connectivity.</td>
+    </tr>
+    <tr class="even">
+    <td>Wireless diagnostic rule tests</td>
+    <td>Known metric inputs produce expected severity and technician
+    actions.</td>
+    </tr>
+    <tr class="odd">
+    <td>Agent tests</td>
+    <td>Polling errors, retry behavior, backend transport, offline
+    queue.</td>
+    </tr>
+    <tr class="even">
+    <td>Regression tests</td>
+    <td>Protect previously fixed workflows from breaking.</td>
+    </tr>
+    </tbody>
+    </table>
+    <blockquote>
+    <p><strong>MVP Limitation</strong><br>
+    A formal test suite was not clearly present in the checked source
+    tree. Adding tests should be treated as a near-term engineering
+    priority.</p>
+    </blockquote>
+    <h1 id="security-hardening-checklist">22. Security Hardening
+    Checklist</h1>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Item</th>
+    <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Strong JWT secret configured outside Git</td>
+    <td>Required</td>
+    </tr>
+    <tr class="even">
+    <td>Access and refresh token expiration reviewed</td>
+    <td>Required</td>
+    </tr>
+    <tr class="odd">
+    <td>RBAC implemented</td>
+    <td>Required before production</td>
+    </tr>
+    <tr class="even">
+    <td>Organization isolation enforced and tested</td>
+    <td>Required before production</td>
+    </tr>
+    <tr class="odd">
+    <td>Input validation for all endpoints</td>
+    <td>Required</td>
+    </tr>
+    <tr class="even">
+    <td>API rate limiting</td>
+    <td>Required</td>
+    </tr>
+    <tr class="odd">
+    <td>CORS restricted to trusted origins</td>
+    <td>Required</td>
+    </tr>
+    <tr class="even">
+    <td>Docker ports not publicly exposed</td>
+    <td>Required</td>
+    </tr>
+    <tr class="odd">
+    <td>Secrets management process</td>
+    <td>Required</td>
+    </tr>
+    <tr class="even">
+    <td>Audit logs for auth/config/automation</td>
+    <td>Required</td>
+    </tr>
+    <tr class="odd">
+    <td>Password hashing with secure parameters</td>
+    <td>Present concept; verify settings</td>
+    </tr>
+    <tr class="even">
+    <td>Database backup and restore tested</td>
+    <td>Required</td>
+    </tr>
+    <tr class="odd">
+    <td>Dependency scanning</td>
+    <td>Required</td>
+    </tr>
+    <tr class="even">
+    <td>API abuse protection</td>
+    <td>Required</td>
+    </tr>
+    <tr class="odd">
+    <td>Telemetry agent authentication</td>
+    <td>Required</td>
+    </tr>
+    <tr class="even">
+    <td>AI endpoint protection and prompt injection mitigation</td>
+    <td>Required</td>
+    </tr>
+    <tr class="odd">
+    <td>Security headers through reverse proxy</td>
+    <td>Recommended</td>
+    </tr>
+    <tr class="even">
+    <td>TLS termination</td>
+    <td>Required beyond local-only use</td>
+    </tr>
+    <tr class="odd">
+    <td>Log redaction</td>
+    <td>Recommended</td>
+    </tr>
+    <tr class="even">
+    <td>Incident export controls</td>
+    <td>Recommended</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="business-and-product-positioning">23. Business and Product
+    Positioning</h1>
+    <p>NetSentinel AI targets the gap between lightweight device
+    monitoring tools and large enterprise NMS/SIEM platforms. Many
+    organizations need practical local visibility, incident workflows,
+    wireless diagnostics, and security monitoring but cannot justify
+    large enterprise systems or do not want full cloud dependence.</p>
+    <h2 id="market-need">Market Need</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Need</th>
+    <th>Explanation</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Local infrastructure visibility</td>
+    <td>Organizations need to understand assets, alerts, incidents, and
+    logs.</td>
+    </tr>
+    <tr class="even">
+    <td>Wireless diagnostics</td>
+    <td>WISPs and public institutions often depend on outdoor radio
+    links.</td>
+    </tr>
+    <tr class="odd">
+    <td>Affordable NOC/SOC tooling</td>
+    <td>Small and medium teams need structured workflows without
+    enterprise overhead.</td>
+    </tr>
+    <tr class="even">
+    <td>Data control</td>
+    <td>Local-first deployment can support privacy and operational
+    control.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="differentiation">Differentiation</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Differentiator</th>
+    <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Local-first architecture</td>
+    <td>Keeps operational data close to the organization.</td>
+    </tr>
+    <tr class="even">
+    <td>Wireless RF focus</td>
+    <td>Goes beyond standard uptime monitoring.</td>
+    </tr>
+    <tr class="odd">
+    <td>Combined NOC/SOC model</td>
+    <td>Connects operations and security workflows.</td>
+    </tr>
+    <tr class="even">
+    <td>Desktop launcher</td>
+    <td>Supports operator workstation usage.</td>
+    </tr>
+    <tr class="odd">
+    <td>AI-assisted explanation</td>
+    <td>Helps translate complex evidence into practical actions.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="enterprise-potential">Enterprise Potential</h2>
+    <p>Future commercial positioning could include community edition,
+    professional support, enterprise licensing, managed appliances, SIEM
+    integrations, vendor adapters, compliance reporting, and role-based
+    operational dashboards.</p>
+    <h1 id="future-enterprise-features">24. Future Enterprise
+    Features</h1>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Feature</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Multi-tenant RBAC</td>
+    <td>Fine-grained roles and permissions across organizations.</td>
+    </tr>
+    <tr class="even">
+    <td>SNMP integrations</td>
+    <td>Standard polling for network infrastructure.</td>
+    </tr>
+    <tr class="odd">
+    <td>MikroTik integration</td>
+    <td>RouterOS and wireless device support.</td>
+    </tr>
+    <tr class="even">
+    <td>Ubiquiti integration</td>
+    <td>UISP/airMAX/UniFi-oriented device support where feasible.</td>
+    </tr>
+    <tr class="odd">
+    <td>TP-Link CPE integration</td>
+    <td>Support for common wireless CPE deployments.</td>
+    </tr>
+    <tr class="even">
+    <td>Syslog ingestion</td>
+    <td>UDP/TCP syslog collection and parsing.</td>
+    </tr>
+    <tr class="odd">
+    <td>NetFlow/sFlow</td>
+    <td>Network traffic flow visibility.</td>
+    </tr>
+    <tr class="even">
+    <td>SIEM export</td>
+    <td>Export alerts/events to external SIEM tools.</td>
+    </tr>
+    <tr class="odd">
+    <td>PDF reports</td>
+    <td>Incident, wireless diagnostic, and executive reports.</td>
+    </tr>
+    <tr class="even">
+    <td>Role-based dashboards</td>
+    <td>Different views for executives, analysts, admins, and
+    technicians.</td>
+    </tr>
+    <tr class="odd">
+    <td>Notification channels</td>
+    <td>Email, Slack, Teams, webhooks, SMS.</td>
+    </tr>
+    <tr class="even">
+    <td>SLA tracking</td>
+    <td>Availability and incident response metrics.</td>
+    </tr>
+    <tr class="odd">
+    <td>Compliance reports</td>
+    <td>SOC 2, ISO 27001, local policy reporting support.</td>
+    </tr>
+    <tr class="even">
+    <td>Backup and restore</td>
+    <td>Admin-controlled backup lifecycle.</td>
+    </tr>
+    <tr class="odd">
+    <td>Offline edge collectors</td>
+    <td>Resilient local agents for remote sites.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h1 id="official-appendices">25. Official Appendices</h1>
+    <h2 id="appendix-a-glossary">Appendix A: Glossary</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Term</th>
+    <th>Meaning</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>NOC</td>
+    <td>Network Operations Center.</td>
+    </tr>
+    <tr class="even">
+    <td>SOC</td>
+    <td>Security Operations Center.</td>
+    </tr>
+    <tr class="odd">
+    <td>RF</td>
+    <td>Radio Frequency.</td>
+    </tr>
+    <tr class="even">
+    <td>RSSI</td>
+    <td>Received Signal Strength Indicator.</td>
+    </tr>
+    <tr class="odd">
+    <td>SNR</td>
+    <td>Signal-to-noise ratio.</td>
+    </tr>
+    <tr class="even">
+    <td>CCQ</td>
+    <td>Connection quality indicator often used in wireless
+    systems.</td>
+    </tr>
+    <tr class="odd">
+    <td>IOC</td>
+    <td>Indicator of Compromise.</td>
+    </tr>
+    <tr class="even">
+    <td>JWT</td>
+    <td>JSON Web Token.</td>
+    </tr>
+    <tr class="odd">
+    <td>PTP</td>
+    <td>Point-to-point wireless link.</td>
+    </tr>
+    <tr class="even">
+    <td>PTMP</td>
+    <td>Point-to-multipoint wireless network.</td>
+    </tr>
+    <tr class="odd">
+    <td>Fresnel zone</td>
+    <td>Area around wireless line-of-sight that should remain
+    unobstructed.</td>
+    </tr>
+    <tr class="even">
+    <td>ARQ</td>
+    <td>Async Redis Queue for Python background jobs.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="appendix-b-api-reference-summary">Appendix B: API Reference
+    Summary</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Module</th>
+    <th>Summary</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Auth</td>
+    <td>Register, login, refresh token, current user.</td>
+    </tr>
+    <tr class="even">
+    <td>Organizations</td>
+    <td>CRUD for organization records.</td>
+    </tr>
+    <tr class="odd">
+    <td>Sites</td>
+    <td>CRUD for site records.</td>
+    </tr>
+    <tr class="even">
+    <td>Assets</td>
+    <td>CRUD and stats for assets.</td>
+    </tr>
+    <tr class="odd">
+    <td>Alerts</td>
+    <td>CRUD and stats for alerts.</td>
+    </tr>
+    <tr class="even">
+    <td>Incidents</td>
+    <td>CRUD and stats for incidents.</td>
+    </tr>
+    <tr class="odd">
+    <td>Logs</td>
+    <td>Create and list log entries.</td>
+    </tr>
+    <tr class="even">
+    <td>Security</td>
+    <td>Manage detection rules and IOCs.</td>
+    </tr>
+    <tr class="odd">
+    <td>Automation</td>
+    <td>List playbooks and response actions.</td>
+    </tr>
+    <tr class="even">
+    <td>Discovery</td>
+    <td>Run scans, list scans, list hosts, import hosts as assets.</td>
+    </tr>
+    <tr class="odd">
+    <td>Wireless</td>
+    <td>Manage antenna profiles, mounts, interfaces, links, metrics,
+    diagnostics, maintenance.</td>
+    </tr>
+    <tr class="even">
+    <td>Field Measurements</td>
+    <td>Manage field measurements and stats.</td>
+    </tr>
+    <tr class="odd">
+    <td>Radio Devices</td>
+    <td>Manage radio devices and diagnostics.</td>
+    </tr>
+    <tr class="even">
+    <td>AI Assistant</td>
+    <td>Chat, incident analysis, alert analysis, capabilities.</td>
+    </tr>
+    <tr class="odd">
+    <td>Telemetry</td>
+    <td>Accept telemetry metrics.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="appendix-c-environment-variables">Appendix C: Environment
+    Variables</h2>
+    <table>
+    <colgroup>
+    <col style="width: 33%">
+    <col style="width: 33%">
+    <col style="width: 33%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Variable</th>
+    <th>Purpose</th>
+    <th>Example</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td><code>POSTGRES_USER</code></td>
+    <td>Database user</td>
+    <td><code>netsentinel</code></td>
+    </tr>
+    <tr class="even">
+    <td><code>POSTGRES_PASSWORD</code></td>
+    <td>Database password</td>
+    <td><code>netsentinel_dev_password</code></td>
+    </tr>
+    <tr class="odd">
+    <td><code>POSTGRES_DB</code></td>
+    <td>Database name</td>
+    <td><code>netsentinel</code></td>
+    </tr>
+    <tr class="even">
+    <td><code>DATABASE_URL</code></td>
+    <td>Backend database connection</td>
+    <td><code>postgresql+asyncpg://...</code></td>
+    </tr>
+    <tr class="odd">
+    <td><code>REDIS_URL</code></td>
+    <td>Redis connection</td>
+    <td><code>redis://redis:6379/0</code></td>
+    </tr>
+    <tr class="even">
+    <td><code>SECRET_KEY</code></td>
+    <td>JWT signing secret</td>
+    <td>Replace in non-local use</td>
+    </tr>
+    <tr class="odd">
+    <td><code>JWT_ALGORITHM</code></td>
+    <td>JWT algorithm</td>
+    <td><code>HS256</code></td>
+    </tr>
+    <tr class="even">
+    <td><code>ACCESS_TOKEN_EXPIRE_MINUTES</code></td>
+    <td>Access token lifetime</td>
+    <td><code>30</code></td>
+    </tr>
+    <tr class="odd">
+    <td><code>REFRESH_TOKEN_EXPIRE_DAYS</code></td>
+    <td>Refresh token lifetime</td>
+    <td><code>7</code></td>
+    </tr>
+    <tr class="even">
+    <td><code>NEXT_PUBLIC_API_URL</code></td>
+    <td>Frontend API base URL</td>
+    <td><code>http://localhost:8000/api/v1</code></td>
+    </tr>
+    <tr class="odd">
+    <td><code>ENVIRONMENT</code></td>
+    <td>Runtime mode</td>
+    <td><code>development</code></td>
+    </tr>
+    <tr class="even">
+    <td><code>DEBUG</code></td>
+    <td>Debug mode</td>
+    <td><code>true</code></td>
+    </tr>
+    <tr class="odd">
+    <td><code>GEMINI_API_KEY</code></td>
+    <td>Optional AI provider key</td>
+    <td>Empty by default</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="appendix-d-docker-services-table">Appendix D: Docker
+    Services Table</h2>
+    <table>
+    <thead>
+    <tr class="header">
+    <th>Service</th>
+    <th>Container Name</th>
+    <th>Port</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>PostgreSQL</td>
+    <td><code>netsentinel-postgres</code></td>
+    <td><code>5432</code></td>
+    </tr>
+    <tr class="even">
+    <td>Redis</td>
+    <td><code>netsentinel-redis</code></td>
+    <td><code>6379</code></td>
+    </tr>
+    <tr class="odd">
+    <td>Backend</td>
+    <td><code>netsentinel-backend</code></td>
+    <td><code>8000</code></td>
+    </tr>
+    <tr class="even">
+    <td>Frontend</td>
+    <td><code>netsentinel-frontend</code></td>
+    <td><code>3000</code></td>
+    </tr>
+    <tr class="odd">
+    <td>Worker</td>
+    <td><code>netsentinel-worker</code></td>
+    <td>Internal</td>
+    </tr>
+    <tr class="even">
+    <td>Edge Agent</td>
+    <td><code>netsentinel-edge-agent</code></td>
+    <td>Internal</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="appendix-e-example-wireless-measurement">Appendix E: Example
+    Wireless Measurement</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Field</th>
+    <th>Example</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Link name</td>
+    <td>North Tower to City Hall</td>
+    </tr>
+    <tr class="even">
+    <td>Type</td>
+    <td>Point-to-point</td>
+    </tr>
+    <tr class="odd">
+    <td>Frequency</td>
+    <td>5.8 GHz</td>
+    </tr>
+    <tr class="even">
+    <td>Channel width</td>
+    <td>40 MHz</td>
+    </tr>
+    <tr class="odd">
+    <td>RSSI</td>
+    <td>-68 dBm</td>
+    </tr>
+    <tr class="even">
+    <td>SNR</td>
+    <td>27 dB</td>
+    </tr>
+    <tr class="odd">
+    <td>Noise floor</td>
+    <td>-95 dBm</td>
+    </tr>
+    <tr class="even">
+    <td>CCQ</td>
+    <td>92%</td>
+    </tr>
+    <tr class="odd">
+    <td>Latency</td>
+    <td>4 ms</td>
+    </tr>
+    <tr class="even">
+    <td>Packet loss</td>
+    <td>0.2%</td>
+    </tr>
+    <tr class="odd">
+    <td>TX capacity</td>
+    <td>180 Mbps</td>
+    </tr>
+    <tr class="even">
+    <td>RX capacity</td>
+    <td>165 Mbps</td>
+    </tr>
+    <tr class="odd">
+    <td>Technician notes</td>
+    <td>Alignment acceptable; monitor during peak traffic.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="appendix-f-example-diagnostic-report">Appendix F: Example
+    Diagnostic Report</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Section</th>
+    <th>Example</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Summary</td>
+    <td>Link is degraded but service remains usable.</td>
+    </tr>
+    <tr class="even">
+    <td>Evidence</td>
+    <td>RSSI is 8 dB worse than expected baseline; CCQ dropped below
+    85%.</td>
+    </tr>
+    <tr class="odd">
+    <td>Likely cause</td>
+    <td>Minor antenna movement or partial Fresnel obstruction.</td>
+    </tr>
+    <tr class="even">
+    <td>Severity</td>
+    <td>Medium</td>
+    </tr>
+    <tr class="odd">
+    <td>Recommended action</td>
+    <td>Inspect mounting stability, verify line of sight, run spectrum
+    scan.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="appendix-g-example-incident-workflow">Appendix G: Example
+    Incident Workflow</h2>
+    <table>
+    <thead>
+    <tr class="header">
+    <th>Step</th>
+    <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>1</td>
+    <td>Alert generated for degraded wireless link.</td>
+    </tr>
+    <tr class="even">
+    <td>2</td>
+    <td>Incident opened and assigned to network technician.</td>
+    </tr>
+    <tr class="odd">
+    <td>3</td>
+    <td>AI assistant summarizes likely RF cause.</td>
+    </tr>
+    <tr class="even">
+    <td>4</td>
+    <td>Field technician records measurements.</td>
+    </tr>
+    <tr class="odd">
+    <td>5</td>
+    <td>Technician realigns antenna and records maintenance log.</td>
+    </tr>
+    <tr class="even">
+    <td>6</td>
+    <td>Alert resolves and incident is closed with notes.</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="appendix-h-example-security-rule">Appendix H: Example
+    Security Rule</h2>
+    <table>
+    <thead>
+    <tr class="header">
+    <th>Field</th>
+    <th>Example</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Name</td>
+    <td>Repeated failed login attempts</td>
+    </tr>
+    <tr class="even">
+    <td>Condition</td>
+    <td>More than 10 failed logins from same source in 5 minutes</td>
+    </tr>
+    <tr class="odd">
+    <td>Severity</td>
+    <td>High</td>
+    </tr>
+    <tr class="even">
+    <td>Action</td>
+    <td>Create alert and recommend investigation</td>
+    </tr>
+    <tr class="odd">
+    <td>Future automation</td>
+    <td>Temporarily block source IP after approval</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="appendix-i-example-automation-playbook">Appendix I: Example
+    Automation Playbook</h2>
+    <table>
+    <thead>
+    <tr class="header">
+    <th>Field</th>
+    <th>Example</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td>Name</td>
+    <td>Wireless degradation response</td>
+    </tr>
+    <tr class="even">
+    <td>Trigger</td>
+    <td>Wireless health score below 60</td>
+    </tr>
+    <tr class="odd">
+    <td>Conditions</td>
+    <td>Packet loss above 3% or SNR below 18 dB</td>
+    </tr>
+    <tr class="even">
+    <td>Actions</td>
+    <td>Create incident, notify technician, generate field brief</td>
+    </tr>
+    <tr class="odd">
+    <td>Approval</td>
+    <td>Required before service-impacting action</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="appendix-j-recommended-folder-structure">Appendix J:
+    Recommended Folder Structure</h2>
+    <pre class="text"><code>NetSentinel AI/
+  backend/
+    app/
+      models/
+      schemas/
+      routers/
+      services/
+      security/
+      ai/
+      ingestion/
+      worker/
+    alembic/
+  frontend/
+    src/
+      app/
+      components/
+      lib/
+  edge-agent/
+  desktop-client/
+  docker/
+  docs/
+  shared/</code></pre>
+    <h2 id="appendix-k-recommended-documentation-structure">Appendix K:
+    Recommended Documentation Structure</h2>
+    <table>
+    <colgroup>
+    <col style="width: 50%">
+    <col style="width: 50%">
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th>Document</th>
+    <th>Purpose</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td><code>README.md</code></td>
+    <td>Project overview and quick start.</td>
+    </tr>
+    <tr class="even">
+    <td><code>INSTALL.md</code></td>
+    <td>Local and desktop installation guide.</td>
+    </tr>
+    <tr class="odd">
+    <td><code>architecture.md</code></td>
+    <td>System architecture and design rationale.</td>
+    </tr>
+    <tr class="even">
+    <td><code>SECURITY.md</code></td>
+    <td>Security policy and deployment warnings.</td>
+    </tr>
+    <tr class="odd">
+    <td><code>roadmap.md</code></td>
+    <td>Product roadmap and planned phases.</td>
+    </tr>
+    <tr class="even">
+    <td><code>docs/API.md</code></td>
+    <td>API reference summary and examples.</td>
+    </tr>
+    <tr class="odd">
+    <td><code>docs/OPERATOR_GUIDE.md</code></td>
+    <td>Network/security operator workflows.</td>
+    </tr>
+    <tr class="even">
+    <td><code>docs/WIRELESS_DIAGNOSTICS.md</code></td>
+    <td>RF measurement and diagnosis guide.</td>
+    </tr>
+    <tr class="odd">
+    <td><code>docs/DEPLOYMENT_HARDENING.md</code></td>
+    <td>Production hardening recommendations.</td>
+    </tr>
+    </tbody>
+    </table>
+  </main>
+
+  <script src="file:///home/emorphi/Documents/NetSentinel%20AI/docs/pdf/node_modules/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    (async () => {
+      const slug = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+      document.querySelectorAll('blockquote').forEach((bq) => {
+        const strong = bq.querySelector('p > strong:first-child');
+        if (!strong) return;
+        const label = strong.textContent.trim();
+        const known = ['Important', 'Security Note', 'MVP Limitation', 'Future Improvement'];
+        if (!known.includes(label)) return;
+        bq.classList.add('callout', slug(label));
+        strong.classList.add('callout-title');
+      });
+
+      document.querySelectorAll('pre.mermaid > code, pre > code.language-mermaid').forEach((code, index) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'mermaid-wrap';
+        const title = document.createElement('div');
+        title.className = 'mermaid-title';
+        title.textContent = 'Architecture Diagram';
+        const diagram = document.createElement('div');
+        diagram.className = 'mermaid';
+        diagram.textContent = code.textContent;
+        wrap.appendChild(title);
+        wrap.appendChild(diagram);
+        code.parentElement.replaceWith(wrap);
+      });
+
+      window.__netsentinelMermaid = { total: document.querySelectorAll('.mermaid').length, rendered: 0, failed: 0 };
+
+      if (window.mermaid) {
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'loose',
+          theme: 'base',
+          themeVariables: {
+            primaryColor: '#eef6ff',
+            primaryTextColor: '#172033',
+            primaryBorderColor: '#00a3ff',
+            lineColor: '#12345a',
+            secondaryColor: '#f8fbff',
+            tertiaryColor: '#ffffff',
+            fontFamily: 'Inter, Segoe UI, Arial, sans-serif'
+          }
+        });
+
+        const timeout = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error('Mermaid render timeout')), ms));
+        const diagrams = [...document.querySelectorAll('.mermaid')];
+        for (const [index, diagram] of diagrams.entries()) {
+          const source = diagram.textContent;
+          try {
+            const result = await Promise.race([
+              mermaid.render('netsentinel-mermaid-' + index, source),
+              timeout(6000)
+            ]);
+            diagram.innerHTML = result.svg;
+            window.__netsentinelMermaid.rendered += 1;
+          } catch (error) {
+            diagram.classList.add('mermaid-error');
+            diagram.innerHTML = '<pre>' + source.replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])) + '</pre>';
+            window.__netsentinelMermaid.failed += 1;
+            console.error('Mermaid render failed', index, error);
+          }
+        }
+      }
+
+      const pageHeight = 1056;
+      const toc = document.querySelector('#generated-toc');
+      const headings = [...document.querySelectorAll('main > h1')];
+      function pageFor(el) {
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        return Math.max(1, Math.floor((top + 32) / pageHeight) + 1);
+      }
+      function buildToc() {
+        if (toc.dataset.static === 'true') return;
+        toc.innerHTML = '';
+        let currentGroup = null;
+        headings.forEach((heading) => {
+          const level = heading.tagName === 'H1' ? 1 : 2;
+          if (level === 1) {
+            currentGroup = document.createElement('div');
+            currentGroup.className = 'toc-group';
+            toc.appendChild(currentGroup);
+          }
+          if (!currentGroup) return;
+          const row = document.createElement('div');
+          row.className = 'toc-row level-' + level;
+          const title = document.createElement('span');
+          title.className = 'toc-title';
+          title.textContent = heading.textContent.replace(/(\d+)\.(\S)/, (_m, n, rest) => n + '. ' + rest);
+          const dots = document.createElement('span');
+          dots.className = 'toc-dots';
+          const page = document.createElement('span');
+          page.className = 'toc-page-num';
+          page.textContent = pageFor(heading);
+          row.appendChild(title);
+          row.appendChild(dots);
+          row.appendChild(page);
+          currentGroup.appendChild(row);
+        });
+      }
+      buildToc();
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      buildToc();
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      buildToc();
+
+      document.body.classList.add('ready');
+      window.__netsentinelReady = true;
+    })().catch((error) => {
+      console.error(error);
+      window.__netsentinelReady = 'error: ' + error.message;
+    });
+  </script>
+
+
+</body></html>

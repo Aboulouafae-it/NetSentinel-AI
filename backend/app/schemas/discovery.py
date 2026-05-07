@@ -40,6 +40,7 @@ class SubnetScanRequest(BaseModel):
 
 class DiscoveredHostResponse(BaseModel):
     id: str
+    organization_id: str | None = None
     ip_address: str
     is_reachable: bool
     response_time_ms: float | None = None
@@ -54,6 +55,7 @@ class DiscoveredHostResponse(BaseModel):
 
 class DiscoveryScanResponse(BaseModel):
     id: str
+    organization_id: str | None = None
     subnet: str
     status: str
     total_hosts: int

@@ -24,12 +24,14 @@ class RadioDeviceCreate(BaseModel):
     azimuth_deg: float | None = None
     link_name: str | None = None
     link_side: str | None = None
+    wireless_link_id: str | None = None
     adapter_type: str = "manual_only"
     notes: str | None = None
 
 
 class RadioDeviceResponse(BaseModel):
     id: str
+    organization_id: str | None = None
     name: str
     ip_address: str
     mac_address: str | None = None
@@ -47,6 +49,17 @@ class RadioDeviceResponse(BaseModel):
     link_side: str | None = None
     adapter_type: str
     is_monitored: bool
+    is_online: bool | None = None
+    last_seen: datetime | None = None
+    last_poll_source: str | None = None
+    last_poll_latency_ms: float | None = None
+    last_poll_error: str | None = None
+    snmp_info: dict | None = None
+    latest_device_info: dict | None = None
+    latest_interface_status: dict | None = None
+    latest_wireless_metrics: dict | None = None
+    adapter_capabilities: dict | None = None
+    wireless_link_id: str | None = None
     notes: str | None = None
     created_at: datetime
     updated_at: datetime

@@ -1,0 +1,15 @@
+{
+  "sample_type": "synthetic",
+  "device_family": "PowerBeam",
+  "data": {
+    "sysName": "ubnt-powerbeam-a",
+    "sysDescr": "Ubiquiti PowerBeam 5AC airMAX",
+    "sysUpTime": "6454321",
+    "interface_names": ["eth0", "ath0"],
+    "interface_status": ["up", "up"],
+    "interface_in_octets": ["10000", "22000"],
+    "interface_out_octets": ["18000", "26000"],
+    "interface_in_errors": ["0", "1"],
+    "interface_out_errors": ["0", "0"]
+  }
+}

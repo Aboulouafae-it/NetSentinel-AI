@@ -7,6 +7,7 @@ Handles user registration, login, and token refresh.
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from app.database import get_db
 from app.models.user import User
@@ -92,4 +93,12 @@ async def refresh_token(data: TokenRefresh, db: AsyncSession = Depends(get_db)):
 @router.get("/me", response_model=UserResponse)
 async def get_me(current_user: User = Depends(get_current_user)):
     """Get the currently authenticated user's profile."""
-    return current_user
+    return {
+        "id": str(current_user.id),
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+        "is_active": current_user.is_active,
+        "role": current_user.role.value if hasattr(current_user.role, "value") else current_user.role,
+        "organization_id": str(current_user.organization_id) if current_user.organization_id else None,
+        "organization_name": current_user.organization.name if current_user.organization else None,
+    }

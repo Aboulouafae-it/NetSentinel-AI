@@ -12,6 +12,8 @@ from sqlalchemy import select
 
 from app.database import get_db
 from app.models.discovery import DiscoveredHost, DiscoveryScan, ScanStatus
+from app.models.site import Site
+from app.models.user import User
 from app.schemas.discovery import (
     SubnetScanRequest,
     DiscoveredHostResponse,
@@ -19,6 +21,7 @@ from app.schemas.discovery import (
     ScanResultSummary,
 )
 from app.services.discovery_service import scan_subnet
+from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/discovery", tags=["Discovery"])
 
@@ -27,6 +30,7 @@ router = APIRouter(prefix="/discovery", tags=["Discovery"])
 async def trigger_subnet_scan(
     request: SubnetScanRequest,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """
     Trigger a REAL subnet scan.
@@ -53,7 +57,7 @@ async def trigger_subnet_scan(
         )
 
     # Execute real scan
-    scan = await scan_subnet(request.subnet, db)
+    scan = await scan_subnet(request.subnet, db, current_user.organization_id)
 
     return scan
 
@@ -62,10 +66,12 @@ async def trigger_subnet_scan(
 async def list_scans(
     limit: int = 20,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """List all previous discovery scans, most recent first."""
     result = await db.execute(
         select(DiscoveryScan)
+        .where(DiscoveryScan.organization_id == current_user.organization_id)
         .order_by(DiscoveryScan.created_at.desc())
         .limit(limit)
     )
@@ -76,10 +82,14 @@ async def list_scans(
 async def get_scan_results(
     scan_id: str,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """Get a specific scan and all its discovered hosts."""
     scan_result = await db.execute(
-        select(DiscoveryScan).where(DiscoveryScan.id == scan_id)
+        select(DiscoveryScan).where(
+            DiscoveryScan.id == scan_id,
+            DiscoveryScan.organization_id == current_user.organization_id,
+        )
     )
     scan = scan_result.scalar_one_or_none()
     if not scan:
@@ -100,6 +110,7 @@ async def list_discovered_hosts(
     reachable_only: bool = False,
     limit: int = 500,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """
     List all discovered hosts across all scans.
@@ -107,6 +118,7 @@ async def list_discovered_hosts(
     """
     query = (
         select(DiscoveredHost)
+        .where(DiscoveredHost.organization_id == current_user.organization_id)
         .order_by(DiscoveredHost.created_at.desc())
         .limit(limit)
     )
@@ -120,6 +132,7 @@ async def list_discovered_hosts(
 @router.get("/hosts/latest", response_model=list[DiscoveredHostResponse])
 async def list_latest_scan_hosts(
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """
     Get hosts from the most recent completed scan only.
@@ -129,6 +142,7 @@ async def list_latest_scan_hosts(
     scan_result = await db.execute(
         select(DiscoveryScan)
         .where(DiscoveryScan.status == ScanStatus.COMPLETED)
+        .where(DiscoveryScan.organization_id == current_user.organization_id)
         .order_by(DiscoveryScan.created_at.desc())
         .limit(1)
     )
@@ -147,6 +161,7 @@ async def list_latest_scan_hosts(
 @router.post("/import-as-assets")
 async def import_discovered_hosts_as_assets(
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """
     Import all reachable hosts from the latest scan as real assets.
@@ -159,6 +174,7 @@ async def import_discovered_hosts_as_assets(
     scan_result = await db.execute(
         select(DiscoveryScan)
         .where(DiscoveryScan.status == ScanStatus.COMPLETED)
+        .where(DiscoveryScan.organization_id == current_user.organization_id)
         .order_by(DiscoveryScan.created_at.desc())
         .limit(1)
     )
@@ -175,7 +191,11 @@ async def import_discovered_hosts_as_assets(
     reachable_hosts = hosts_result.scalars().all()
 
     # Get existing asset IPs to avoid duplicates
-    existing_result = await db.execute(select(Asset.ip_address))
+    existing_result = await db.execute(
+        select(Asset.ip_address)
+        .join(Site, Asset.site_id == Site.id)
+        .where(Site.organization_id == current_user.organization_id)
+    )
     existing_ips = {row[0] for row in existing_result.fetchall() if row[0]}
 
     imported = 0
@@ -189,7 +209,7 @@ async def import_discovered_hosts_as_assets(
             hostname=host.hostname_resolved or f"host-{host.ip_address.replace('.', '-')}",
             ip_address=host.ip_address,
             asset_type=AssetType.OTHER,
-            status=AssetStatus.ACTIVE,
+            status=AssetStatus.UNKNOWN,
         )
         db.add(asset)
         imported += 1

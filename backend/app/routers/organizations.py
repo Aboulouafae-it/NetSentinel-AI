@@ -8,7 +8,10 @@ from sqlalchemy import select
 
 from app.database import get_db
 from app.models.organization import Organization
+from app.models.user import User
 from app.schemas.organization import OrganizationCreate, OrganizationUpdate, OrganizationResponse
+from app.dependencies import get_current_user
+from app.services.access_control import assert_same_organization
 
 router = APIRouter(prefix="/organizations", tags=["Organizations"])
 
@@ -18,17 +21,19 @@ async def list_organizations(
     skip: int = 0,
     limit: int = 50,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-    """List all organizations."""
+    """List the current user's organization."""
     result = await db.execute(
-        select(Organization).offset(skip).limit(limit).order_by(Organization.name)
+        select(Organization).where(Organization.id == current_user.organization_id).offset(skip).limit(limit)
     )
     return result.scalars().all()
 
 
 @router.get("/{org_id}", response_model=OrganizationResponse)
-async def get_organization(org_id: str, db: AsyncSession = Depends(get_db)):
+async def get_organization(org_id: str, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Get a single organization by ID."""
+    assert_same_organization(current_user.organization_id, org_id)
     result = await db.execute(select(Organization).where(Organization.id == org_id))
     org = result.scalar_one_or_none()
     if not org:
@@ -37,7 +42,7 @@ async def get_organization(org_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/", response_model=OrganizationResponse, status_code=status.HTTP_201_CREATED)
-async def create_organization(data: OrganizationCreate, db: AsyncSession = Depends(get_db)):
+async def create_organization(data: OrganizationCreate, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Create a new organization."""
     org = Organization(**data.model_dump())
     db.add(org)
@@ -48,9 +53,10 @@ async def create_organization(data: OrganizationCreate, db: AsyncSession = Depen
 
 @router.patch("/{org_id}", response_model=OrganizationResponse)
 async def update_organization(
-    org_id: str, data: OrganizationUpdate, db: AsyncSession = Depends(get_db)
+    org_id: str, data: OrganizationUpdate, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)
 ):
     """Update an existing organization."""
+    assert_same_organization(current_user.organization_id, org_id)
     result = await db.execute(select(Organization).where(Organization.id == org_id))
     org = result.scalar_one_or_none()
     if not org:
@@ -66,8 +72,9 @@ async def update_organization(
 
 
 @router.delete("/{org_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_organization(org_id: str, db: AsyncSession = Depends(get_db)):
+async def delete_organization(org_id: str, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Delete an organization."""
+    assert_same_organization(current_user.organization_id, org_id)
     result = await db.execute(select(Organization).where(Organization.id == org_id))
     org = result.scalar_one_or_none()
     if not org:

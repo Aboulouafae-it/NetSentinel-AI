@@ -6,12 +6,15 @@ by the AIAnalysisEngine (Gemini or rich fallback).
 """
 
 from datetime import datetime, timezone
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.ai.analysis_engine import AIAnalysisEngine
+from app.models.alert import Alert
+from app.models.incident import Incident
 from app.models.user import User
 from app.security.auth import get_current_active_user
 
@@ -50,6 +53,14 @@ async def analyze_incident(
     current_user: User = Depends(get_current_active_user),
 ):
     """Request a full AI-powered analysis of an incident."""
+    incident = await db.scalar(
+        select(Incident).where(
+            Incident.id == incident_id,
+            Incident.organization_id == current_user.organization_id,
+        )
+    )
+    if not incident:
+        raise HTTPException(status_code=404, detail="Incident not found")
     engine = AIAnalysisEngine(db)
     return await engine.analyze_incident(incident_id)
 
@@ -61,6 +72,14 @@ async def analyze_alert(
     current_user: User = Depends(get_current_active_user),
 ):
     """Request an AI-powered explanation for a specific alert."""
+    alert = await db.scalar(
+        select(Alert).where(
+            Alert.id == alert_id,
+            Alert.organization_id == current_user.organization_id,
+        )
+    )
+    if not alert:
+        raise HTTPException(status_code=404, detail="Alert not found")
     engine = AIAnalysisEngine(db)
     return await engine.analyze_alert(alert_id)
 

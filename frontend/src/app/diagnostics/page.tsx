@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/api';
 import type { FieldMeasurement } from '@/lib/types';
@@ -35,7 +35,7 @@ const healthColors: Record<string, string> = {
   critical: 'var(--status-critical)',
 };
 
-export default function DiagnosticsPage() {
+function DiagnosticsPageContent() {
   const searchParams = useSearchParams();
   const { data: measurements } = useSWR<FieldMeasurement[]>('/field-measurements/', fetcher);
   const [report, setReport] = useState<DiagnosticReport | null>(null);
@@ -263,5 +263,13 @@ export default function DiagnosticsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DiagnosticsPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '40px', color: 'var(--text-secondary)' }}>Loading diagnostics...</div>}>
+      <DiagnosticsPageContent />
+    </Suspense>
   );
 }

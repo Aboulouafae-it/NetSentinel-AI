@@ -14,6 +14,8 @@ class AlertCreate(BaseModel):
     rule_name: str | None = None
     organization_id: str | None = None
     asset_id: str | None = None
+    wireless_link_id: str | None = None
+    source_metadata: dict | None = None
 
 
 class AlertUpdate(BaseModel):
@@ -22,6 +24,11 @@ class AlertUpdate(BaseModel):
     severity: str | None = None
     status: str | None = None
     incident_id: str | None = None
+
+
+class AlertActionRequest(BaseModel):
+    note: str | None = None
+    assigned_to: str | None = None
 
 
 class AlertResponse(BaseModel):
@@ -35,6 +42,11 @@ class AlertResponse(BaseModel):
     organization_id: str | None = None
     asset_id: str | None = None
     incident_id: str | None = None
+    wireless_link_id: str | None = None
+    source_metadata: dict | None = None
+    dedupe_key: str | None = None
+    occurrence_count: int
+    last_seen: datetime | None = None
     created_at: datetime
     updated_at: datetime
 

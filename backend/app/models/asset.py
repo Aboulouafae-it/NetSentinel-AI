@@ -3,7 +3,8 @@ NetSentinel AI — Asset Model
 """
 
 import uuid
-from sqlalchemy import ForeignKey, String, Text, Enum as SQLEnum
+from datetime import datetime
+from sqlalchemy import DateTime, ForeignKey, String, Text, Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import enum
@@ -45,6 +46,13 @@ class Asset(Base, UUIDMixin, TimestampMixin):
     os_info: Mapped[str | None] = mapped_column(String(255), nullable=True)
     vendor: Mapped[str | None] = mapped_column(String(255), nullable=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    last_seen: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_poll_status: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    last_telemetry_source: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    last_poll_latency_ms: Mapped[float | None] = mapped_column(nullable=True)
+    last_poll_packet_loss_percent: Mapped[float | None] = mapped_column(nullable=True)
+    last_poll_error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    last_polled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Foreign key (nullable for auto-discovered assets not yet assigned to a site)
     site_id: Mapped[uuid.UUID | None] = mapped_column(

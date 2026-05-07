@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Server, ShieldAlert, Settings, MessageSquareWarning, Radio, ScrollText, Shield, Zap, Radar, Stethoscope, Router } from 'lucide-react';
+import { Activity, LayoutDashboard, Server, ShieldAlert, Settings, MessageSquareWarning, Radio, ScrollText, Shield, Zap, Radar, Stethoscope, Router } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
 const navItems = [
@@ -10,6 +10,7 @@ const navItems = [
   { name: 'Discovery', href: '/discovery', icon: Radar },
   { name: 'Assets', href: '/assets', icon: Server },
   { name: 'Radio Devices', href: '/radio-devices', icon: Router },
+  { name: 'Edge Agents', href: '/agents', icon: Activity },
   { name: 'Field Measurements', href: '/field-measurements', icon: Radio },
   { name: 'Diagnostics', href: '/diagnostics', icon: Stethoscope },
   { name: 'Alerts', href: '/alerts', icon: ShieldAlert },
@@ -17,7 +18,7 @@ const navItems = [
   { name: 'Security', href: '/security', icon: Shield },
   { name: 'Logs', href: '/logs', icon: ScrollText },
   { name: 'Automation', href: '/automation', icon: Zap },
-  { name: 'Settings', href: '#', icon: Settings, disabled: true },
+  { name: 'Appliance', href: '/admin/appliance', icon: Settings },
 ];
 
 export default function Sidebar() {
@@ -34,15 +35,6 @@ export default function Sidebar() {
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
-          
-          if (item.disabled) {
-            return (
-              <div key={item.name} className={`${styles.navItem} ${styles.disabled}`}>
-                <Icon size={20} />
-                <span>{item.name}</span>
-              </div>
-            );
-          }
           
           return (
             <Link 

@@ -31,8 +31,7 @@ async def create_log_entry(
     In a production system, this might be handled by a fast-path ingestion pipeline 
     or background worker. For Phase 3, we expose it as a standard endpoint.
     """
-    # Enforce organization isolation if user is not superadmin
-    if not current_user.is_superuser and log_in.organization_id != current_user.organization_id:
+    if log_in.organization_id != current_user.organization_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Cannot ingest logs for a different organization.",
@@ -64,6 +63,7 @@ async def create_log_entry(
 async def list_logs(
     level: Optional[LogLevel] = None,
     source: Optional[str] = None,
+    q: Optional[str] = None,
     asset_id: Optional[uuid.UUID] = None,
     organization_id: Optional[uuid.UUID] = None,
     page: int = Query(1, ge=1),
@@ -74,14 +74,9 @@ async def list_logs(
     """
     Retrieve logs with filtering and pagination.
     """
-    # Organization filtering
-    target_org_id = organization_id
-    if not current_user.is_superuser:
-        target_org_id = current_user.organization_id
-    elif not target_org_id:
-        # If superuser and no org specified, we might require it or just show all.
-        # For safety in SaaS, defaulting to user's org if none provided.
-        target_org_id = current_user.organization_id
+    target_org_id = current_user.organization_id
+    if organization_id and organization_id != current_user.organization_id:
+        raise HTTPException(status_code=403, detail="Cannot read logs for a different organization.")
 
     stmt = select(LogEntry)
     if target_org_id:
@@ -91,6 +86,8 @@ async def list_logs(
         stmt = stmt.where(LogEntry.level == level)
     if source:
         stmt = stmt.where(LogEntry.source.ilike(f"%{source}%"))
+    if q:
+        stmt = stmt.where(LogEntry.message.ilike(f"%{q}%"))
     if asset_id:
         stmt = stmt.where(LogEntry.asset_id == asset_id)
 

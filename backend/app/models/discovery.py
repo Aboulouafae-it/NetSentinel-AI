@@ -8,7 +8,7 @@ No mock data. Every row in this table represents a real network probe result.
 import uuid
 import enum
 from datetime import datetime
-from sqlalchemy import String, Float, DateTime, Enum as SQLEnum, Boolean, Integer, func
+from sqlalchemy import ForeignKey, String, Float, DateTime, Enum as SQLEnum, Boolean, Integer, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -32,6 +32,9 @@ class DiscoveryScan(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "discovery_scans"
 
     subnet: Mapped[str] = mapped_column(String(50), nullable=False)
+    organization_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=True, index=True
+    )
     status: Mapped[ScanStatus] = mapped_column(
         SQLEnum(ScanStatus), default=ScanStatus.PENDING, nullable=False
     )
@@ -58,6 +61,9 @@ class DiscoveredHost(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "discovered_hosts"
 
     ip_address: Mapped[str] = mapped_column(String(45), nullable=False, index=True)
+    organization_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=True, index=True
+    )
     is_reachable: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     response_time_ms: Mapped[float | None] = mapped_column(Float, nullable=True)
     hostname_resolved: Mapped[str | None] = mapped_column(String(255), nullable=True)

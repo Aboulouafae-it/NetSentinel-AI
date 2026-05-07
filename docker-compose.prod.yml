@@ -1,0 +1,114 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-netsentinel}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-netsentinel}"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks: [netsentinel]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks: [netsentinel]
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-netsentinel}
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: production
+      DEBUG: "false"
+    ports:
+      - "${BACKEND_BIND:-127.0.0.1:8000}:8000"
+    volumes:
+      - app_storage:/app/storage
+      - backups:${BACKUP_DIR:-/opt/netsentinel/backups}
+      - reports:${REPORTS_DIR:-/opt/netsentinel/reports}
+      - appliance_logs:${APPLIANCE_LOG_DIR:-/var/log/netsentinel}
+      - appliance_data:${APPLIANCE_DATA_DIR:-/var/lib/netsentinel}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    networks: [netsentinel]
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?set NEXT_PUBLIC_API_URL}
+    ports:
+      - "${FRONTEND_BIND:-127.0.0.1:3000}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000 >/dev/null || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    networks: [netsentinel]
+
+  worker:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    command: arq app.worker.main.WorkerSettings
+    env_file: .env.production
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-netsentinel}
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: production
+      DEBUG: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import app.worker.main"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    networks: [netsentinel]
+
+volumes:
+  postgres_data:
+  redis_data:
+  app_storage:
+  backups:
+  reports:
+  appliance_logs:
+  appliance_data:
+
+networks:
+  netsentinel:
+    driver: bridge

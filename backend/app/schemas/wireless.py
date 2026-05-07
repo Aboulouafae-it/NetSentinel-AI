@@ -80,6 +80,8 @@ class WirelessLinkBase(BaseModel):
     link_type: str
     theoretical_max_capacity_mbps: int | None = None
     expected_rssi_dbm: float | None = None
+    near_end_radio_id: str | None = None
+    far_end_radio_id: str | None = None
 
 class WirelessLinkCreate(WirelessLinkBase):
     pass
@@ -89,6 +91,8 @@ class WirelessLinkUpdate(BaseModel):
     status: str | None = None
     theoretical_max_capacity_mbps: int | None = None
     expected_rssi_dbm: float | None = None
+    near_end_radio_id: str | None = None
+    far_end_radio_id: str | None = None
 
 class WirelessLinkResponse(WirelessLinkBase):
     id: str

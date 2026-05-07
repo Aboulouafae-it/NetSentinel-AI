@@ -1,0 +1,11 @@
+{
+  "sample_type": "synthetic",
+  "source": "manual_field_measurement",
+  "radio_model": "PowerBeam-like",
+  "rssi_dbm": -59,
+  "snr_db": 34,
+  "noise_floor_dbm": -93,
+  "latency_ms": 4.9,
+  "packet_loss_percent": 0,
+  "notes": "Manual field measurement retained as fallback when SNMP/UISP RF metrics are unavailable."
+}

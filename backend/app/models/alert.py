@@ -3,8 +3,9 @@ NetSentinel AI — Alert Model
 """
 
 import uuid
-from sqlalchemy import ForeignKey, String, Text, Enum as SQLEnum
-from sqlalchemy.dialects.postgresql import UUID
+from datetime import datetime
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, Enum as SQLEnum
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import enum
 
@@ -22,6 +23,7 @@ class AlertSeverity(str, enum.Enum):
 class AlertStatus(str, enum.Enum):
     OPEN = "open"
     ACKNOWLEDGED = "acknowledged"
+    ESCALATED = "escalated"
     RESOLVED = "resolved"
     DISMISSED = "dismissed"
 
@@ -39,6 +41,10 @@ class Alert(Base, UUIDMixin, TimestampMixin):
     )
     source: Mapped[str | None] = mapped_column(String(255), nullable=True)
     rule_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    source_metadata: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    dedupe_key: Mapped[str | None] = mapped_column(String(500), nullable=True, index=True)
+    occurrence_count: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    last_seen: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Foreign keys (organization_id nullable for system-generated alerts)
     organization_id: Mapped[uuid.UUID | None] = mapped_column(

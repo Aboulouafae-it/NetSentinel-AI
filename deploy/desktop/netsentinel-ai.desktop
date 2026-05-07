@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=NetSentinel AI
+Comment=Open the NetSentinel AI local appliance console
+Exec=/opt/netsentinel/deploy/desktop/launch-netsentinel.sh
+Icon=/opt/netsentinel/frontend/public/logo.svg
+Terminal=false
+Type=Application
+Categories=Network;System;Security;

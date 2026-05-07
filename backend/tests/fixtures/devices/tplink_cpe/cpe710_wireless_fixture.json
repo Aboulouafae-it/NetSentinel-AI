@@ -1,0 +1,19 @@
+{
+  "sample_type": "synthetic",
+  "device_family": "CPE710-like",
+  "data": {
+    "sysName": "tplink-cpe710-a",
+    "sysDescr": "TP-Link CPE710 Outdoor Wireless CPE",
+    "sysUpTime": "8123456",
+    "interface_names": ["eth0", "wifi0"],
+    "interface_status": ["up", "up"],
+    "tplink_rssi_dbm": "-64",
+    "tplink_snr_db": "29",
+    "tplink_noise_floor_dbm": "-93",
+    "tplink_link_quality_percent": "86",
+    "tplink_tx_rate_mbps": "300",
+    "tplink_rx_rate_mbps": "270",
+    "tplink_frequency_mhz": "5805",
+    "tplink_channel_width_mhz": "40"
+  }
+}

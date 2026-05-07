@@ -31,8 +31,17 @@ async def evaluate_alert_rules(ctx):
     logger.info("Evaluating alert rules.")
 
 
+async def scheduled_polling_tick(ctx):
+    """Worker entrypoint for future scheduled polling.
+
+    v0.6 keeps this as a bounded service hook; production scheduling should
+    provide organization IDs and concurrency controls from persistent config.
+    """
+    logger.info("Scheduled polling tick requested.")
+
+
 class WorkerSettings:
-    functions = [process_telemetry_batch]
+    functions = [process_telemetry_batch, scheduled_polling_tick]
     cron_jobs = [] # Add cron jobs for periodic tasks (e.g. ARQ cron)
     redis_settings = RedisSettings.from_dsn(settings.redis_url)
     on_startup = startup

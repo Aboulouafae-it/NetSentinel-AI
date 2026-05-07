@@ -1,0 +1,10 @@
+[Unit]
+Description=NetSentinel AI appliance backup
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/netsentinel
+EnvironmentFile=/opt/netsentinel/.env.production
+ExecStart=/opt/netsentinel/scripts/backup.sh

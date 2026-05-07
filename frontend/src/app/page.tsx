@@ -1,237 +1,143 @@
 'use client';
 
+import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import { Server, Radio, Network, ShieldAlert, Activity, ArrowRight, ShieldCheck, Zap, Radar, Stethoscope, Router } from 'lucide-react';
+import { Activity, AlertTriangle, RefreshCw, Router, ShieldAlert, Wifi } from 'lucide-react';
 import { fetcher } from '@/lib/api';
-import Link from 'next/link';
+import type { DashboardActivity, DashboardSummary, DashboardSystemStatus, DashboardWirelessHealth, TopologySummary } from '@/lib/types';
+import { useLiveEvents } from '@/lib/useLiveEvents';
+import { ActivityFeedItem, ErrorState, KpiCard, LiveIndicator, LoadingSkeleton, MetricCard, SectionHeader } from '@/components/ui';
 
-interface MeasurementStats {
-  total: number; operational: number; degraded: number; down: number;
-  avg_rssi: number | null; avg_snr: number | null; avg_latency: number | null;
-}
+const card: React.CSSProperties = { padding: '18px' };
 
-export default function UnifiedDashboard() {
-  const { data: alertStats } = useSWR<{ total: number; open: number; critical: number; high: number }>('/alerts/stats', fetcher);
-  const { data: measurementStats } = useSWR<MeasurementStats>('/field-measurements/stats', fetcher);
-  const { data: radioDevices } = useSWR<any[]>('/radio-devices/', fetcher);
+export default function OperationsDashboard() {
+  const [range, setRange] = useState('24h');
+  const summary = useSWR<DashboardSummary>('/dashboard/summary', fetcher);
+  const wireless = useSWR<DashboardWirelessHealth>('/dashboard/wireless-health', fetcher);
+  const activity = useSWR<DashboardActivity[]>('/dashboard/recent-activity', fetcher);
+  const system = useSWR<DashboardSystemStatus>('/dashboard/system-status', fetcher);
+  const topology = useSWR<TopologySummary>('/dashboard/topology-summary', fetcher);
+  const refreshAll = useCallback(() => {
+    summary.mutate();
+    wireless.mutate();
+    activity.mutate();
+    system.mutate();
+    topology.mutate();
+  }, [activity, summary, system, topology, wireless]);
+  const live = useLiveEvents(refreshAll);
 
-  const cardStyle = (borderColor: string): React.CSSProperties => ({
-    padding: '28px', height: '100%', display: 'flex', flexDirection: 'column',
-    borderTop: `4px solid ${borderColor}`,
-    transition: 'transform 0.2s, box-shadow 0.2s', cursor: 'pointer',
-  });
+  const loading = summary.isLoading || wireless.isLoading || activity.isLoading || system.isLoading;
+  const error = summary.error || wireless.error || activity.error || system.error;
 
   return (
     <div>
-      <div className="page-title" style={{ marginBottom: '32px' }}>
-        <h1>NetSentinel AI — Operations Center</h1>
-        <p className="page-subtitle" style={{ marginTop: '8px' }}>
-          Unified wireless network observability & diagnostics platform.
-        </p>
-      </div>
-
-      {/* Quick Stats Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '14px', marginBottom: '32px' }}>
-        <div className="card" style={{ padding: '18px', borderTop: '3px solid var(--brand-primary)' }}>
-          <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '6px' }}>Field Readings</div>
-          <div style={{ fontSize: '2rem', fontWeight: 700 }}>{measurementStats?.total ?? '—'}</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+        <div className="page-title">
+          <h1>Operations Dashboard</h1>
+          <p className="page-subtitle" style={{ marginTop: '8px' }}>Organization-scoped operational health from assets, alerts, incidents, logs, discovery, and wireless readings.</p>
         </div>
-        <div className="card" style={{ padding: '18px', borderTop: '3px solid var(--status-warning)' }}>
-          <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '6px' }}>Radio Devices</div>
-          <div style={{ fontSize: '2rem', fontWeight: 700 }}>{radioDevices?.length ?? '—'}</div>
-        </div>
-        <div className="card" style={{ padding: '18px', borderTop: '3px solid #ef4444' }}>
-          <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '6px' }}>Open Alerts</div>
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: alertStats?.open ? '#ef4444' : '#10b981' }}>{alertStats?.open ?? '—'}</div>
-        </div>
-        <div className="card" style={{ padding: '18px', borderTop: '3px solid var(--brand-secondary)' }}>
-          <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '6px' }}>Avg RSSI</div>
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: measurementStats?.avg_rssi && measurementStats.avg_rssi < -70 ? '#f59e0b' : '#10b981' }}>
-            {measurementStats?.avg_rssi != null ? `${measurementStats.avg_rssi}` : '—'}
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}> dBm</span>
-          </div>
-        </div>
-        <div className="card" style={{ padding: '18px', borderTop: '3px solid #10b981' }}>
-          <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '6px' }}>Avg Latency</div>
-          <div style={{ fontSize: '2rem', fontWeight: 700 }}>
-            {measurementStats?.avg_latency != null ? measurementStats.avg_latency : '—'}
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}> ms</span>
-          </div>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <LiveIndicator state={live.state} lastUpdated={live.lastUpdated} />
+          <select value={range} onChange={e => setRange(e.target.value)} style={controlStyle}>
+            <option value="24h">Last 24h</option>
+            <option value="7d">Last 7d</option>
+            <option value="30d">Last 30d</option>
+          </select>
+          <button onClick={refreshAll} style={buttonStyle}><RefreshCw size={16} /> Refresh</button>
         </div>
       </div>
 
-      {/* Main Navigation Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '32px' }}>
-        
-        {/* Discovery & RF Diagnostics */}
-        <Link href="/discovery" style={{ textDecoration: 'none' }}>
-          <div className="card" style={cardStyle('var(--brand-primary)')}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <div style={{ padding: '10px', background: 'rgba(16,185,129,0.1)', borderRadius: '10px' }}>
-                <Radar size={24} color="var(--brand-primary)" />
-              </div>
-              <ArrowRight size={18} color="var(--text-secondary)" />
-            </div>
-            <h2 style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>Discovery & RF Diagnostics</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px', flex: 1, lineHeight: 1.5 }}>
-              Real ICMP scanning, field measurements, and root cause analysis engine.
-            </p>
-            <div style={{ display: 'flex', gap: '14px', borderTop: '1px solid var(--border-subtle)', paddingTop: '16px' }}>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--status-online)' }}>Live</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Scanning</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--brand-secondary)' }}>RCA</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Engine</div>
-              </div>
-            </div>
-          </div>
-        </Link>
+      {error && <ErrorState message="Unable to load dashboard data." />}
+      {loading && <LoadingSkeleton label="Loading operations data..." />}
 
-        {/* Radio Devices */}
-        <Link href="/radio-devices" style={{ textDecoration: 'none' }}>
-          <div className="card" style={cardStyle('var(--status-warning)')}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <div style={{ padding: '10px', background: 'rgba(245,158,11,0.1)', borderRadius: '10px' }}>
-                <Router size={24} color="var(--status-warning)" />
-              </div>
-              <ArrowRight size={18} color="var(--text-secondary)" />
-            </div>
-            <h2 style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>Radio Devices</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px', flex: 1, lineHeight: 1.5 }}>
-              Managed wireless radios with live ping & multi-vendor support.
-            </p>
-            <div style={{ display: 'flex', gap: '14px', borderTop: '1px solid var(--border-subtle)', paddingTop: '16px' }}>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{radioDevices?.length || 0}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Registered</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#10b981' }}>ICMP</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Ping Ready</div>
-              </div>
-            </div>
-          </div>
-        </Link>
+      <SystemStrip system={system.data} />
 
-        {/* Alerts */}
-        <Link href="/alerts" style={{ textDecoration: 'none' }}>
-          <div className="card" style={cardStyle('#ef4444')}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <div style={{ padding: '10px', background: 'rgba(239,68,68,0.1)', borderRadius: '10px' }}>
-                <ShieldAlert size={24} color="#ef4444" />
-              </div>
-              <ArrowRight size={18} color="var(--text-secondary)" />
-            </div>
-            <h2 style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>Alerts & Thresholds</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px', flex: 1, lineHeight: 1.5 }}>
-              Real alerts from RF threshold violations. Auto-generated from measurements.
-            </p>
-            <div style={{ display: 'flex', gap: '14px', borderTop: '1px solid var(--border-subtle)', paddingTop: '16px' }}>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: alertStats?.critical ? '#ef4444' : '#10b981' }}>{alertStats?.critical || 0}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Critical</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: alertStats?.high ? '#f59e0b' : '#10b981' }}>{alertStats?.high || 0}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>High</div>
-              </div>
-            </div>
-          </div>
-        </Link>
-
-        {/* Field Measurements */}
-        <Link href="/field-measurements" style={{ textDecoration: 'none' }}>
-          <div className="card" style={cardStyle('#8b5cf6')}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <div style={{ padding: '10px', background: 'rgba(139,92,246,0.1)', borderRadius: '10px' }}>
-                <Radio size={24} color="#8b5cf6" />
-              </div>
-              <ArrowRight size={18} color="var(--text-secondary)" />
-            </div>
-            <h2 style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>Field Measurements</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px', flex: 1, lineHeight: 1.5 }}>
-              Real RF readings: RSSI, SNR, CCQ, noise floor — entered by technicians.
-            </p>
-            <div style={{ display: 'flex', gap: '14px', borderTop: '1px solid var(--border-subtle)', paddingTop: '16px' }}>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{measurementStats?.total || 0}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Readings</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: measurementStats?.degraded ? '#f59e0b' : '#10b981' }}>{measurementStats?.degraded || 0}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Degraded</div>
-              </div>
-            </div>
-          </div>
-        </Link>
-
-        {/* Security */}
-        <Link href="/security" style={{ textDecoration: 'none' }}>
-          <div className="card" style={cardStyle('var(--status-critical)')}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <div style={{ padding: '10px', background: 'rgba(239,68,68,0.1)', borderRadius: '10px' }}>
-                <ShieldCheck size={24} color="var(--status-critical)" />
-              </div>
-              <ArrowRight size={18} color="var(--text-secondary)" />
-            </div>
-            <h2 style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>Security & Threat Engine</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px', flex: 1, lineHeight: 1.5 }}>
-              Detection rules, IOC tracking, and automated response playbooks.
-            </p>
-            <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '16px' }}>
-              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--status-critical)' }}>Active</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Threat Engine</div>
-            </div>
-          </div>
-        </Link>
-
-        {/* Incidents */}
-        <Link href="/incidents" style={{ textDecoration: 'none' }}>
-          <div className="card" style={cardStyle('var(--brand-secondary)')}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <div style={{ padding: '10px', background: 'rgba(59,130,246,0.1)', borderRadius: '10px' }}>
-                <Activity size={24} color="var(--brand-secondary)" />
-              </div>
-              <ArrowRight size={18} color="var(--text-secondary)" />
-            </div>
-            <h2 style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>Incidents & Workflows</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px', flex: 1, lineHeight: 1.5 }}>
-              Track investigations, group alerts, and manage resolution workflows.
-            </p>
-            <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '16px' }}>
-              <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>Ready</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Incident Tracker</div>
-            </div>
-          </div>
-        </Link>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '14px', margin: '18px 0' }}>
+        <KpiCard label="Assets" value={summary.data?.assets.total ?? '—'} sub={`${summary.data?.assets.online ?? 0} online`} toneColor="var(--brand-primary)" />
+        <KpiCard label="Open Alerts" value={summary.data?.alerts.open ?? '—'} sub={`${summary.data?.alerts.critical ?? 0} critical`} toneColor="#ef4444" />
+        <KpiCard label="Active Incidents" value={summary.data?.incidents.active ?? '—'} sub="open or investigating" toneColor="#f59e0b" />
+        <KpiCard label="Wireless Links" value={summary.data?.wireless_links.total ?? '—'} sub={`${wireless.data?.measurements ?? 0} field readings`} toneColor="#8b5cf6" />
+        <KpiCard label="Radio Devices" value={summary.data?.radio_devices.total ?? '—'} sub={`${summary.data?.radio_devices.live_adapter_supported ?? 0} live adapters · ${summary.data?.radio_devices.missing_metrics ?? 0} missing metrics`} toneColor="#10b981" />
       </div>
 
-      {/* System Status */}
-      <div className="card" style={{ padding: '24px' }}>
-        <h2 style={{ fontSize: '1.1rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Activity size={20} color="var(--brand-primary)" />
-          System Status
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-          {[
-            { label: 'Discovery Engine', status: 'Operational', color: '#10b981' },
-            { label: 'RCA Engine', status: 'Operational', color: '#10b981' },
-            { label: 'Alert Threshold Engine', status: 'Operational', color: '#10b981' },
-            { label: 'Database (PostgreSQL)', status: 'Connected', color: '#10b981' },
-            { label: 'SNMP Adapter', status: 'Stage 2', color: '#64748b' },
-          ].map(item => (
-            <div key={item.label} style={{ padding: '14px', background: 'var(--bg-base)', borderRadius: '8px', border: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color, boxShadow: `0 0 6px ${item.color}` }} />
-              <div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{item.label}</div>
-                <div style={{ fontSize: '0.75rem', color: item.color }}>{item.status}</div>
-              </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '18px', marginBottom: '18px' }}>
+        <section className="card" style={card}>
+          <SectionHeader title={<><ShieldAlert size={18} /> Alert Severity Distribution</>} />
+          <Distribution data={summary.data?.alerts} />
+        </section>
+        <section className="card" style={card}>
+          <SectionHeader title={<><Wifi size={18} /> Wireless Diagnostics Summary</>} />
+          {wireless.data?.measurements ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+              <MetricCard label="Avg RSSI" value={format(wireless.data.avg_rssi, 'dBm')} />
+              <MetricCard label="Avg SNR" value={format(wireless.data.avg_snr, 'dB')} />
+              <MetricCard label="Noise Floor" value={format(wireless.data.avg_noise_floor, 'dBm')} />
+              <MetricCard label="Latency" value={format(wireless.data.avg_latency, 'ms')} />
+              <MetricCard label="Packet Loss" value={format(wireless.data.avg_packet_loss, '%')} />
+              <MetricCard label="Measurements" value={wireless.data.measurements} />
             </div>
-          ))}
-        </div>
+          ) : <Empty text="No field measurements available yet." />}
+        </section>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '18px' }}>
+        <section className="card" style={card}>
+          <SectionHeader title={<><AlertTriangle size={18} /> Recent Incidents</>} />
+          <StatusRows data={summary.data?.incidents.by_status} />
+        </section>
+        <section className="card" style={card}>
+          <SectionHeader title={<><Activity size={18} /> Recent Activity</>} />
+          {activity.data?.length ? activity.data.slice(0, 8).map((item, index) => (
+            <ActivityFeedItem key={`${item.type}-${index}`} title={`${item.event} · ${item.type}`} subtitle={item.title} />
+          )) : <Empty text="No recent activity from alerts, incidents, logs, or measurements." />}
+        </section>
+        <section className="card" style={card}>
+          <SectionHeader title={<><Router size={18} /> Topology MVP</>} />
+          {topology.data?.sites.length ? topology.data.sites.slice(0, 6).map(site => (
+            <div key={site.id} style={rowStyle}>
+              <div style={{ fontWeight: 700 }}>{site.name}</div>
+              <div style={{ color: site.has_active_alerts ? '#ef4444' : 'var(--text-secondary)' }}>{site.assets_count} assets {site.has_active_alerts ? '· active alert' : ''}</div>
+            </div>
+          )) : <Empty text="No sites available for topology summary." />}
+        </section>
       </div>
     </div>
   );
 }
+
+function Kpi({ label, value, sub, color }: { label: string; value: React.ReactNode; sub: string; color: string }) {
+  return <div className="card" style={{ padding: '18px', borderTop: `3px solid ${color}` }}><div style={kpiLabel}>{label}</div><div style={{ fontSize: '2rem', fontWeight: 800, color }}>{value}</div><div style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{sub}</div></div>;
+}
+
+function Metric({ label, value }: { label: string; value: React.ReactNode }) {
+  return <div style={{ padding: '12px', background: 'var(--bg-base)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}><div style={kpiLabel}>{label}</div><div style={{ fontWeight: 800, fontSize: '1.1rem' }}>{value}</div></div>;
+}
+
+function Distribution({ data }: { data?: DashboardSummary['alerts'] }) {
+  if (!data) return <Empty text="No alert data loaded." />;
+  return <div>{(['critical', 'high', 'medium', 'low'] as const).map(key => <div key={key} style={rowStyle}><span style={{ textTransform: 'capitalize' }}>{key}</span><strong>{data[key]}</strong></div>)}</div>;
+}
+
+function StatusRows({ data }: { data?: Record<string, number> }) {
+  const entries = Object.entries(data || {});
+  if (!entries.length) return <Empty text="No incidents recorded." />;
+  return <div>{entries.map(([key, value]) => <div key={key} style={rowStyle}><span>{key}</span><strong>{value}</strong></div>)}</div>;
+}
+
+function SystemStrip({ system }: { system?: DashboardSystemStatus }) {
+  return <div className="card" style={{ padding: '14px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>{Object.entries(system || {}).map(([key, value]) => <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)' }}><span style={{ width: 8, height: 8, borderRadius: '50%', background: value.status.includes('planned') ? '#64748b' : '#10b981' }} />{key}: {value.status}</div>)}</div>;
+}
+
+function Empty({ text }: { text: string }) {
+  return <div style={{ color: 'var(--text-muted)', fontSize: '0.86rem', padding: '12px 0' }}>{text}</div>;
+}
+
+function format(value: number | null | undefined, unit: string) {
+  return value == null ? '—' : `${value} ${unit}`;
+}
+
+const controlStyle: React.CSSProperties = { padding: '9px 10px', backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', color: 'var(--text-primary)' };
+const buttonStyle: React.CSSProperties = { ...controlStyle, display: 'flex', gap: '8px', alignItems: 'center', cursor: 'pointer', fontWeight: 800 };
+const kpiLabel: React.CSSProperties = { fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800, marginBottom: '6px' };
+const sectionTitle: React.CSSProperties = { margin: '0 0 14px', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px' };
+const rowStyle: React.CSSProperties = { padding: '9px 0', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', gap: '12px', fontSize: '0.86rem' };

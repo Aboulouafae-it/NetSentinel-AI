@@ -1,0 +1,15 @@
+{
+  "sample_type": "synthetic",
+  "device_family": "CPE710-like",
+  "data": {
+    "sysName": "tplink-cpe710-a",
+    "sysDescr": "TP-Link CPE710 Outdoor Wireless CPE",
+    "sysUpTime": "8123456",
+    "interface_names": ["eth0", "wifi0"],
+    "interface_status": ["up", "up"],
+    "interface_in_octets": ["9000", "8000"],
+    "interface_out_octets": ["7000", "6000"],
+    "interface_in_errors": ["0", "0"],
+    "interface_out_errors": ["0", "0"]
+  }
+}

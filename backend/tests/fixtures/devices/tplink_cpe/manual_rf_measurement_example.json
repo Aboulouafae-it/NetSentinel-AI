@@ -1,0 +1,11 @@
+{
+  "sample_type": "synthetic",
+  "source": "manual_field_measurement",
+  "radio_model": "CPE710-like",
+  "rssi_dbm": -63,
+  "snr_db": 30,
+  "noise_floor_dbm": -93,
+  "latency_ms": 7.4,
+  "packet_loss_percent": 0.2,
+  "notes": "Manual RF survey entry for a point-to-point alignment check."
+}

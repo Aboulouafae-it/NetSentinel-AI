@@ -21,6 +21,32 @@ class IncidentUpdate(BaseModel):
     status: str | None = None
     assigned_to: str | None = None
     resolution_notes: str | None = None
+    impacted_services: list[str] | None = None
+
+
+class IncidentAssignRequest(BaseModel):
+    assigned_to: str = Field(min_length=1, max_length=255)
+
+
+class IncidentNoteCreate(BaseModel):
+    note: str = Field(min_length=1)
+
+
+class IncidentEventCreate(BaseModel):
+    event_type: str = Field(min_length=1, max_length=100)
+    message: str = Field(min_length=1)
+
+
+class IncidentTaskCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=255)
+
+
+class IncidentTaskUpdate(BaseModel):
+    completed: bool
+
+
+class IncidentResolveRequest(BaseModel):
+    resolution_notes: str = Field(min_length=1)
 
 
 class IncidentResponse(BaseModel):
@@ -31,6 +57,10 @@ class IncidentResponse(BaseModel):
     status: str
     assigned_to: str | None = None
     resolution_notes: str | None = None
+    notes: list | None = None
+    timeline_events: list | None = None
+    tasks: list | None = None
+    impacted_services: list | None = None
     organization_id: str | None = None
     created_at: datetime
     updated_at: datetime

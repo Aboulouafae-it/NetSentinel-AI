@@ -25,6 +25,9 @@ pnpm-debug.log*
 
 # Environment
 .env
+.env.*
+!.env.example
+!.env.production.example
 .env.local
 .env.*.local
 
@@ -50,6 +53,18 @@ Thumbs.db
 htmlcov/
 .pytest_cache/
 .mypy_cache/
+
+# Runtime data and secrets
+backups/
+*.dump
+*.sql
+*.sqlite
+*.db
+*.key
+*.pem
+*.token
+*.secret
+frontend/tsconfig.tsbuildinfo
 
 # Desktop builds
 desktop-client/dist/

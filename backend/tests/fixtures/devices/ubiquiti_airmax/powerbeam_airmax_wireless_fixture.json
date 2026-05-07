@@ -1,0 +1,23 @@
+{
+  "sample_type": "synthetic",
+  "device_family": "PowerBeam",
+  "data": {
+    "sysName": "ubnt-powerbeam-a",
+    "sysDescr": "Ubiquiti PowerBeam 5AC airMAX",
+    "sysUpTime": "6454321",
+    "interface_names": ["eth0", "ath0"],
+    "interface_status": ["up", "up"],
+    "ubnt_rssi_dbm": "-58",
+    "ubnt_snr_db": "35",
+    "ubnt_noise_floor_dbm": "-94",
+    "ubnt_airmax_quality_percent": "92",
+    "ubnt_airmax_capacity_percent": "88",
+    "ubnt_tx_rate_mbps": "390",
+    "ubnt_rx_rate_mbps": "360",
+    "ubnt_frequency_mhz": "5745",
+    "ubnt_channel_width_mhz": "40",
+    "ubnt_latency_ms": "4.8",
+    "ubnt_packet_loss_percent": "0",
+    "ubnt_link_distance_km": "3.6"
+  }
+}

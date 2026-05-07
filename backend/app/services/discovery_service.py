@@ -112,6 +112,7 @@ def resolve_hostname(ip: str) -> str | None:
 async def scan_subnet(
     subnet_str: str,
     db: AsyncSession,
+    organization_id=None,
 ) -> DiscoveryScan:
     """
     Perform a REAL ICMP ping sweep of the given subnet.
@@ -132,6 +133,7 @@ async def scan_subnet(
     # Create scan record
     scan = DiscoveryScan(
         subnet=subnet_str,
+        organization_id=organization_id,
         status=ScanStatus.RUNNING,
         total_hosts=len(host_ips),
     )
@@ -173,6 +175,7 @@ async def scan_subnet(
 
         host = DiscoveredHost(
             ip_address=result["ip"],
+            organization_id=organization_id,
             is_reachable=is_reachable,
             response_time_ms=result["response_time_ms"],
             hostname_resolved=hostname,

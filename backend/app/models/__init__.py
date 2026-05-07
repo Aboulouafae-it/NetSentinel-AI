@@ -17,6 +17,8 @@ from app.models.automation import PlaybookRule, ActionType, ResponseAction
 from app.models.discovery import DiscoveredHost, DiscoveryScan, HostReachability, ScanStatus
 from app.models.field_measurement import FieldMeasurement, LinkStatus
 from app.models.radio_device import RadioDevice, DeviceVendor, AdapterType, RadioDeviceRole
+from app.models.credential import CredentialProfile, CredentialType
+from app.models.edge_agent import EdgeAgent, EdgeAgentStatus, ActivityEvent, ActivitySeverity
 from app.models.wireless import (
     AntennaProfile,
     PhysicalMount,
@@ -69,4 +71,10 @@ __all__ = [
     "DeviceVendor",
     "AdapterType",
     "RadioDeviceRole",
+    "CredentialProfile",
+    "CredentialType",
+    "EdgeAgent",
+    "EdgeAgentStatus",
+    "ActivityEvent",
+    "ActivitySeverity",
 ]

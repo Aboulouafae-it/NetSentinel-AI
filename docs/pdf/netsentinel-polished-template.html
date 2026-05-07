@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NetSentinel AI — Project Foundation Dossier</title>
+  <style>
+    :root {
+      --blue-950: #061526;
+      --blue-900: #0b1f3a;
+      --blue-800: #12345a;
+      --cyan-500: #00a3ff;
+      --cyan-300: #19d3ff;
+      --ink: #172033;
+      --muted: #5c6b7d;
+      --line: #d6e0ea;
+      --soft: #eef6ff;
+      --paper: #ffffff;
+      --warn: #fff4e5;
+      --danger: #fff1f2;
+      --success: #f0fdf4;
+    }
+
+    @page {
+      size: Letter;
+      margin: 0.72in 0.62in 0.78in 0.62in;
+    }
+
+    * { box-sizing: border-box; }
+    html { color: var(--ink); font-family: "Inter", "Segoe UI", "Noto Sans", Arial, sans-serif; font-size: 10.2pt; line-height: 1.48; }
+    body { margin: 0; background: var(--paper); }
+    a { color: var(--blue-800); text-decoration: none; }
+    p { margin: 0 0 0.58rem; }
+    strong { color: var(--blue-900); }
+
+    .cover {
+      page-break-after: always;
+      min-height: 9.05in;
+      padding: 0.2in 0 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .cover::before {
+      content: "";
+      position: absolute;
+      inset: -0.72in -0.62in auto -0.62in;
+      height: 2.15in;
+      background: linear-gradient(135deg, var(--blue-950), var(--blue-800));
+      z-index: -1;
+    }
+
+    .cover-kicker {
+      color: var(--cyan-300);
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-top: 0.1in;
+    }
+
+    .cover h1 {
+      margin: 0.68in 0 0.16in;
+      color: white;
+      font-size: 3.05rem;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      font-weight: 900;
+    }
+
+    .cover-subtitle {
+      color: #dbeafe;
+      font-size: 1.12rem;
+      max-width: 6.2in;
+      font-weight: 520;
+    }
+
+    .cover-card {
+      margin-top: 0.72in;
+      width: 5.45in;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cyan-500);
+      padding: 0.18in 0.22in;
+      background: #fbfdff;
+      border-radius: 9px;
+      box-shadow: 0 10px 24px rgba(6, 21, 38, 0.08);
+    }
+
+    .cover-card div { margin: 0.08in 0; font-size: 0.98rem; }
+    .confidential {
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      padding: 0.16in 0.2in;
+      border-radius: 9px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .toc-page {
+      page-break-after: always;
+      padding-top: 0.1in;
+      min-height: 9.05in;
+    }
+
+    .toc-page h1 {
+      color: var(--blue-900);
+      font-size: 1.85rem;
+      margin: 0 0 0.28in;
+      padding-bottom: 0.08in;
+      border-bottom: 3px solid var(--cyan-500);
+    }
+
+    #generated-toc { columns: 2; column-gap: 0.35in; }
+    .toc-group {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin: 0 0 0.06in;
+      padding-bottom: 0.045in;
+      border-bottom: 1px solid #eef2f7;
+    }
+    .toc-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.06in;
+      align-items: baseline;
+      color: var(--blue-900);
+      font-weight: 800;
+      font-size: 0.82rem;
+      line-height: 1.25;
+      margin: 0 0 0.02in;
+    }
+    .toc-row.level-2 {
+      color: var(--muted);
+      font-weight: 520;
+      font-size: 0.72rem;
+      margin-left: 0.12in;
+    }
+    .toc-title { overflow-wrap: anywhere; }
+    .toc-dots {
+      border-bottom: 1px dotted #b8c5d4;
+      transform: translateY(-0.12em);
+      min-width: 0.15in;
+    }
+    .toc-page-num {
+      color: var(--blue-800);
+      font-variant-numeric: tabular-nums;
+      min-width: 0.18in;
+      text-align: right;
+    }
+
+    main > h1 {
+      page-break-before: always;
+      margin: 0 0 0.18in;
+      padding: 0.22in 0.25in;
+      color: white;
+      background: linear-gradient(135deg, var(--blue-950), var(--blue-800));
+      border-radius: 8px;
+      font-size: 1.72rem;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    main > h1:first-child { page-break-before: auto; }
+    h2 {
+      color: var(--blue-900);
+      font-size: 1.14rem;
+      margin: 0.22in 0 0.075in;
+      padding-bottom: 0.035in;
+      border-bottom: 1px solid var(--line);
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+    h3 {
+      color: var(--blue-800);
+      font-size: 1rem;
+      margin: 0.16in 0 0.05in;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.12in 0 0.18in;
+      font-size: 0.82rem;
+      page-break-inside: auto;
+    }
+    thead { display: table-header-group; }
+    tr { page-break-inside: avoid; }
+    th {
+      background: var(--blue-900);
+      color: white;
+      text-align: left;
+      padding: 7px 8px;
+      border: 1px solid var(--blue-800);
+      font-weight: 800;
+    }
+    td {
+      vertical-align: top;
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+    }
+    tbody tr:nth-child(even) td { background: #f8fbff; }
+
+    blockquote.callout {
+      margin: 0.15in 0 0.2in;
+      padding: 0.13in 0.17in;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cyan-500);
+      border-radius: 8px;
+      background: var(--soft);
+      page-break-inside: avoid;
+    }
+    blockquote.callout p:last-child { margin-bottom: 0; }
+    blockquote.callout .callout-title {
+      display: block;
+      color: var(--blue-900);
+      font-weight: 900;
+      margin-bottom: 0.045in;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.78rem;
+    }
+    blockquote.security-note { background: var(--warn); border-left-color: #f59e0b; }
+    blockquote.mvp-limitation { background: var(--danger); border-left-color: #dc2626; }
+    blockquote.future-improvement { background: var(--success); border-left-color: #16a34a; }
+
+    pre {
+      margin: 0.1in 0 0.18in;
+      padding: 0.12in 0.14in;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0b1220;
+      color: #e5eefb;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 0.78rem;
+      line-height: 1.38;
+    }
+    code { font-family: "JetBrains Mono", "DejaVu Sans Mono", Consolas, monospace; font-size: 0.88em; }
+    p code, li code, td code, a, .nowrap {
+      background: #edf5ff;
+      color: var(--blue-900);
+      padding: 0.06rem 0.18rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      word-break: keep-all;
+    }
+
+    .literal {
+      font-family: "JetBrains Mono", "DejaVu Sans Mono", Consolas, monospace;
+      font-size: 0.88em;
+    }
+
+    .mermaid-wrap {
+      margin: 0.15in 0 0.22in;
+      padding: 0.14in;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cyan-500);
+      border-radius: 10px;
+      background: #fbfdff;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      overflow: hidden;
+    }
+    .mermaid-title {
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: var(--blue-900);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.08in;
+    }
+    .mermaid { text-align: center; }
+    .mermaid svg {
+      max-width: 100% !important;
+      max-height: 6.65in !important;
+      height: auto !important;
+    }
+
+    .interface-shot {
+      display: block;
+      width: 100%;
+      max-height: 5.85in;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 0.14in 0 0.12in;
+      box-shadow: 0 10px 24px rgba(6, 21, 38, 0.12);
+      page-break-inside: avoid;
+    }
+
+    p:has(.interface-shot) {
+      page-break-inside: avoid;
+    }
+
+    ul, ol { margin-top: 0.04in; padding-left: 0.24in; }
+    li { margin: 0.025in 0; }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 0.2in 0; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div>
+      <div class="cover-kicker">Project Foundation Dossier</div>
+      <h1>NetSentinel AI</h1>
+      <div class="cover-subtitle">Local-First Network Observability, Cybersecurity &amp; Wireless Diagnostics Platform</div>
+      <div class="cover-card">
+        <div><strong>Version:</strong> MVP / Project Foundation Dossier</div>
+        <div><strong>Date:</strong> 2026-05-06</div>
+        <div><strong>Founder:</strong> Aboulouafae IT</div>
+        <div><strong>Classification:</strong> Confidential - Internal Project and Partner Evaluation</div>
+      </div>
+    </div>
+    <div class="confidential">
+      <strong>Confidentiality Notice:</strong> This document contains project strategy, architecture, technical design, product positioning, and security planning information for NetSentinel AI. It is intended for authorized evaluation by founders, engineers, cybersecurity professionals, network administrators, investors, public institutions, and enterprise reviewers.
+    </div>
+  </section>
+
+  <section class="toc-page">
+    <h1>Table of Contents</h1>
+    <nav id="generated-toc" aria-label="Table of Contents"></nav>
+  </section>
+
+  <main>
+    $body$
+  </main>
+
+  <script src="$mermaid_script$"></script>
+  <script>
+    (async () => {
+      const slug = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$$/g, '');
+
+      document.querySelectorAll('blockquote').forEach((bq) => {
+        const strong = bq.querySelector('p > strong:first-child');
+        if (!strong) return;
+        const label = strong.textContent.trim();
+        const known = ['Important', 'Security Note', 'MVP Limitation', 'Future Improvement'];
+        if (!known.includes(label)) return;
+        bq.classList.add('callout', slug(label));
+        strong.classList.add('callout-title');
+      });
+
+      document.querySelectorAll('pre.mermaid > code, pre > code.language-mermaid').forEach((code, index) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'mermaid-wrap';
+        const title = document.createElement('div');
+        title.className = 'mermaid-title';
+        title.textContent = 'Architecture Diagram';
+        const diagram = document.createElement('div');
+        diagram.className = 'mermaid';
+        diagram.textContent = code.textContent;
+        wrap.appendChild(title);
+        wrap.appendChild(diagram);
+        code.parentElement.replaceWith(wrap);
+      });
+
+      window.__netsentinelMermaid = { total: document.querySelectorAll('.mermaid').length, rendered: 0, failed: 0 };
+
+      if (window.mermaid) {
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'loose',
+          theme: 'base',
+          themeVariables: {
+            primaryColor: '#eef6ff',
+            primaryTextColor: '#172033',
+            primaryBorderColor: '#00a3ff',
+            lineColor: '#12345a',
+            secondaryColor: '#f8fbff',
+            tertiaryColor: '#ffffff',
+            fontFamily: 'Inter, Segoe UI, Arial, sans-serif'
+          }
+        });
+
+        const timeout = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error('Mermaid render timeout')), ms));
+        const diagrams = [...document.querySelectorAll('.mermaid')];
+        for (const [index, diagram] of diagrams.entries()) {
+          const source = diagram.textContent;
+          try {
+            const result = await Promise.race([
+              mermaid.render('netsentinel-mermaid-' + index, source),
+              timeout(6000)
+            ]);
+            diagram.innerHTML = result.svg;
+            window.__netsentinelMermaid.rendered += 1;
+          } catch (error) {
+            diagram.classList.add('mermaid-error');
+            diagram.innerHTML = '<pre>' + source.replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])) + '</pre>';
+            window.__netsentinelMermaid.failed += 1;
+            console.error('Mermaid render failed', index, error);
+          }
+        }
+      }
+
+      const pageHeight = 1056;
+      const toc = document.querySelector('#generated-toc');
+      const headings = [...document.querySelectorAll('main > h1')];
+      function pageFor(el) {
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        return Math.max(1, Math.floor((top + 32) / pageHeight) + 1);
+      }
+      function buildToc() {
+        if (toc.dataset.static === 'true') return;
+        toc.innerHTML = '';
+        let currentGroup = null;
+        headings.forEach((heading) => {
+          const level = heading.tagName === 'H1' ? 1 : 2;
+          if (level === 1) {
+            currentGroup = document.createElement('div');
+            currentGroup.className = 'toc-group';
+            toc.appendChild(currentGroup);
+          }
+          if (!currentGroup) return;
+          const row = document.createElement('div');
+          row.className = 'toc-row level-' + level;
+          const title = document.createElement('span');
+          title.className = 'toc-title';
+          title.textContent = heading.textContent.replace(/(\d+)\.(\S)/, (_m, n, rest) => n + '. ' + rest);
+          const dots = document.createElement('span');
+          dots.className = 'toc-dots';
+          const page = document.createElement('span');
+          page.className = 'toc-page-num';
+          page.textContent = pageFor(heading);
+          row.appendChild(title);
+          row.appendChild(dots);
+          row.appendChild(page);
+          currentGroup.appendChild(row);
+        });
+      }
+      buildToc();
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      buildToc();
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      buildToc();
+
+      document.body.classList.add('ready');
+      window.__netsentinelReady = true;
+    })().catch((error) => {
+      console.error(error);
+      window.__netsentinelReady = 'error: ' + error.message;
+    });
+  </script>
+</body>
+</html>

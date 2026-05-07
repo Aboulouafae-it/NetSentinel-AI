@@ -31,6 +31,8 @@ class UserResponse(BaseModel):
     email: str
     full_name: str
     is_active: bool
+    role: str
     organization_id: str | None = None
+    organization_name: str | None = None
 
     model_config = {"from_attributes": True}

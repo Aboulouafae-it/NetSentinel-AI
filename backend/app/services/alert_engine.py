@@ -111,6 +111,10 @@ async def evaluate_measurement(measurement: FieldMeasurement, db: AsyncSession) 
             severity=AlertSeverity(severity),
             status=AlertStatus.OPEN,
             source=source,
+            organization_id=measurement.organization_id,
+            wireless_link_id=measurement.wireless_link_id,
+            last_seen=now,
+            source_metadata={"field_measurement_id": str(measurement.id)},
         )
         db.add(alert)
         alerts_created.append(alert)

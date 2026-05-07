@@ -1,0 +1,18 @@
+# NetSentinel AI Caddy example
+# For HTTPS, replace :80 with your appliance hostname and configure DNS/certs.
+
+:80 {
+    encode zstd gzip
+
+    handle /api/* {
+        reverse_proxy 127.0.0.1:8000
+    }
+
+    handle /health {
+        reverse_proxy 127.0.0.1:8000
+    }
+
+    handle {
+        reverse_proxy 127.0.0.1:3000
+    }
+}

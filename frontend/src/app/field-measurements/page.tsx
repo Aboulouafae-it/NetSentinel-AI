@@ -2,12 +2,10 @@
 
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
-import { fetcher } from '@/lib/api';
-import type { FieldMeasurement } from '@/lib/types';
+import { fetchApi, fetcher } from '@/lib/api';
+import type { FieldMeasurement, WirelessLink } from '@/lib/types';
 import { Radio, Plus, X, Wifi, WifiOff, AlertTriangle, Wrench, Stethoscope } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
 const statusConfig: Record<string, { color: string; icon: any; label: string }> = {
   operational: { color: 'var(--status-online)', icon: Wifi, label: 'Operational' },
@@ -36,16 +34,40 @@ const labelStyle: React.CSSProperties = {
   letterSpacing: '0.5px',
 };
 
+const numericRules: Record<string, { label: string; min: number; max: number }> = {
+  frequency_mhz: { label: 'Frequency', min: 800, max: 80000 },
+  channel_width_mhz: { label: 'Channel width', min: 5, max: 160 },
+  rssi_dbm: { label: 'RSSI', min: -100, max: 0 },
+  snr_db: { label: 'SNR', min: 0, max: 70 },
+  noise_floor_dbm: { label: 'Noise floor', min: -120, max: -30 },
+  ccq_percent: { label: 'CCQ', min: 0, max: 100 },
+  latency_ms: { label: 'Latency', min: 0, max: 10000 },
+  packet_loss_percent: { label: 'Packet loss', min: 0, max: 100 },
+  tx_capacity_mbps: { label: 'TX capacity', min: 0, max: 100000 },
+  rx_capacity_mbps: { label: 'RX capacity', min: 0, max: 100000 },
+};
+
+const diagnosisColor: Record<string, string> = {
+  Excellent: '#10b981',
+  Good: '#22c55e',
+  Degraded: '#f59e0b',
+  Poor: '#f97316',
+  Critical: '#ef4444',
+};
+
 export default function FieldMeasurementsPage() {
-  const { data: measurements } = useSWR<FieldMeasurement[]>('/field-measurements/', fetcher);
+  const { data: measurements, error: loadError, isLoading } = useSWR<FieldMeasurement[]>('/field-measurements/', fetcher);
+  const { data: wirelessLinks } = useSWR<WirelessLink[]>('/wireless/links', fetcher);
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
   // Form state
   const [form, setForm] = useState({
     link_name: '',
+    wireless_link_id: '',
     origin_site: '',
     destination_site: '',
     vendor: '',
@@ -70,18 +92,33 @@ export default function FieldMeasurementsPage() {
   };
 
   const handleSubmit = async () => {
-    if (!form.link_name.trim()) {
-      setError('Link name is required');
+    if (!form.wireless_link_id && !form.link_name.trim()) {
+      setError('Select a wireless link or enter a fallback link name');
       return;
+    }
+    for (const [key, rule] of Object.entries(numericRules)) {
+      const value = (form as any)[key];
+      if (!value?.trim()) continue;
+      const parsed = Number(value);
+      if (!Number.isFinite(parsed)) {
+        setError(`${rule.label} must be a valid number`);
+        return;
+      }
+      if (parsed < rule.min || parsed > rule.max) {
+        setError(`${rule.label} must be between ${rule.min} and ${rule.max}`);
+        return;
+      }
     }
     setSubmitting(true);
     setError(null);
+    setSuccess(null);
 
     // Build payload — convert numeric strings to numbers, empty to null
     const payload: Record<string, any> = {
       link_name: form.link_name,
       link_status: form.link_status,
     };
+    if (form.wireless_link_id) payload.wireless_link_id = form.wireless_link_id;
     
     const stringFields = ['origin_site', 'destination_site', 'vendor', 'device_model', 'technician_name', 'notes'];
     for (const f of stringFields) {
@@ -102,26 +139,27 @@ export default function FieldMeasurementsPage() {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/field-measurements/`, {
+      const created = await fetchApi<FieldMeasurement>('/field-measurements/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || JSON.stringify(err));
-      }
-
       // Reset form and close
       setForm({
-        link_name: '', origin_site: '', destination_site: '', vendor: '', device_model: '',
+        link_name: '', wireless_link_id: '', origin_site: '', destination_site: '', vendor: '', device_model: '',
         frequency_mhz: '', channel_width_mhz: '', rssi_dbm: '', snr_db: '', noise_floor_dbm: '',
         ccq_percent: '', latency_ms: '', packet_loss_percent: '', tx_capacity_mbps: '', rx_capacity_mbps: '',
         link_status: 'operational', technician_name: '', notes: '',
       });
       setShowForm(false);
-      mutate('/field-measurements/');
+      mutate('/field-measurements/', (current?: FieldMeasurement[]) => [created, ...(current || [])], false);
+      mutate('/field-measurements/stats');
+      mutate('/alerts/');
+      if (created.wireless_link_id) mutate(`/wireless/links/${created.wireless_link_id}/measurements`);
+      mutate('/alerts/stats');
+      setSuccess(
+        `Measurement saved. Wireless health: ${created.diagnosis.status} (${created.diagnosis.health_score}/100).`
+      );
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -162,6 +200,15 @@ export default function FieldMeasurementsPage() {
         </button>
       </div>
 
+      {success && (
+        <div style={{
+          padding: '12px', marginBottom: '16px',
+          backgroundColor: 'rgba(16,185,129,0.15)',
+          border: '1px solid rgba(16,185,129,0.35)',
+          borderRadius: '8px', color: '#10b981', fontSize: '0.9rem',
+        }}>{success}</div>
+      )}
+
       {/* Entry Form */}
       {showForm && (
         <div className="card" style={{
@@ -185,9 +232,26 @@ export default function FieldMeasurementsPage() {
           )}
 
           {/* Link Identity */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '20px' }}>
             <div>
-              <label style={labelStyle}>Link Name *</label>
+              <label style={labelStyle}>Wireless Link</label>
+              <select
+                style={{ ...inputStyle, cursor: 'pointer' }}
+                value={form.wireless_link_id}
+                onChange={e => {
+                  const selected = wirelessLinks?.find(link => link.id === e.target.value);
+                  updateField('wireless_link_id', e.target.value);
+                  if (selected) updateField('link_name', selected.name);
+                }}
+              >
+                <option value="">Manual fallback</option>
+                {wirelessLinks?.map(link => (
+                  <option key={link.id} value={link.id}>{link.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Link Name / Fallback</label>
               <input style={inputStyle} placeholder="e.g. Tower-A ↔ Tower-B" value={form.link_name} onChange={e => updateField('link_name', e.target.value)} />
             </div>
             <div>
@@ -307,7 +371,18 @@ export default function FieldMeasurementsPage() {
       )}
 
       {/* Results Table */}
-      {measurements && measurements.length > 0 ? (
+      {loadError && (
+        <div className="card" style={{ padding: '24px', border: '1px solid rgba(239,68,68,0.35)', marginBottom: '20px' }}>
+          <strong style={{ color: '#ef4444' }}>Unable to load field measurements.</strong>
+          <p style={{ margin: '8px 0 0', color: 'var(--text-secondary)' }}>{loadError.message}</p>
+        </div>
+      )}
+
+      {isLoading ? (
+        <div className="card" style={{ padding: '48px', textAlign: 'center', color: 'var(--text-muted)' }}>
+          Loading real field measurements...
+        </div>
+      ) : measurements && measurements.length > 0 ? (
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-subtle)' }}>
             <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600 }}>
@@ -318,10 +393,10 @@ export default function FieldMeasurementsPage() {
             </p>
           </div>
           <div className="table-container" style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '1100px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '1450px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-surface-hover)' }}>
-                  {['Status', 'Link Name', 'Sites', 'Vendor / Model', 'RSSI', 'SNR', 'CCQ', 'Latency', 'Loss', 'Date', ''].map(h => (
+                  {['Health', 'Status', 'Link Name', 'Sites', 'Vendor / Model', 'RSSI', 'SNR', 'CCQ', 'Latency', 'Loss', 'Root Cause', 'Date', ''].map(h => (
                     <th key={h} style={{ padding: '12px 14px', fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
@@ -337,6 +412,15 @@ export default function FieldMeasurementsPage() {
                       onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.02)'}
                       onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
+                      <td style={{ padding: '12px 14px' }}>
+                        <span style={{
+                          display: 'inline-flex', alignItems: 'center', gap: '6px',
+                          color: diagnosisColor[m.diagnosis.status] || 'var(--text-secondary)',
+                          fontWeight: 700, fontSize: '0.82rem', whiteSpace: 'nowrap',
+                        }}>
+                          {m.diagnosis.health_score}/100 {m.diagnosis.status}
+                        </span>
+                      </td>
                       <td style={{ padding: '12px 14px' }}>
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: sc.color, fontWeight: 600, fontSize: '0.8rem' }}>
                           <Icon size={14} /> {sc.label}
@@ -363,6 +447,12 @@ export default function FieldMeasurementsPage() {
                       </td>
                       <td style={{ padding: '12px 14px', fontFamily: 'monospace', color: m.packet_loss_percent != null && m.packet_loss_percent > 1 ? 'var(--status-critical)' : 'var(--text-secondary)' }}>
                         {m.packet_loss_percent != null ? `${m.packet_loss_percent}%` : '—'}
+                      </td>
+                      <td style={{ padding: '12px 14px', fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '260px' }}>
+                        <div style={{ whiteSpace: 'normal' }}>{m.diagnosis.likely_root_cause}</div>
+                        <div style={{ marginTop: '4px', color: 'var(--text-muted)' }}>
+                          {m.diagnosis.recommended_actions[0]}
+                        </div>
                       </td>
                       <td style={{ padding: '12px 14px', fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                         {new Date(m.created_at).toLocaleDateString()}

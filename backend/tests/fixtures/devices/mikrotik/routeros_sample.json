@@ -1,0 +1,46 @@
+{
+  "sample_type": "synthetic",
+  "device_family": "RouterOS outdoor bridge",
+  "commands": {
+    "/system/identity/print": [
+      {"name": "mt-edge-ptp-a"}
+    ],
+    "/system/resource/print": [
+      {
+        "platform": "MikroTik",
+        "board-name": "LHG 5 ac",
+        "version": "7.14.3",
+        "uptime": "5d12h03m",
+        "cpu-load": "23",
+        "free-memory": "134217728",
+        "total-memory": "268435456"
+      }
+    ],
+    "/interface/print": [
+      {"name": "ether1", "type": "ether", "running": "true", "disabled": "false", "rx-byte": "12345678", "tx-byte": "23456789", "rx-error": "0", "tx-error": "1"},
+      {"name": "wlan1", "type": "wlan", "running": "true", "disabled": "false", "rx-byte": "34567890", "tx-byte": "45678901", "rx-error": "2", "tx-error": "0"},
+      {"name": "bridge1", "type": "bridge", "running": "false", "disabled": "true"}
+    ],
+    "/ip/address/print": [
+      {"address": "192.0.2.10/24", "interface": "ether1", "network": "192.0.2.0"}
+    ],
+    "/interface/wireless/registration-table/print": [
+      {
+        "interface": "wlan1",
+        "mac-address": "00:11:22:33:44:55",
+        "signal-strength": "-61dBm",
+        "signal-to-noise": "32",
+        "noise-floor": "-93",
+        "tx-ccq": "91%",
+        "tx-rate": "300Mbps",
+        "rx-rate": "270Mbps",
+        "frequency": "5805",
+        "channel-width": "40"
+      }
+    ],
+    "/log/print": [
+      {"time": "12:00:01", "topics": "account,warning", "message": "login failure for user admin from 198.51.100.10"},
+      {"time": "12:05:21", "topics": "interface,info", "message": "interface wlan1 link down"}
+    ]
+  }
+}

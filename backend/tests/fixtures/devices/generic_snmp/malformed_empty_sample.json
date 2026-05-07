@@ -1,0 +1,9 @@
+{
+  "sample_type": "synthetic",
+  "data": {},
+  "malformed_outputs": [
+    "not an oid response",
+    "IF-MIB::ifDescr.1 = ",
+    ""
+  ]
+}

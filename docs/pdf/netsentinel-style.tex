@@ -1,0 +1,147 @@
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fvextra}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{fontspec}
+
+\definecolor{NetBlue}{HTML}{0B1F3A}
+\definecolor{NetAccent}{HTML}{00A3FF}
+\definecolor{NetCyan}{HTML}{19D3FF}
+\definecolor{NetSoft}{HTML}{EEF6FF}
+\definecolor{NetLine}{HTML}{B7C7D8}
+\definecolor{NetText}{HTML}{1E293B}
+\definecolor{NetMuted}{HTML}{536173}
+\definecolor{ImportantBg}{HTML}{EEF6FF}
+\definecolor{SecurityBg}{HTML}{FFF4E5}
+\definecolor{MVPBg}{HTML}{FFF1F2}
+\definecolor{FutureBg}{HTML}{F0FDF4}
+
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.86]
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=NetBlue,
+  urlcolor=NetAccent,
+  citecolor=NetBlue,
+  pdftitle={NetSentinel AI Project Foundation Dossier},
+  pdfauthor={Author / Founder Placeholder}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsf{NetSentinel AI — Project Foundation Dossier}}
+\fancyhead[R]{\small\textsf{MVP / Work in Progress}}
+\fancyfoot[L]{\small\textsf{Confidential}}
+\fancyfoot[R]{\small\textsf{Page \thepage\ of \pageref*{LastPage}}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{NetLine}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{NetLine}\leaders\hrule height \footrulewidth\hfill}}
+
+\titleformat{\section}
+  {\clearpage\Large\bfseries\sffamily\color{NetBlue}}
+  {\thesection}{0.8em}{}
+  [\vspace{0.15em}{\color{NetAccent}\titlerule[0.8pt]}]
+\titleformat{\subsection}
+  {\large\bfseries\sffamily\color{NetBlue}}
+  {\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\sffamily\color{NetMuted}}
+  {\thesubsubsection}{0.8em}{}
+\titlespacing*{\section}{0pt}{0pt}{1.1em}
+\titlespacing*{\subsection}{0pt}{1.25em}{0.55em}
+\titlespacing*{\subsubsection}{0pt}{1em}{0.4em}
+
+\pretitle{%
+  \begin{titlepage}
+  \pagecolor{white}
+  \vspace*{1.6cm}
+  {\sffamily\color{NetAccent}\Large Project Foundation Dossier\par}
+  \vspace{0.5cm}
+  {\color{NetAccent}\rule{0.35\textwidth}{2pt}\par}
+  \vspace{1.2cm}
+  \begin{flushleft}
+  \sffamily\bfseries\Huge\color{NetBlue}
+}
+\posttitle{%
+  \par
+  \vspace{0.6cm}
+  {\sffamily\Large\color{NetMuted}Local-First Network Observability, Cybersecurity \& Wireless Diagnostics Platform\par}
+  \vspace{2cm}
+  \begin{tcolorbox}[colback=NetSoft,colframe=NetAccent,arc=1.5mm,boxrule=0.8pt,left=10pt,right=10pt,top=8pt,bottom=8pt,width=0.82\textwidth]
+  {\sffamily\large\color{NetBlue}\textbf{Version:} MVP / Project Foundation Dossier\par}
+  \vspace{0.2cm}
+  {\sffamily\large\color{NetBlue}\textbf{Date:} 2026-05-06\par}
+  \vspace{0.2cm}
+  {\sffamily\large\color{NetBlue}\textbf{Author / Founder:} [Name Placeholder]\par}
+  \end{tcolorbox}
+  \vfill
+  \begin{tcolorbox}[colback=white,colframe=NetLine,arc=1.5mm,boxrule=0.5pt,left=10pt,right=10pt,top=8pt,bottom=8pt,width=0.9\textwidth]
+  {\sffamily\small\color{NetText}\textbf{Confidentiality Notice}\\
+  This document contains project strategy, architecture, technical design, product positioning, and security planning information for NetSentinel AI. It is intended for authorized evaluation by founders, engineers, cybersecurity professionals, network administrators, investors, public institutions, and enterprise reviewers.}
+  \end{tcolorbox}
+  \end{flushleft}
+  \end{titlepage}
+}
+\preauthor{}
+\postauthor{}
+\predate{}
+\postdate{}
+
+\renewcommand{\contentsname}{Table of Contents}
+\setcounter{tocdepth}{3}
+
+\AtBeginDocument{
+  \color{NetText}
+  \setlength{\parskip}{0.38em}
+  \setlength{\parindent}{0pt}
+  \setlist[itemize]{topsep=0.25em,itemsep=0.12em,leftmargin=1.3em}
+  \setlist[enumerate]{topsep=0.25em,itemsep=0.12em,leftmargin=1.4em}
+}
+
+\captionsetup{font=small,labelfont=bf}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{5pt}
+
+\newtcolorbox{netsentinelbox}[2][]{
+  enhanced,
+  breakable,
+  arc=1.5mm,
+  boxrule=0.7pt,
+  left=8pt,
+  right=8pt,
+  top=7pt,
+  bottom=7pt,
+  title={#2},
+  fonttitle=\bfseries\sffamily,
+  coltitle=NetBlue,
+  #1
+}
+
+\newcommand{\NSImportantBoxStart}{\begin{netsentinelbox}[colback=ImportantBg,colframe=NetAccent]{Important}}
+\newcommand{\NSSecurityBoxStart}{\begin{netsentinelbox}[colback=SecurityBg,colframe=orange!70!black]{Security Note}}
+\newcommand{\NSMVPBoxStart}{\begin{netsentinelbox}[colback=MVPBg,colframe=red!65!black]{MVP Limitation}}
+\newcommand{\NSFutureBoxStart}{\begin{netsentinelbox}[colback=FutureBg,colframe=green!45!black]{Future Improvement}}
+\newcommand{\NSBoxEnd}{\end{netsentinelbox}}
+
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+  breaklines,
+  commandchars=\\\{\},
+  fontsize=\footnotesize
+}
+
+\newenvironment{mermaiddiagram}
+  {\begin{netsentinelbox}[colback=NetSoft,colframe=NetBlue,title={Mermaid Diagram},fonttitle=\bfseries\sffamily]\VerbatimEnvironment\begin{Verbatim}[breaklines=true,fontsize=\scriptsize]}
+  {\end{Verbatim}\end{netsentinelbox}}

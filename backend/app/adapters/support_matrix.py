@@ -1,0 +1,79 @@
+"""Honest vendor adapter support matrix used by docs/tests."""
+
+from __future__ import annotations
+
+from copy import deepcopy
+from typing import Any
+
+
+SUPPORT_MATRIX: list[dict[str, Any]] = [
+    {
+        "vendor": "Generic SNMP",
+        "adapter_type": "generic_snmp",
+        "transport": "SNMP v2c",
+        "device_info": "supported",
+        "interfaces": "supported",
+        "health": "partial",
+        "wireless_rf_metrics": "not_available",
+        "logs": "not_available",
+        "configuration_changes": False,
+        "status": "partial",
+        "fixture_verified": True,
+    },
+    {
+        "vendor": "MikroTik RouterOS",
+        "adapter_type": "mikrotik_routeros",
+        "transport": "RouterOS API",
+        "device_info": "supported_by_fixture",
+        "interfaces": "supported_by_fixture",
+        "health": "supported_by_fixture",
+        "wireless_rf_metrics": "partial_requires_device_data",
+        "logs": "partial",
+        "configuration_changes": False,
+        "status": "partial",
+        "fixture_verified": True,
+    },
+    {
+        "vendor": "TP-Link CPE",
+        "adapter_type": "tplink_cpe",
+        "transport": "SNMP v2c + ping",
+        "device_info": "partial",
+        "interfaces": "partial",
+        "health": "partial",
+        "wireless_rf_metrics": "requires_fixture_or_known_oids",
+        "logs": "not_available",
+        "configuration_changes": False,
+        "status": "partial",
+        "fixture_verified": True,
+    },
+    {
+        "vendor": "Ubiquiti airMAX / UISP",
+        "adapter_type": "ubiquiti_airmax",
+        "transport": "SNMP v2c + UISP placeholder",
+        "device_info": "partial",
+        "interfaces": "partial",
+        "health": "partial",
+        "wireless_rf_metrics": "requires_fixture_or_known_oids",
+        "logs": "not_available",
+        "configuration_changes": False,
+        "status": "partial",
+        "fixture_verified": True,
+    },
+    {
+        "vendor": "Cambium",
+        "adapter_type": "cambium",
+        "transport": "placeholder",
+        "device_info": "placeholder",
+        "interfaces": "placeholder",
+        "health": "placeholder",
+        "wireless_rf_metrics": "placeholder",
+        "logs": "placeholder",
+        "configuration_changes": False,
+        "status": "placeholder",
+        "fixture_verified": False,
+    },
+]
+
+
+def get_support_matrix() -> list[dict[str, Any]]:
+    return deepcopy(SUPPORT_MATRIX)

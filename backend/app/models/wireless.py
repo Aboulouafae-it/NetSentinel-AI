@@ -95,6 +95,8 @@ class WirelessLink(Base, UUIDMixin, TimestampMixin):
     # Endpoints
     interface_a_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("radio_interfaces.id"), nullable=False)
     interface_b_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("radio_interfaces.id"), nullable=False)
+    near_end_radio_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("radio_devices.id"), nullable=True)
+    far_end_radio_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("radio_devices.id"), nullable=True)
     
     link_type: Mapped[LinkType] = mapped_column(SQLEnum(LinkType), nullable=False)
     
@@ -109,6 +111,8 @@ class WirelessLink(Base, UUIDMixin, TimestampMixin):
     organization = relationship("Organization")
     interface_a = relationship("RadioInterface", foreign_keys=[interface_a_id])
     interface_b = relationship("RadioInterface", foreign_keys=[interface_b_id])
+    near_end_radio = relationship("RadioDevice", foreign_keys=[near_end_radio_id])
+    far_end_radio = relationship("RadioDevice", foreign_keys=[far_end_radio_id])
     
     alerts = relationship("Alert", back_populates="wireless_link")
     metrics = relationship("WirelessMetric", back_populates="wireless_link", cascade="all, delete-orphan")

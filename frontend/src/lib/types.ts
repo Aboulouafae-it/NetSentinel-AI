@@ -5,7 +5,44 @@ export interface User {
   email: string;
   full_name: string;
   is_active: boolean;
+  role: string;
   organization_id: string | null;
+  organization_name: string | null;
+}
+
+export interface SetupStatus {
+  initialized: boolean;
+  organizations: number;
+  users: number;
+}
+
+export interface ApplianceHealth {
+  app: {
+    name: string;
+    version: string;
+    build_date: string | null;
+    edition: string;
+    environment: string;
+    debug: boolean;
+    production_ready: boolean;
+    config_warnings: string[];
+  };
+  backend: { status: string; detail?: string };
+  database: { status: string; detail?: string };
+  redis: { status: string; detail?: string };
+  worker: { status: string; detail?: string };
+  edge_agents: { status: string; total: number; healthy: number; revoked: number };
+  disk: { total_bytes: number; used_bytes: number; free_bytes: number };
+  backup: { status: string; latest: string | null };
+}
+
+export interface SystemVersion {
+  app_version: string;
+  build_date: string | null;
+  edition: string;
+  environment: string;
+  git_commit: string | null;
+  database_revision: string | null;
 }
 
 export interface Organization {
@@ -39,7 +76,17 @@ export interface Asset {
   os_info: string | null;
   vendor: string | null;
   description: string | null;
-  site_id: string;
+  last_seen: string | null;
+  site_id: string | null;
+  risk_level: 'normal' | 'warning' | 'at_risk' | 'offline' | 'unknown' | null;
+  risk_reasons: string[] | null;
+  related_alerts_count: number;
+  last_poll_status: string | null;
+  last_telemetry_source: string | null;
+  last_poll_latency_ms: number | null;
+  last_poll_packet_loss_percent: number | null;
+  last_poll_error: string | null;
+  last_polled_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -49,12 +96,16 @@ export interface Alert {
   title: string;
   description: string | null;
   severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
-  status: 'open' | 'acknowledged' | 'resolved' | 'dismissed';
+  status: 'open' | 'acknowledged' | 'escalated' | 'resolved' | 'dismissed';
   source: string | null;
   rule_name: string | null;
+  source_metadata: Record<string, any> | null;
   organization_id: string;
   asset_id: string | null;
   incident_id: string | null;
+  wireless_link_id: string | null;
+  occurrence_count: number;
+  last_seen: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -67,6 +118,10 @@ export interface Incident {
   status: 'open' | 'investigating' | 'mitigated' | 'resolved' | 'closed';
   assigned_to: string | null;
   resolution_notes: string | null;
+  notes: Array<Record<string, any>> | null;
+  timeline_events: Array<Record<string, any>> | null;
+  tasks: Array<{ id: string; title: string; completed: boolean }> | null;
+  impacted_services: string[] | null;
   organization_id: string;
   created_at: string;
   updated_at: string;
@@ -77,7 +132,61 @@ export interface AssetStats {
   online: number;
   offline: number;
   degraded: number;
+  unmanaged: number;
+  at_risk: number;
   uptime_percentage: number;
+}
+
+export interface DashboardSummary {
+  assets: { total: number; online: number; offline: number; warning: number; unmanaged: number };
+  alerts: { open: number; critical: number; high: number; medium: number; low: number };
+  incidents: { active: number; by_status: Record<string, number> };
+  wireless_links: { total: number };
+  radio_devices: { total: number; live_adapter_supported?: number; missing_credentials?: number; missing_metrics?: number };
+}
+
+export interface DashboardWirelessHealth {
+  measurements: number;
+  avg_rssi: number | null;
+  avg_snr: number | null;
+  avg_noise_floor: number | null;
+  avg_latency: number | null;
+  avg_packet_loss: number | null;
+}
+
+export interface DashboardActivity {
+  type: string;
+  event: string;
+  title: string;
+  actor?: string | null;
+  severity?: string | null;
+  timestamp: string;
+}
+
+export interface DashboardSystemStatus {
+  [key: string]: { status: string };
+}
+
+export interface TopologySummary {
+  sites: Array<{ id: string; name: string; assets_count: number; has_active_alerts: boolean }>;
+  wireless_links: Array<{ id: string; name: string; status: string; has_active_alerts: boolean }>;
+}
+
+export interface EdgeAgent {
+  id: string;
+  organization_id: string;
+  site_id: string | null;
+  name: string;
+  agent_uid: string;
+  version: string | null;
+  hostname: string | null;
+  ip_address: string | null;
+  status: 'healthy' | 'degraded' | 'offline' | 'unknown';
+  last_seen: string | null;
+  health_metadata: Record<string, any> | null;
+  revoked_at: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface AlertStats {
@@ -125,7 +234,43 @@ export interface WirelessLink {
   organization_id: string;
   theoretical_max_capacity_mbps: number | null;
   expected_rssi_dbm: number | null;
+  near_end_radio_id: string | null;
+  far_end_radio_id: string | null;
   status: 'online' | 'offline' | 'degraded' | 'alignment_needed' | 'unknown';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RadioDevice {
+  id: string;
+  organization_id: string | null;
+  name: string;
+  ip_address: string;
+  mac_address: string | null;
+  vendor: string;
+  device_model: string | null;
+  firmware_version: string | null;
+  role: string;
+  frequency_mhz: number | null;
+  channel_width_mhz: number | null;
+  tx_power_dbm: number | null;
+  site_name: string | null;
+  link_name: string | null;
+  link_side: string | null;
+  wireless_link_id: string | null;
+  adapter_type: string;
+  is_monitored: boolean;
+  is_online: boolean | null;
+  last_seen: string | null;
+  last_poll_source: string | null;
+  last_poll_latency_ms: number | null;
+  last_poll_error: string | null;
+  snmp_info: Record<string, any> | null;
+  latest_device_info: Record<string, any> | null;
+  latest_interface_status: Record<string, any> | null;
+  latest_wireless_metrics: Record<string, any> | null;
+  adapter_capabilities: Record<string, any> | null;
+  notes: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -243,6 +388,8 @@ export interface ScanResultSummary {
 
 export interface FieldMeasurement {
   id: string;
+  organization_id: string | null;
+  wireless_link_id: string | null;
   link_name: string;
   origin_site: string | null;
   destination_site: string | null;
@@ -261,6 +408,16 @@ export interface FieldMeasurement {
   link_status: 'operational' | 'degraded' | 'down' | 'maintenance';
   technician_name: string | null;
   notes: string | null;
+  diagnosis: WirelessDiagnosis;
   created_at: string;
   updated_at: string;
+}
+
+export interface WirelessDiagnosis {
+  health_score: number;
+  status: 'Excellent' | 'Good' | 'Degraded' | 'Poor' | 'Critical';
+  severity: 'info' | 'low' | 'medium' | 'high' | 'critical';
+  likely_root_cause: string;
+  recommended_actions: string[];
+  evidence: string[];
 }

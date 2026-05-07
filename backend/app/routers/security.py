@@ -23,7 +23,7 @@ async def create_detection_rule(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
-    if not current_user.is_superuser and rule_in.organization_id != current_user.organization_id:
+    if rule_in.organization_id != current_user.organization_id:
         raise HTTPException(status_code=403, detail="Not enough permissions")
 
     rule_obj = DetectionRule(**rule_in.model_dump())
@@ -49,7 +49,7 @@ async def create_ioc(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
-    if not current_user.is_superuser and ioc_in.organization_id != current_user.organization_id:
+    if ioc_in.organization_id != current_user.organization_id:
         raise HTTPException(status_code=403, detail="Not enough permissions")
 
     ioc_obj = IndicatorOfCompromise(**ioc_in.model_dump())

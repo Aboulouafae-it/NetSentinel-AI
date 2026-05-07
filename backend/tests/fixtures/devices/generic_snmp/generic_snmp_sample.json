@@ -1,0 +1,14 @@
+{
+  "sample_type": "synthetic",
+  "data": {
+    "sysName": "edge-radio-01",
+    "sysDescr": "Generic Outdoor Radio SNMP Agent",
+    "sysUpTime": "123456789",
+    "interface_names": ["eth0", "wlan0", "bridge0"],
+    "interface_status": ["up", "up", "down"],
+    "interface_in_octets": ["1000", "2000", "3000"],
+    "interface_out_octets": ["4000", "5000", "6000"],
+    "interface_in_errors": ["0", "4", "1"],
+    "interface_out_errors": ["0", "2", "0"]
+  }
+}

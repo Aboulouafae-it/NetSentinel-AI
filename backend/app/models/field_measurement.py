@@ -11,9 +11,9 @@ we failed to generate a fake number.
 
 import uuid
 import enum
-from sqlalchemy import String, Float, Integer, Text, Enum as SQLEnum
+from sqlalchemy import ForeignKey, String, Float, Integer, Text, Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, UUIDMixin, TimestampMixin
 
@@ -40,6 +40,12 @@ class FieldMeasurement(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "field_measurements"
 
     # --- Link Identity ---
+    organization_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=True, index=True
+    )
+    wireless_link_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("wireless_links.id"), nullable=True, index=True
+    )
     link_name: Mapped[str] = mapped_column(String(255), nullable=False)
     origin_site: Mapped[str | None] = mapped_column(String(255), nullable=True)
     destination_site: Mapped[str | None] = mapped_column(String(255), nullable=True)
@@ -70,6 +76,9 @@ class FieldMeasurement(Base, UUIDMixin, TimestampMixin):
     )
     technician_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    organization = relationship("Organization")
+    wireless_link = relationship("WirelessLink")
 
     def __repr__(self) -> str:
         return f"<FieldMeasurement {self.link_name} RSSI={self.rssi_dbm}>"

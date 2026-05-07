@@ -2,7 +2,12 @@
 NetSentinel AI — Main Application Entry Point
 """
 
-from fastapi import FastAPI
+import logging
+import time
+from collections import defaultdict, deque
+
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
@@ -11,30 +16,31 @@ from app.database import engine
 from app.models.base import Base
 
 # Import routers
-from app.routers import auth, organizations, sites, assets, alerts, incidents, ai_assistant, wireless, logs, security, automation, discovery, field_measurements, radio_devices
+from app.routers import auth, organizations, sites, assets, alerts, incidents, ai_assistant, wireless, logs, security, automation, discovery, field_measurements, radio_devices, dashboard, credentials, agents, syslog, events, setup, system
 from app.ingestion import telemetry
 
 settings = get_settings()
+logger = logging.getLogger("netsentinel")
+
+RATE_LIMIT_WINDOW_SECONDS = 60
+RATE_LIMIT_MAX_REQUESTS = 180
+_request_log: dict[str, deque[float]] = defaultdict(deque)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifecycle events for the FastAPI application."""
+    if settings.uses_unsafe_dev_secret:
+        logger.warning(
+            "UNSAFE DEVELOPMENT SECRET_KEY is active. Change SECRET_KEY before shared or production-like use."
+        )
+    production_errors = settings.production_config_errors()
+    if settings.is_production and production_errors:
+        raise RuntimeError("Production configuration is not safe: " + "; ".join(production_errors))
     async with engine.begin() as conn:
-        # Create new tables
+        # MVP bootstrap creates missing tables for fresh local installs.
+        # Existing schema changes are managed through Alembic migrations.
         await conn.run_sync(Base.metadata.create_all)
-
-        # Safe migrations: make FK columns nullable for standalone operation
-        migrations = [
-            "ALTER TABLE alerts ALTER COLUMN organization_id DROP NOT NULL",
-            "ALTER TABLE incidents ALTER COLUMN organization_id DROP NOT NULL",
-            "ALTER TABLE assets ALTER COLUMN site_id DROP NOT NULL",
-        ]
-        for sql in migrations:
-            try:
-                await conn.execute(__import__('sqlalchemy').text(sql))
-            except Exception:
-                pass  # Column already nullable or table doesn't exist yet
     
     yield
     
@@ -58,6 +64,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.middleware("http")
+async def basic_rate_limit(request: Request, call_next):
+    """Small in-memory rate limiter for MVP abuse protection.
+
+    This is not a distributed production rate limiter; it protects the local MVP
+    from accidental floods and simple API abuse while Redis-backed limiting is
+    planned.
+    """
+    if request.url.path == "/health":
+        return await call_next(request)
+
+    client = request.client.host if request.client else "unknown"
+    now = time.monotonic()
+    bucket = _request_log[client]
+    while bucket and now - bucket[0] > RATE_LIMIT_WINDOW_SECONDS:
+        bucket.popleft()
+    if len(bucket) >= RATE_LIMIT_MAX_REQUESTS:
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Rate limit exceeded. Try again shortly."},
+        )
+    bucket.append(now)
+    return await call_next(request)
+
 # Include routers
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(organizations.router, prefix="/api/v1")
@@ -73,6 +104,13 @@ app.include_router(automation.router, prefix="/api/v1")
 app.include_router(discovery.router, prefix="/api/v1")
 app.include_router(field_measurements.router, prefix="/api/v1")
 app.include_router(radio_devices.router, prefix="/api/v1")
+app.include_router(dashboard.router, prefix="/api/v1")
+app.include_router(credentials.router, prefix="/api/v1")
+app.include_router(agents.router, prefix="/api/v1")
+app.include_router(syslog.router, prefix="/api/v1")
+app.include_router(events.router, prefix="/api/v1")
+app.include_router(setup.router, prefix="/api/v1")
+app.include_router(system.router, prefix="/api/v1")
 
 # Fast-path telemetry
 app.include_router(telemetry.router, prefix="/api/v1")

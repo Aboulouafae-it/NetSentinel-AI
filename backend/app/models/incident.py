@@ -4,7 +4,7 @@ NetSentinel AI — Incident Model
 
 import uuid
 from sqlalchemy import ForeignKey, String, Text, Enum as SQLEnum
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import enum
 
@@ -39,6 +39,10 @@ class Incident(Base, UUIDMixin, TimestampMixin):
     )
     assigned_to: Mapped[str | None] = mapped_column(String(255), nullable=True)
     resolution_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    notes: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    timeline_events: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    tasks: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    impacted_services: Mapped[list | None] = mapped_column(JSONB, nullable=True)
 
     # Foreign key (nullable — incidents can be created independently)
     organization_id: Mapped[uuid.UUID | None] = mapped_column(

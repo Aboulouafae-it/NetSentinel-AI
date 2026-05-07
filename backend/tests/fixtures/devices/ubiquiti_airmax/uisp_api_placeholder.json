@@ -1,0 +1,11 @@
+{
+  "sample_type": "synthetic",
+  "transport": "uisp_api_placeholder",
+  "status": "not_implemented",
+  "notes": "Shape reserved for future UISP API captures. No UISP metrics are parsed until real fixtures and credentials are available.",
+  "example_shape": {
+    "device": {},
+    "interfaces": [],
+    "wireless": {}
+  }
+}
