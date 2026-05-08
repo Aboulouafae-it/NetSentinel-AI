@@ -53,6 +53,9 @@ async def dashboard_summary(
     links_count = await db.scalar(select(func.count()).select_from(WirelessLink).where(WirelessLink.organization_id == org_id))
     radio_count = await db.scalar(select(func.count()).select_from(RadioDevice).where(RadioDevice.organization_id == org_id))
     radios = (await db.execute(select(RadioDevice).where(RadioDevice.organization_id == org_id))).scalars().all()
+    recent_logs = (await db.execute(select(LogEntry).where(LogEntry.organization_id == org_id).order_by(LogEntry.timestamp.desc()).limit(500))).scalars().all()
+    fortinet_logs = [log for log in recent_logs if (log.metadata_json or {}).get("vendor_profile") == "fortinet"]
+    fortinet_categories = Counter((log.metadata_json or {}).get("category") for log in fortinet_logs)
 
     summary = summarize_dashboard_counts(assets, alerts, incidents, links_count or 0, radio_count or 0)
     summary["radio_devices"].update({
@@ -60,6 +63,12 @@ async def dashboard_summary(
         "missing_credentials": sum(1 for radio in radios if "credential" in " ".join((radio.adapter_capabilities or {}).get("missing_requirements", []))),
         "missing_metrics": sum(1 for radio in radios if (radio.latest_wireless_metrics or {}).get("snapshot", {}).get("missing_fields")),
     })
+    summary["security_events"] = {
+        "fortinet_high_severity": sum(1 for log in fortinet_logs if (log.metadata_json or {}).get("severity") in {"critical", "high"}),
+        "vpn_failures": fortinet_categories.get("vpn_login_failure", 0),
+        "ips_malware": fortinet_categories.get("ips_attack_detected", 0) + fortinet_categories.get("malware_detected", 0),
+        "blocked_traffic": fortinet_categories.get("firewall_blocked_traffic", 0),
+    }
     return summary
 
 

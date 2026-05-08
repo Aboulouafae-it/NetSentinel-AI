@@ -25,18 +25,32 @@ Outputs are normalized into vendor-independent structures:
 
 ## Support Matrix
 
-| Vendor | Transport | Device info | Interfaces | Health | Wireless RF metrics | Logs | Configuration changes | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Generic SNMP | SNMP v2c | Supported | Supported | Partial | Not available from standard MIBs | Not available | No | Partial, fixture validated |
-| MikroTik RouterOS | RouterOS API wrapper | Supported by fixture | Supported by fixture | Supported by fixture | Partial when registration-table data exists | Partial read-only | No | Partial, fixture validated |
-| TP-Link CPE | SNMP v2c + ping | Partial | Partial | Partial | Requires known OIDs or explicit fixtures | Not available | No | Partial, fixture validated |
-| Ubiquiti airMAX / UISP | SNMP v2c + UISP placeholder | Partial | Partial | Partial | Requires known OIDs or explicit fixtures | Not available | No | Partial, fixture validated |
-| Cambium | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | Placeholder | No | Placeholder |
+| Vendor / Profile | Transport | Status | Fixture Confidence | Real Capture | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Generic SNMP | SNMP v2c | Supported foundation / Partial | Synthetic fixture validated | Real capture needed | Standard system/interface data; no RF claims |
+| MikroTik RouterOS | RouterOS API wrapper | Partial / adapter foundation | Synthetic fixture validated | Real capture needed | Read-only foundation; live transport field verification needed |
+| TP-Link CPE | SNMP v2c + ping | Partial | Synthetic fixture validated | Real capture needed | RF metrics need real OIDs/API captures; manual RF often required |
+| Ubiquiti airMAX / UISP | SNMP v2c + UISP placeholder | Partial | Synthetic fixture validated | Real capture needed | airMAX foundation; UISP placeholder; UniFi not supported |
+| Fortinet / FortiGate syslog | HTTP syslog ingest | Partial | Synthetic fixture validated | Real capture needed | Syslog-only; no API/configuration changes |
+| Cambium | TBD | Placeholder | None | Needed | Planned |
+| Cisco / Aruba / Juniper | TBD | Planned | None | Needed | Planned network device profiles |
+| AWS / Azure / GCP | Cloud APIs | Planned / future | None | Needed | Future cloud integrations |
 
 The fixture lab lives under `backend/tests/fixtures/devices`. Current fixtures
 are synthetic/redacted examples, not production customer captures. Real device
 captures should be added only after secrets, serials, public IPs, usernames, and
 site identifiers are removed.
+
+Support confidence is now tracked separately:
+
+- `synthetic_fixture_validated`: parser has synthetic/redacted example coverage.
+- `real_capture_validated`: reviewed real-redacted captures are committed.
+- `real_device_tested`: a maintainer has tested against a real device.
+- `transport_tested`: live protocol transport has been exercised safely.
+- `rf_metrics_verified`: RF fields are proven from real device output.
+- `manual_required`: manual field measurements remain required for complete RF health.
+
+As of v1.7, no reviewed real device captures are committed yet.
 
 ## Supported Now
 
@@ -135,6 +149,17 @@ The following adapters remain placeholders:
 
 They expose `configured=false`, report `not_configured`, and do not fake device
 or RF metrics.
+
+## Syslog Security Profiles
+
+Fortinet/FortiGate support is provided as a syslog security profile rather than
+a configuration adapter. NetSentinel parses FortiGate key/value syslog, stores
+normalized fields, classifies security events, creates activity events, and
+deduplicates high-value alerts. It does not call FortiGate APIs or change
+firewall configuration.
+
+See `docs/SYSLOG_PROFILES.md` for supported Fortinet categories, sample formats,
+forwarding notes, and limitations.
 
 ## Credentials
 

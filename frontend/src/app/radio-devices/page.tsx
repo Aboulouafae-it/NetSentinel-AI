@@ -5,7 +5,7 @@ import useSWR, { mutate } from 'swr';
 import { api, fetcher } from '@/lib/api';
 import type { RadioDevice } from '@/lib/types';
 import { Loader2, Plus, Router, Wifi, WifiOff, X, Zap } from 'lucide-react';
-import { EmptyState, LiveIndicator } from '@/components/ui';
+import { EmptyState, HealthScoreGauge, LiveIndicator, SourceConfidenceBadge } from '@/components/ui';
 import { useLiveEvents } from '@/lib/useLiveEvents';
 
 const inputStyle: React.CSSProperties = {
@@ -208,7 +208,9 @@ function AdapterPanel({ device }: { device: RadioDevice }) {
       <div>Health: CPU {healthMeta.cpu_load_percent ?? '—'}% · Memory {healthMeta.memory_used_percent ?? '—'}% · Uptime {healthMeta.uptime || info.uptime || '—'}</div>
       <div>Interfaces: {Array.isArray(interfaces) ? interfaces.length : 0} total · {downCount} down</div>
       <div>Wireless health: {diagnosis.status || 'Partial'} {diagnosis.health_score != null ? `(${diagnosis.health_score}/100)` : ''}</div>
+      <HealthScoreGauge score={diagnosis.health_score} />
       <div>Outdoor role: {outdoor.link_role || device.role} · {outdoor.frequency_band || 'band unknown'} · Confidence {metrics.confidence ?? '—'}</div>
+      <div style={{ marginTop: 6 }}><SourceConfidenceBadge confidence={metrics.confidence} source={metrics.source} /></div>
       <div>RF metrics: RSSI {metrics.rssi_dbm ?? '—'}, SNR {metrics.snr_db ?? '—'}, Noise {metrics.noise_floor_dbm ?? '—'}, CCQ {metrics.ccq_percent ?? '—'}</div>
       <div>airMAX: capacity {metrics.airmax_capacity_percent ?? '—'}% · distance {metrics.link_distance_km ?? '—'} km</div>
       {missing.length > 0 && <div style={{ color: '#f59e0b' }}>Missing metrics: {missing.slice(0, 5).join(', ')}{missing.length > 5 ? '...' : ''}</div>}

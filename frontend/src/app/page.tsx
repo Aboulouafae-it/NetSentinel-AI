@@ -6,7 +6,7 @@ import { Activity, AlertTriangle, RefreshCw, Router, ShieldAlert, Wifi } from 'l
 import { fetcher } from '@/lib/api';
 import type { DashboardActivity, DashboardSummary, DashboardSystemStatus, DashboardWirelessHealth, TopologySummary } from '@/lib/types';
 import { useLiveEvents } from '@/lib/useLiveEvents';
-import { ActivityFeedItem, ErrorState, KpiCard, LiveIndicator, LoadingSkeleton, MetricCard, SectionHeader } from '@/components/ui';
+import { ActionButton, ActivityFeedItem, ErrorState, KpiCard, LiveIndicator, LoadingSkeleton, MetricCard, PageHeader, SectionHeader } from '@/components/ui';
 
 const card: React.CSSProperties = { padding: '18px' };
 
@@ -31,21 +31,19 @@ export default function OperationsDashboard() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-        <div className="page-title">
-          <h1>Operations Dashboard</h1>
-          <p className="page-subtitle" style={{ marginTop: '8px' }}>Organization-scoped operational health from assets, alerts, incidents, logs, discovery, and wireless readings.</p>
-        </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+      <PageHeader
+        title="Operations Dashboard"
+        subtitle="Organization-scoped operational health from assets, alerts, incidents, logs, discovery, and wireless readings."
+        actions={<>
           <LiveIndicator state={live.state} lastUpdated={live.lastUpdated} />
           <select value={range} onChange={e => setRange(e.target.value)} style={controlStyle}>
             <option value="24h">Last 24h</option>
             <option value="7d">Last 7d</option>
             <option value="30d">Last 30d</option>
           </select>
-          <button onClick={refreshAll} style={buttonStyle}><RefreshCw size={16} /> Refresh</button>
-        </div>
-      </div>
+          <ActionButton onClick={refreshAll}><RefreshCw size={16} /> Refresh</ActionButton>
+        </>}
+      />
 
       {error && <ErrorState message="Unable to load dashboard data." />}
       {loading && <LoadingSkeleton label="Loading operations data..." />}
@@ -79,6 +77,18 @@ export default function OperationsDashboard() {
           ) : <Empty text="No field measurements available yet." />}
         </section>
       </div>
+
+      <section className="card" style={{ ...card, marginBottom: '18px' }}>
+        <SectionHeader title={<><ShieldAlert size={18} /> Security Events Summary</>} />
+        {summary.data?.security_events ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+            <MetricCard label="Fortinet High Severity" value={summary.data.security_events.fortinet_high_severity} />
+            <MetricCard label="VPN Failures" value={summary.data.security_events.vpn_failures} />
+            <MetricCard label="IPS / Malware" value={summary.data.security_events.ips_malware} />
+            <MetricCard label="Blocked Traffic" value={summary.data.security_events.blocked_traffic} />
+          </div>
+        ) : <Empty text="No Fortinet security events ingested yet." />}
+      </section>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '18px' }}>
         <section className="card" style={card}>
@@ -137,7 +147,5 @@ function format(value: number | null | undefined, unit: string) {
 }
 
 const controlStyle: React.CSSProperties = { padding: '9px 10px', backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', color: 'var(--text-primary)' };
-const buttonStyle: React.CSSProperties = { ...controlStyle, display: 'flex', gap: '8px', alignItems: 'center', cursor: 'pointer', fontWeight: 800 };
 const kpiLabel: React.CSSProperties = { fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 800, marginBottom: '6px' };
-const sectionTitle: React.CSSProperties = { margin: '0 0 14px', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px' };
 const rowStyle: React.CSSProperties = { padding: '9px 0', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', gap: '12px', fontSize: '0.86rem' };

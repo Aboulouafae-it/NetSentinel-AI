@@ -13,7 +13,6 @@ from contextlib import asynccontextmanager
 
 from app.config import get_settings
 from app.database import engine
-from app.models.base import Base
 
 # Import routers
 from app.routers import auth, organizations, sites, assets, alerts, incidents, ai_assistant, wireless, logs, security, automation, discovery, field_measurements, radio_devices, dashboard, credentials, agents, syslog, events, setup, system
@@ -37,11 +36,6 @@ async def lifespan(app: FastAPI):
     production_errors = settings.production_config_errors()
     if settings.is_production and production_errors:
         raise RuntimeError("Production configuration is not safe: " + "; ".join(production_errors))
-    async with engine.begin() as conn:
-        # MVP bootstrap creates missing tables for fresh local installs.
-        # Existing schema changes are managed through Alembic migrations.
-        await conn.run_sync(Base.metadata.create_all)
-    
     yield
     
     # Cleanup on shutdown

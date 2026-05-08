@@ -6,7 +6,7 @@ import { api, fetcher } from '@/lib/api';
 import type { Alert } from '@/lib/types';
 import { AlertTriangle, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { useLiveEvents } from '@/lib/useLiveEvents';
-import { DataTable, DetailsDrawer, EmptyState, LiveIndicator, SeverityBadge, StatusBadge } from '@/components/ui';
+import { DataTable, DetailsDrawer, EmptyState, FilterBar, LiveIndicator, PageHeader, SeverityBadge, StatusBadge } from '@/components/ui';
 
 const severityConfig: Record<string, { color: string; bg: string; label: string }> = {
   critical: { color: '#ef4444', bg: 'rgba(239,68,68,0.12)', label: 'CRITICAL' },
@@ -38,15 +38,17 @@ export default function AlertsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('all');
   const [severityFilter, setSeverityFilter] = useState('all');
+  const [sourceFilter, setSourceFilter] = useState('all');
   const [actionNote, setActionNote] = useState('');
 
   const filteredAlerts = useMemo(() => {
     return (alerts || []).filter(alert => {
       if (statusFilter !== 'all' && alert.status !== statusFilter) return false;
       if (severityFilter !== 'all' && alert.severity !== severityFilter) return false;
+      if (sourceFilter !== 'all' && (alert.source || '').toLowerCase() !== sourceFilter) return false;
       return true;
     });
-  }, [alerts, severityFilter, statusFilter]);
+  }, [alerts, severityFilter, sourceFilter, statusFilter]);
 
   const selected = filteredAlerts.find(alert => alert.id === selectedId) || filteredAlerts[0] || null;
 
@@ -73,16 +75,12 @@ export default function AlertsPage() {
 
   return (
     <div>
-      <div className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <ShieldAlert size={32} color="#ef4444" />
-          <h1>Alerts</h1>
-        </div>
-        <LiveIndicator state={live.state} lastUpdated={live.lastUpdated} />
-      </div>
-      <p className="page-subtitle" style={{ marginBottom: '24px' }}>
-        Triage, acknowledge, escalate, and resolve operational alerts.
-      </p>
+      <PageHeader
+        title="Alerts"
+        subtitle="Triage, acknowledge, escalate, and resolve operational alerts."
+        icon={<ShieldAlert size={30} color="#ef4444" />}
+        actions={<LiveIndicator state={live.state} lastUpdated={live.lastUpdated} />}
+      />
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '18px' }}>
         {([
@@ -98,7 +96,7 @@ export default function AlertsPage() {
         ))}
       </div>
 
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+      <FilterBar>
         <select style={selectStyle} value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
           <option value="all">All statuses</option>
           {Object.keys(statusConfig).map(status => <option key={status} value={status}>{statusConfig[status].label}</option>)}
@@ -107,7 +105,13 @@ export default function AlertsPage() {
           <option value="all">All severities</option>
           {Object.keys(severityConfig).map(severity => <option key={severity} value={severity}>{severityConfig[severity].label}</option>)}
         </select>
-      </div>
+        <select style={selectStyle} value={sourceFilter} onChange={e => setSourceFilter(e.target.value)}>
+          <option value="all">All sources</option>
+          <option value="fortinet syslog">Fortinet Syslog</option>
+          <option value="syslog">Syslog</option>
+          <option value="wireless diagnosis">Wireless Diagnosis</option>
+        </select>
+      </FilterBar>
 
       {!alerts && !error && <div className="card" style={{ padding: '48px', textAlign: 'center', color: 'var(--text-muted)' }}>Loading alerts...</div>}
 
@@ -173,6 +177,11 @@ export default function AlertsPage() {
 
                 <div style={{ marginTop: '18px' }}>
                   <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 800, marginBottom: '8px' }}>Evidence</div>
+                  {selected.source_metadata?.vendor === 'fortinet' && (
+                    <div style={{ padding: '8px 0', color: '#f59e0b', fontSize: '0.82rem' }}>
+                      Fortinet category: {selected.source_metadata.category || '—'} · MITRE: {selected.source_metadata.mitre_mapping || 'placeholder'}
+                    </div>
+                  )}
                   {evidence.length > 0 ? evidence.slice(-5).map((item: any, index: number) => (
                     <div key={index} style={{ padding: '8px 0', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-secondary)', fontSize: '0.82rem' }}>
                       {typeof item === 'string' ? item : item.message || item.event_type || JSON.stringify(item)}

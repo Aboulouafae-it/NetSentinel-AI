@@ -5,6 +5,7 @@ Pydantic schemas corresponding to the Wireless Link Intelligence domain models.
 """
 
 from datetime import datetime
+from uuid import UUID
 from typing import Optional
 from pydantic import BaseModel, Field
 
@@ -21,7 +22,7 @@ class AntennaProfileCreate(AntennaProfileBase):
     pass
 
 class AntennaProfileResponse(AntennaProfileBase):
-    id: str
+    id: UUID
     created_at: datetime
     updated_at: datetime
 
@@ -31,7 +32,7 @@ class AntennaProfileResponse(AntennaProfileBase):
 # --- Physical Mount Schemas ---
 
 class PhysicalMountBase(BaseModel):
-    site_id: str
+    site_id: str | UUID
     name: str = Field(min_length=1, max_length=255)
     elevation_meters: float | None = None
     azimuth_heading_deg: float | None = None
@@ -40,7 +41,7 @@ class PhysicalMountCreate(PhysicalMountBase):
     pass
 
 class PhysicalMountResponse(PhysicalMountBase):
-    id: str
+    id: UUID
     created_at: datetime
     updated_at: datetime
 
@@ -50,9 +51,9 @@ class PhysicalMountResponse(PhysicalMountBase):
 # --- Radio Interface Schemas ---
 
 class RadioInterfaceBase(BaseModel):
-    asset_id: str
-    mount_id: str | None = None
-    antenna_profile_id: str | None = None
+    asset_id: str | UUID
+    mount_id: str | UUID | None = None
+    antenna_profile_id: str | UUID | None = None
     mac_address: str = Field(min_length=1, max_length=50)
     mode: str
     frequency_mhz: int | None = None
@@ -63,7 +64,7 @@ class RadioInterfaceCreate(RadioInterfaceBase):
     pass
 
 class RadioInterfaceResponse(RadioInterfaceBase):
-    id: str
+    id: UUID
     created_at: datetime
     updated_at: datetime
 
@@ -73,15 +74,15 @@ class RadioInterfaceResponse(RadioInterfaceBase):
 # --- Wireless Link Schemas ---
 
 class WirelessLinkBase(BaseModel):
-    organization_id: str
+    organization_id: str | UUID
     name: str = Field(min_length=1, max_length=255)
-    interface_a_id: str
-    interface_b_id: str
+    interface_a_id: str | UUID
+    interface_b_id: str | UUID
     link_type: str
     theoretical_max_capacity_mbps: int | None = None
     expected_rssi_dbm: float | None = None
-    near_end_radio_id: str | None = None
-    far_end_radio_id: str | None = None
+    near_end_radio_id: str | UUID | None = None
+    far_end_radio_id: str | UUID | None = None
 
 class WirelessLinkCreate(WirelessLinkBase):
     pass
@@ -91,11 +92,11 @@ class WirelessLinkUpdate(BaseModel):
     status: str | None = None
     theoretical_max_capacity_mbps: int | None = None
     expected_rssi_dbm: float | None = None
-    near_end_radio_id: str | None = None
-    far_end_radio_id: str | None = None
+    near_end_radio_id: str | UUID | None = None
+    far_end_radio_id: str | UUID | None = None
 
 class WirelessLinkResponse(WirelessLinkBase):
-    id: str
+    id: UUID
     status: str
     created_at: datetime
     updated_at: datetime
@@ -106,7 +107,7 @@ class WirelessLinkResponse(WirelessLinkBase):
 # --- Wireless Metric Schemas ---
 
 class WirelessMetricCreate(BaseModel):
-    wireless_link_id: str
+    wireless_link_id: str | UUID
     timestamp: datetime
     rssi: float | None = None
     snr: float | None = None
@@ -116,7 +117,7 @@ class WirelessMetricCreate(BaseModel):
     rx_capacity: int | None = None
 
 class WirelessMetricResponse(WirelessMetricCreate):
-    id: str
+    id: UUID
 
     model_config = {"from_attributes": True}
 
@@ -124,14 +125,14 @@ class WirelessMetricResponse(WirelessMetricCreate):
 # --- Diagnostic Schemas ---
 
 class FieldDiagnosticCreate(BaseModel):
-    wireless_link_id: str
+    wireless_link_id: str | UUID
     diagnostic_type: str
     performed_by: str | None = None
     findings: str
     recommendation: str | None = None
 
 class FieldDiagnosticResponse(FieldDiagnosticCreate):
-    id: str
+    id: UUID
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -140,7 +141,7 @@ class FieldDiagnosticResponse(FieldDiagnosticCreate):
 # --- Maintenance Log Schemas ---
 
 class MaintenanceLogCreate(BaseModel):
-    wireless_link_id: str
+    wireless_link_id: str | UUID
     technician_name: str
     action_taken: str
     parts_replaced: str | None = None
@@ -148,7 +149,7 @@ class MaintenanceLogCreate(BaseModel):
     validation_successful: bool = False
 
 class MaintenanceLogResponse(MaintenanceLogCreate):
-    id: str
+    id: UUID
     created_at: datetime
 
     model_config = {"from_attributes": True}

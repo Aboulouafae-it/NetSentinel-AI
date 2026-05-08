@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=NetSentinel AI
+Comment=Open the local NetSentinel AI appliance console
+Exec=/usr/local/bin/netsentinel-first-boot
+Terminal=true
+Categories=Network;Security;

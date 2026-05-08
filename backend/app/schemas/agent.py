@@ -1,13 +1,14 @@
 """Edge Agent schemas."""
 
 from datetime import datetime
+from uuid import UUID
 from pydantic import BaseModel, Field
 
 
 class AgentRegisterRequest(BaseModel):
     name: str = Field(min_length=1, max_length=255)
     agent_uid: str | None = None
-    site_id: str | None = None
+    site_id: str | UUID | None = None
     version: str | None = None
     hostname: str | None = None
     ip_address: str | None = None
@@ -29,9 +30,9 @@ class AgentHeartbeatRequest(BaseModel):
 
 
 class EdgeAgentResponse(BaseModel):
-    id: str
-    organization_id: str
-    site_id: str | None = None
+    id: UUID
+    organization_id: UUID
+    site_id: UUID | None = None
     name: str
     agent_uid: str
     version: str | None = None

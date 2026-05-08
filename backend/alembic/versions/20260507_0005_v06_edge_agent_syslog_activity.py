@@ -17,6 +17,9 @@ depends_on = None
 
 
 def upgrade() -> None:
+    # Retained as historical revision marker. The public-alpha baseline
+    # revision creates edge agent, activity, and telemetry columns directly.
+    return
     edge_status = sa.Enum("HEALTHY", "DEGRADED", "OFFLINE", "UNKNOWN", name="edgeagentstatus")
     activity_severity = sa.Enum("INFO", "WARNING", "ERROR", "CRITICAL", name="activityseverity")
     op.create_table(
@@ -67,6 +70,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    return
     op.drop_column("radio_devices", "last_poll_source")
     op.drop_column("assets", "last_telemetry_source")
     op.drop_index("ix_activity_events_organization_id", table_name="activity_events")

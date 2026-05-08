@@ -3,6 +3,7 @@ NetSentinel AI — Alert Schemas
 """
 
 from datetime import datetime
+from uuid import UUID
 from pydantic import BaseModel, Field
 
 
@@ -12,9 +13,9 @@ class AlertCreate(BaseModel):
     severity: str = "info"
     source: str | None = None
     rule_name: str | None = None
-    organization_id: str | None = None
-    asset_id: str | None = None
-    wireless_link_id: str | None = None
+    organization_id: str | UUID | None = None
+    asset_id: str | UUID | None = None
+    wireless_link_id: str | UUID | None = None
     source_metadata: dict | None = None
 
 
@@ -23,7 +24,7 @@ class AlertUpdate(BaseModel):
     description: str | None = None
     severity: str | None = None
     status: str | None = None
-    incident_id: str | None = None
+    incident_id: str | UUID | None = None
 
 
 class AlertActionRequest(BaseModel):
@@ -32,17 +33,17 @@ class AlertActionRequest(BaseModel):
 
 
 class AlertResponse(BaseModel):
-    id: str
+    id: UUID
     title: str
     description: str | None = None
     severity: str
     status: str
     source: str | None = None
     rule_name: str | None = None
-    organization_id: str | None = None
-    asset_id: str | None = None
-    incident_id: str | None = None
-    wireless_link_id: str | None = None
+    organization_id: UUID | None = None
+    asset_id: UUID | None = None
+    incident_id: UUID | None = None
+    wireless_link_id: UUID | None = None
     source_metadata: dict | None = None
     dedupe_key: str | None = None
     occurrence_count: int

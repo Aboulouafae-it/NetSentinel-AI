@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+lb config \
+  --distribution bookworm \
+  --architectures amd64 \
+  --archive-areas "main contrib non-free-firmware" \
+  --debian-installer false \
+  --iso-application "NetSentinel AI Live Appliance Prototype" \
+  --iso-publisher "NetSentinel AI" \
+  --iso-volume "NetSentinel-AI-Live"

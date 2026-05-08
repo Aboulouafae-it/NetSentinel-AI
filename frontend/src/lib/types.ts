@@ -143,6 +143,7 @@ export interface DashboardSummary {
   incidents: { active: number; by_status: Record<string, number> };
   wireless_links: { total: number };
   radio_devices: { total: number; live_adapter_supported?: number; missing_credentials?: number; missing_metrics?: number };
+  security_events?: { fortinet_high_severity: number; vpn_failures: number; ips_malware: number; blocked_traffic: number };
 }
 
 export interface DashboardWirelessHealth {

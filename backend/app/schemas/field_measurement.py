@@ -6,6 +6,7 @@ Pydantic validation for real wireless field measurement entries.
 
 from datetime import datetime
 from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -16,7 +17,7 @@ class FieldMeasurementCreate(BaseModel):
     Only link_name is required — all other fields are optional
     because a technician may only capture certain values.
     """
-    wireless_link_id: str | None = Field(None, description="Real wireless link ID, when known")
+    wireless_link_id: str | UUID | None = Field(None, description="Real wireless link ID, when known")
     link_name: str | None = Field(None, min_length=1, max_length=255, description="Fallback wireless link name")
 
     # Optional: Site info
@@ -55,7 +56,7 @@ class FieldMeasurementCreate(BaseModel):
 class FieldMeasurementUpdate(BaseModel):
     """Update schema — all fields optional."""
     link_name: str | None = None
-    wireless_link_id: str | None = None
+    wireless_link_id: str | UUID | None = None
     origin_site: str | None = None
     destination_site: str | None = None
     vendor: str | None = None
@@ -85,9 +86,9 @@ class WirelessDiagnosisResponse(BaseModel):
 
 
 class FieldMeasurementResponse(BaseModel):
-    id: str
-    organization_id: str | None = None
-    wireless_link_id: str | None = None
+    id: UUID
+    organization_id: UUID | None = None
+    wireless_link_id: UUID | None = None
     link_name: str
     origin_site: str | None = None
     destination_site: str | None = None

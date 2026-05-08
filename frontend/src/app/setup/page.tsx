@@ -20,6 +20,7 @@ export default function SetupPage() {
   const [initialized, setInitialized] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [version, setVersion] = useState('v1.0 appliance');
   const [form, setForm] = useState({ organization_name: '', admin_email: '', admin_full_name: '', admin_password: '' });
   const { reloadUser } = useAuth();
 
@@ -31,6 +32,9 @@ export default function SetupPage() {
       })
       .catch(err => setError(err.message || 'Unable to check setup status'))
       .finally(() => setChecking(false));
+    api.system.version()
+      .then(info => setVersion(`v${info.app_version} · ${info.edition}`))
+      .catch(() => setVersion('v1.0 appliance'));
   }, []);
 
   const submit = async (event: React.FormEvent) => {
@@ -76,6 +80,9 @@ export default function SetupPage() {
             {submitting ? 'Initializing...' : 'Initialize Appliance'}
           </button>
         </form>
+        <div style={{ marginTop: 18, color: 'var(--text-muted)', fontSize: '0.78rem', textAlign: 'center' }}>
+          NetSentinel AI {version} · local-first setup
+        </div>
       </section>
     </main>
   );

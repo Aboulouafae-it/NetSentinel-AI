@@ -31,7 +31,7 @@ const labelStyle: React.CSSProperties = {
   textTransform: 'uppercase',
   marginBottom: '6px',
   fontWeight: 600,
-  letterSpacing: '0.5px',
+  letterSpacing: 0,
 };
 
 const numericRules: Record<string, { label: string; min: number; max: number }> = {
@@ -286,7 +286,7 @@ export default function FieldMeasurementsPage() {
 
           {/* RF Values */}
           <div style={{ padding: '16px', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '8px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '12px', letterSpacing: '1px' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '12px', letterSpacing: 0 }}>
               📡 Real RF Readings
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>

@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/api';
 import type { FieldMeasurement, RadioDevice, WirelessLink, WirelessMetric } from '@/lib/types';
 import StatusBadge from '@/components/StatusBadge';
+import { HealthScoreGauge, SourceConfidenceBadge } from '@/components/ui';
 import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Bot } from 'lucide-react';
@@ -309,6 +310,8 @@ function RadioSummary({ title, radio }: { title: string; radio?: RadioDevice }) 
           <div>Role: {outdoor?.link_role || radio.role} · {outdoor?.frequency_band || 'band unknown'}</div>
           <div>Capabilities: {capabilities?.configured ? 'live adapter configured' : capabilities?.reason || 'not polled'}</div>
           <div>Health source: {snapshot?.source || 'manual/none'} · confidence {snapshot?.confidence ?? '—'} {diagnosis?.health_score != null ? `· ${diagnosis.health_score}/100` : ''}</div>
+          <HealthScoreGauge score={diagnosis?.health_score} />
+          <div style={{ marginTop: 6 }}><SourceConfidenceBadge confidence={snapshot?.confidence} source={snapshot?.source} /></div>
           <div>airMAX/Link: capacity {snapshot?.airmax_capacity_percent ?? '—'}% · distance {snapshot?.link_distance_km ?? '—'} km</div>
           {snapshot?.missing_fields?.length > 0 && <div style={{ color: '#f59e0b' }}>Missing: {snapshot.missing_fields.slice(0, 4).join(', ')}</div>}
         </div>

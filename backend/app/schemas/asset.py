@@ -3,6 +3,7 @@ NetSentinel AI — Asset Schemas
 """
 
 from datetime import datetime
+from uuid import UUID
 from pydantic import BaseModel, Field
 
 
@@ -15,7 +16,7 @@ class AssetCreate(BaseModel):
     vendor: str | None = None
     description: str | None = None
     last_seen: datetime | None = None
-    site_id: str | None = None
+    site_id: str | UUID | None = None
 
 
 class AssetUpdate(BaseModel):
@@ -31,7 +32,7 @@ class AssetUpdate(BaseModel):
 
 
 class AssetResponse(BaseModel):
-    id: str
+    id: UUID
     hostname: str
     ip_address: str | None = None
     mac_address: str | None = None
@@ -41,7 +42,7 @@ class AssetResponse(BaseModel):
     vendor: str | None = None
     description: str | None = None
     last_seen: datetime | None = None
-    site_id: str
+    site_id: UUID
     risk_level: str | None = None
     risk_reasons: list[str] | None = None
     related_alerts_count: int = 0

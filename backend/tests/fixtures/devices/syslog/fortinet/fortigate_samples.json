@@ -1,0 +1,55 @@
+{
+  "sample_type": "synthetic",
+  "samples": [
+    {
+      "name": "traffic_deny",
+      "expected_category": "firewall_blocked_traffic",
+      "message": "date=2026-05-07 time=10:00:01 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" vd=\"root\" type=\"traffic\" subtype=\"forward\" level=\"notice\" srcip=198.51.100.10 srcport=54321 dstip=203.0.113.20 dstport=22 srcintf=\"wan1\" dstintf=\"lan\" action=\"deny\" policyid=42 service=\"SSH\" proto=6 msg=\"Denied by forward policy check\""
+    },
+    {
+      "name": "vpn_login_success",
+      "expected_category": "vpn_login_success",
+      "message": "date=2026-05-07 time=10:01:00 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" vd=\"root\" type=\"event\" subtype=\"vpn\" level=\"notice\" srcip=198.51.100.11 user=\"redacted.user\" action=\"tunnel-up\" msg=\"SSL VPN login successfully\""
+    },
+    {
+      "name": "vpn_login_failure",
+      "expected_category": "vpn_login_failure",
+      "message": "date=2026-05-07 time=10:02:00 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" vd=\"root\" type=\"event\" subtype=\"vpn\" level=\"warning\" srcip=198.51.100.12 user=\"redacted.user\" action=\"failed\" msg=\"SSL VPN login failed\""
+    },
+    {
+      "name": "admin_login_failure",
+      "expected_category": "admin_login_failure",
+      "message": "date=2026-05-07 time=10:03:00 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" type=\"event\" subtype=\"admin\" level=\"warning\" srcip=198.51.100.13 user=\"admin\" action=\"login\" status=\"failed\" msg=\"Administrator admin login failed\""
+    },
+    {
+      "name": "ips_attack",
+      "expected_category": "ips_attack_detected",
+      "message": "date=2026-05-07 time=10:04:00 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" type=\"utm\" subtype=\"ips\" level=\"alert\" srcip=198.51.100.14 dstip=192.0.2.50 action=\"blocked\" attack=\"HTTP.URI.SQL.Injection\" msg=\"IPS signature detected\""
+    },
+    {
+      "name": "malware_antivirus",
+      "expected_category": "malware_detected",
+      "message": "date=2026-05-07 time=10:05:00 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" type=\"utm\" subtype=\"virus\" level=\"critical\" srcip=192.0.2.51 dstip=198.51.100.15 action=\"blocked\" virus=\"EICAR_TEST_FILE\" msg=\"Malware detected and blocked\""
+    },
+    {
+      "name": "web_filter_block",
+      "expected_category": "web_filter_block",
+      "message": "date=2026-05-07 time=10:06:00 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" type=\"utm\" subtype=\"webfilter\" level=\"warning\" srcip=192.0.2.52 user=\"redacted.user\" action=\"blocked\" service=\"HTTPS\" msg=\"Web filter blocked category\""
+    },
+    {
+      "name": "interface_down",
+      "expected_category": "interface_down",
+      "message": "date=2026-05-07 time=10:07:00 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" type=\"event\" subtype=\"system\" level=\"error\" msg=\"interface wan1 link down\""
+    },
+    {
+      "name": "ha_failover",
+      "expected_category": "ha_failover",
+      "message": "date=2026-05-07 time=10:08:00 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" type=\"event\" subtype=\"system\" level=\"critical\" msg=\"HA failover: role changed to primary\""
+    },
+    {
+      "name": "config_change",
+      "expected_category": "config_changed",
+      "message": "date=2026-05-07 time=10:09:00 devname=\"FGT-EDGE\" devid=\"FGT60F0000000000\" type=\"event\" subtype=\"system\" level=\"notice\" user=\"admin\" msg=\"Configuration changed by admin\""
+    }
+  ]
+}

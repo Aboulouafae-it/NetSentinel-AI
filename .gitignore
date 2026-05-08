@@ -56,6 +56,17 @@ htmlcov/
 
 # Runtime data and secrets
 backups/
+raw_captures/
+captures/raw/
+backend/tests/fixtures/devices/**/raw/
+deploy/live-image/.build/
+deploy/live-image/cache/
+deploy/live-image/chroot/
+deploy/live-image/binary/
+deploy/live-image/config/
+deploy/live-image/live-image-*.iso
+deploy/live-image/*.hybrid.iso
+deploy/live-image/*.img
 *.dump
 *.sql
 *.sqlite

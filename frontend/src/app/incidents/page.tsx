@@ -5,7 +5,7 @@ import useSWR, { mutate } from 'swr';
 import { api, fetcher } from '@/lib/api';
 import type { Alert, Incident } from '@/lib/types';
 import { CheckSquare, Clock, MessageSquareWarning, Plus, User, X } from 'lucide-react';
-import { DetailsDrawer, EmptyState, LiveIndicator, SeverityBadge, StatusBadge } from '@/components/ui';
+import { ActionButton, DetailsDrawer, EmptyState, FilterBar, LiveIndicator, PageHeader, SeverityBadge, StatusBadge } from '@/components/ui';
 import { useLiveEvents } from '@/lib/useLiveEvents';
 
 const severityColors: Record<string, string> = {
@@ -72,21 +72,17 @@ export default function IncidentsPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-        <div>
-          <div className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <MessageSquareWarning size={32} color="var(--brand-primary)" />
-            <h1>Incidents</h1>
-          </div>
-          <p className="page-subtitle">Manage ownership, notes, timeline, linked alerts, and resolution.</p>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <PageHeader
+        title="Incidents"
+        subtitle="Manage ownership, notes, timeline, linked alerts, tasks, and resolution."
+        icon={<MessageSquareWarning size={30} color="var(--brand-primary)" />}
+        actions={<>
           <LiveIndicator state={live.state} lastUpdated={live.lastUpdated} />
-          <button onClick={() => setShowForm(!showForm)} style={buttonSolid(showForm ? '#ef4444' : 'var(--brand-primary)')}>
+          <ActionButton onClick={() => setShowForm(!showForm)} color={showForm ? '#ef4444' : 'var(--brand-primary)'}>
             {showForm ? <><X size={18} /> Cancel</> : <><Plus size={18} /> New Incident</>}
-          </button>
-        </div>
-      </div>
+          </ActionButton>
+        </>}
+      />
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '18px' }}>
         <Stat label="Total" value={incidents?.length ?? '—'} color="var(--brand-primary)" />
@@ -107,12 +103,12 @@ export default function IncidentsPage() {
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+      <FilterBar>
         <select style={inputStyle} value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
           <option value="all">All statuses</option>
           {Object.keys(statusColors).map(status => <option key={status} value={status}>{status}</option>)}
         </select>
-      </div>
+      </FilterBar>
 
       {incidents && incidents.length === 0 && (
         <EmptyState title="No incidents yet" message="Create one manually or promote an alert into an incident." />
@@ -124,7 +120,7 @@ export default function IncidentsPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-surface-hover)' }}>
-                  {['Severity', 'Status', 'Incident', 'Owner', 'Updated'].map(header => (
+                  {['Severity', 'Status', 'Incident', 'Owner', 'SLA', 'Updated'].map(header => (
                     <th key={header} style={{ padding: '12px', fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>{header}</th>
                   ))}
                 </tr>
@@ -140,6 +136,7 @@ export default function IncidentsPage() {
                     <td style={{ padding: '12px' }}><StatusBadge status={incident.status} /></td>
                     <td style={{ padding: '12px' }}><div style={{ fontWeight: 700 }}>{incident.title}</div><div style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{incident.description || 'No description'}</div></td>
                     <td style={{ padding: '12px', color: 'var(--text-secondary)' }}>{incident.assigned_to || 'Unassigned'}</td>
+                    <td style={{ padding: '12px', color: 'var(--text-muted)' }}>MVP</td>
                     <td style={{ padding: '12px', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{new Date(incident.updated_at).toLocaleString()}</td>
                   </tr>
                 ))}

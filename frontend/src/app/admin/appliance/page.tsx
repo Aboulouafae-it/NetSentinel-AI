@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { HardDrive, RefreshCw, ServerCog, ShieldAlert } from 'lucide-react';
 import { api, fetcher } from '@/lib/api';
 import type { ApplianceHealth } from '@/lib/types';
-import { EmptyState, ErrorState, KpiCard, LoadingSkeleton, SectionHeader, StatusBadge } from '@/components/ui';
+import { ActionButton, EmptyState, ErrorState, KpiCard, LoadingSkeleton, PageHeader, SectionHeader, StatusBadge } from '@/components/ui';
 
 function bytes(value: number) {
   if (!value) return '0 B';
@@ -19,15 +19,11 @@ export default function ApplianceStatusPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
-        <div className="page-title">
-          <h1>Appliance Status</h1>
-          <p className="page-subtitle">Production readiness, service health, backups, and local appliance resources.</p>
-        </div>
-        <button onClick={() => mutate()} style={{ padding: '9px 12px', borderRadius: 6, border: '1px solid var(--border-subtle)', background: 'transparent', color: 'var(--text-primary)', display: 'flex', gap: 8, alignItems: 'center', cursor: 'pointer' }}>
-          <RefreshCw size={16} /> Refresh
-        </button>
-      </div>
+      <PageHeader
+        title="Appliance Status"
+        subtitle="Production readiness, service health, backups, version metadata, and local appliance resources."
+        actions={<ActionButton onClick={() => mutate()} color="#64748b"><RefreshCw size={16} /> Refresh</ActionButton>}
+      />
 
       {isLoading && <LoadingSkeleton label="Loading appliance health..." />}
       {error && <ErrorState message="Unable to load appliance health." />}
@@ -69,6 +65,9 @@ export default function ApplianceStatusPage() {
             <section className="card" style={{ padding: 20 }}>
               <SectionHeader title={<><ServerCog size={18} /> Worker</>} />
               <div style={{ color: 'var(--text-secondary)' }}>{data.worker.detail || data.worker.status}</div>
+              <div style={{ marginTop: 14, color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: 1.6 }}>
+                Deployment hint: check `systemctl status netsentinel-compose` and container healthchecks on Debian appliance installs.
+              </div>
             </section>
           </div>
         </>

@@ -34,11 +34,34 @@ const tone: Record<string, { color: string; bg: string; border: string }> = {
   offline: { color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.38)' },
   revoked: { color: '#64748b', bg: 'rgba(100,116,139,0.12)', border: 'rgba(100,116,139,0.38)' },
   unknown: { color: '#94a3b8', bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.24)' },
+  partial: { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.38)' },
+  supported: { color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.38)' },
+  placeholder: { color: '#94a3b8', bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.24)' },
+  manual: { color: '#38bdf8', bg: 'rgba(56,189,248,0.12)', border: 'rgba(56,189,248,0.32)' },
 };
 
 function Badge({ value }: { value: string }) {
   const style = tone[value] || tone.unknown;
-  return <span style={{ ...badgeBase, color: style.color, background: style.bg, border: `1px solid ${style.border}` }}>{value.replace('_', ' ')}</span>;
+  return <span style={{ ...badgeBase, color: style.color, background: style.bg, border: `1px solid ${style.border}` }}>{value.replaceAll('_', ' ')}</span>;
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
+  return <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-app)' }}>{children}</div>;
+}
+
+export function PageHeader({ title, subtitle, icon, actions }: { title: ReactNode; subtitle?: ReactNode; icon?: ReactNode; actions?: ReactNode }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 18, marginBottom: 24 }}>
+      <div style={{ minWidth: 0 }}>
+        <div className="page-title" style={{ marginBottom: 0 }}>
+          {icon}
+          <h1 style={{ fontSize: '1.55rem', margin: 0 }}>{title}</h1>
+        </div>
+        {subtitle && <p className="page-subtitle">{subtitle}</p>}
+      </div>
+      {actions && <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'flex-end' }}>{actions}</div>}
+    </div>
+  );
 }
 
 export function SeverityBadge({ severity }: { severity: string }) {
@@ -51,6 +74,11 @@ export function StatusBadge({ status }: { status: string }) {
 
 export function RiskBadge({ risk }: { risk: string | null | undefined }) {
   return <Badge value={risk || 'unknown'} />;
+}
+
+export function SourceConfidenceBadge({ confidence, source }: { confidence?: number | null; source?: string | null }) {
+  const value = confidence == null ? 'unknown' : confidence >= 0.8 ? 'supported' : confidence >= 0.4 ? 'partial' : 'manual';
+  return <span title={source || undefined}><Badge value={value} /> {confidence != null && <span style={{ color: 'var(--text-muted)', fontSize: '0.74rem' }}>{Math.round(confidence * 100)}%</span>}</span>;
 }
 
 export function KpiCard({ label, value, sub, toneColor = '#3b82f6' }: { label: string; value: ReactNode; sub?: ReactNode; toneColor?: string }) {
@@ -71,6 +99,10 @@ export function SectionHeader({ title, action }: { title: ReactNode; action?: Re
   return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}><h2 style={{ margin: 0, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>{title}</h2>{action}</div>;
 }
 
+export function FilterBar({ children }: { children: ReactNode }) {
+  return <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginBottom: 16 }}>{children}</div>;
+}
+
 export function EmptyState({ title, message }: { title: string; message?: string }) {
   return <div style={{ padding: 28, color: 'var(--text-muted)', textAlign: 'center' }}><div style={{ color: 'var(--text-secondary)', fontWeight: 800, marginBottom: 6 }}>{title}</div>{message && <div style={{ fontSize: '0.88rem' }}>{message}</div>}</div>;
 }
@@ -84,7 +116,7 @@ export function LoadingSkeleton({ label = 'Loading...' }: { label?: string }) {
 }
 
 export function ActionButton({ children, onClick, disabled, color = '#3b82f6' }: { children: ReactNode; onClick?: () => void; disabled?: boolean; color?: string }) {
-  return <button onClick={onClick} disabled={disabled} style={{ padding: '9px 10px', backgroundColor: `${color}22`, border: `1px solid ${color}66`, color, borderRadius: 6, cursor: disabled ? 'not-allowed' : 'pointer', fontWeight: 800 }}>{children}</button>;
+  return <button onClick={onClick} disabled={disabled} style={{ padding: '9px 10px', backgroundColor: `${color}22`, border: `1px solid ${color}66`, color, borderRadius: 6, cursor: disabled ? 'not-allowed' : 'pointer', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: 8 }}>{children}</button>;
 }
 
 export function DataTable({ children }: { children: ReactNode }) {
@@ -98,6 +130,22 @@ export function DetailsDrawer({ children }: { children: ReactNode }) {
 export function ActivityFeedItem({ title, subtitle, severity = 'info' }: { title: ReactNode; subtitle?: ReactNode; severity?: string }) {
   const style = tone[severity] || tone.info;
   return <div style={{ padding: '9px 0', borderBottom: '1px solid var(--border-subtle)', display: 'grid', gridTemplateColumns: '10px 1fr', gap: 10, fontSize: '0.86rem' }}><span style={{ width: 8, height: 8, borderRadius: '50%', background: style.color, marginTop: 5 }} /><div><div style={{ fontWeight: 700 }}>{title}</div>{subtitle && <div style={{ color: 'var(--text-secondary)' }}>{subtitle}</div>}</div></div>;
+}
+
+export function HealthScoreGauge({ score, label = 'Health Score' }: { score?: number | null; label?: string }) {
+  const safeScore = typeof score === 'number' ? Math.max(0, Math.min(100, score)) : null;
+  const color = safeScore == null ? '#94a3b8' : safeScore >= 80 ? '#10b981' : safeScore >= 60 ? '#f59e0b' : '#ef4444';
+  return (
+    <div style={{ display: 'grid', gap: 6 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.78rem', fontWeight: 800 }}>
+        <span>{label}</span>
+        <span style={{ color }}>{safeScore == null ? '—' : `${safeScore}/100`}</span>
+      </div>
+      <div style={{ height: 8, borderRadius: 999, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+        <div style={{ width: `${safeScore ?? 0}%`, height: '100%', background: color }} />
+      </div>
+    </div>
+  );
 }
 
 export function LiveIndicator({ state, lastUpdated }: { state: LiveState; lastUpdated: Date | null }) {

@@ -17,6 +17,9 @@ depends_on = None
 
 
 def upgrade() -> None:
+    # Retained as historical revision marker. The public-alpha baseline
+    # revision creates these polling, radio-link, and credential objects.
+    return
     op.add_column("assets", sa.Column("last_poll_status", sa.String(length=50), nullable=True))
     op.add_column("assets", sa.Column("last_poll_latency_ms", sa.Float(), nullable=True))
     op.add_column("assets", sa.Column("last_poll_packet_loss_percent", sa.Float(), nullable=True))
@@ -55,6 +58,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    return
     op.drop_index("ix_credential_profiles_organization_id", table_name="credential_profiles")
     op.drop_table("credential_profiles")
     op.drop_constraint("fk_wireless_links_far_end_radio_id", "wireless_links", type_="foreignkey")

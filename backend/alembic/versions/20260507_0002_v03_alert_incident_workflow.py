@@ -17,6 +17,9 @@ depends_on = None
 
 
 def upgrade() -> None:
+    # Retained as historical revision marker. The public-alpha baseline
+    # revision creates these columns/status values directly.
+    return
     op.execute("ALTER TYPE alertstatus ADD VALUE IF NOT EXISTS 'ESCALATED'")
     op.execute("ALTER TYPE alertstatus ADD VALUE IF NOT EXISTS 'escalated'")
     op.add_column("incidents", sa.Column("notes", postgresql.JSONB(astext_type=sa.Text()), nullable=True))
@@ -26,6 +29,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    return
     op.drop_column("incidents", "impacted_services")
     op.drop_column("incidents", "tasks")
     op.drop_column("incidents", "timeline_events")

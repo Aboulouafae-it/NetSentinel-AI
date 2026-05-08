@@ -42,7 +42,7 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'radial-gradient(circle at top left, rgba(59,130,246,0.16), transparent 28%), var(--bg-app)',
+      background: 'var(--bg-app)',
       position: 'absolute',
       inset: 0,
       zIndex: 50,
@@ -60,7 +60,7 @@ export default function LoginPage() {
               <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>Operations appliance console</div>
             </div>
           </div>
-          <h1 style={{ fontSize: '2.4rem', margin: '0 0 14px', letterSpacing: 0 }}>Secure access for live network operations</h1>
+          <h1 style={{ fontSize: '2.2rem', margin: '0 0 14px', letterSpacing: 0 }}>Secure access for live network operations</h1>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: 520 }}>
             Sign in to monitor alerts, incidents, edge agents, syslog ingestion, wireless health, and polling freshness for your organization.
           </p>

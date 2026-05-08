@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
+import { AppShell } from '@/components/ui';
 import { api, clearTokens, getAccessToken } from '@/lib/api';
 import type { User } from '@/lib/types';
 
@@ -86,7 +87,7 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider value={value}>
-      <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <AppShell>
         <Sidebar />
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           <TopBar />
@@ -94,7 +95,7 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
             {children}
           </main>
         </div>
-      </div>
+      </AppShell>
     </AuthContext.Provider>
   );
 }

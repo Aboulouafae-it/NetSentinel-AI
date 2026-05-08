@@ -3,6 +3,7 @@ NetSentinel AI — Radio Devices & Diagnostics Schemas
 """
 
 from datetime import datetime
+from uuid import UUID
 from pydantic import BaseModel, Field
 
 
@@ -24,14 +25,14 @@ class RadioDeviceCreate(BaseModel):
     azimuth_deg: float | None = None
     link_name: str | None = None
     link_side: str | None = None
-    wireless_link_id: str | None = None
+    wireless_link_id: str | UUID | None = None
     adapter_type: str = "manual_only"
     notes: str | None = None
 
 
 class RadioDeviceResponse(BaseModel):
-    id: str
-    organization_id: str | None = None
+    id: UUID
+    organization_id: UUID | None = None
     name: str
     ip_address: str
     mac_address: str | None = None
@@ -59,7 +60,7 @@ class RadioDeviceResponse(BaseModel):
     latest_interface_status: dict | None = None
     latest_wireless_metrics: dict | None = None
     adapter_capabilities: dict | None = None
-    wireless_link_id: str | None = None
+    wireless_link_id: UUID | None = None
     notes: str | None = None
     created_at: datetime
     updated_at: datetime

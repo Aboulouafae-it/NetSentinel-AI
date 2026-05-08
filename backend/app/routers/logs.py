@@ -7,7 +7,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, desc
+from sqlalchemy import String, cast, select, func, desc
 
 from app.database import get_db
 from app.models.log import LogEntry, LogLevel
@@ -64,6 +64,12 @@ async def list_logs(
     level: Optional[LogLevel] = None,
     source: Optional[str] = None,
     q: Optional[str] = None,
+    vendor_profile: Optional[str] = None,
+    category: Optional[str] = None,
+    action: Optional[str] = None,
+    src_ip: Optional[str] = None,
+    dst_ip: Optional[str] = None,
+    user: Optional[str] = None,
     asset_id: Optional[uuid.UUID] = None,
     organization_id: Optional[uuid.UUID] = None,
     page: int = Query(1, ge=1),
@@ -88,6 +94,19 @@ async def list_logs(
         stmt = stmt.where(LogEntry.source.ilike(f"%{source}%"))
     if q:
         stmt = stmt.where(LogEntry.message.ilike(f"%{q}%"))
+    metadata_text = cast(LogEntry.metadata_json, String)
+    if vendor_profile:
+        stmt = stmt.where(metadata_text.ilike(f"%{vendor_profile}%"))
+    if category:
+        stmt = stmt.where(metadata_text.ilike(f"%{category}%"))
+    if action:
+        stmt = stmt.where(metadata_text.ilike(f"%{action}%"))
+    if src_ip:
+        stmt = stmt.where(metadata_text.ilike(f"%{src_ip}%"))
+    if dst_ip:
+        stmt = stmt.where(metadata_text.ilike(f"%{dst_ip}%"))
+    if user:
+        stmt = stmt.where(metadata_text.ilike(f"%{user}%"))
     if asset_id:
         stmt = stmt.where(LogEntry.asset_id == asset_id)
 

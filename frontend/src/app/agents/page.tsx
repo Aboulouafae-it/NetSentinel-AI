@@ -5,7 +5,7 @@ import useSWR, { mutate } from 'swr';
 import { Activity, Plus, X } from 'lucide-react';
 import { api, fetcher } from '@/lib/api';
 import type { EdgeAgent } from '@/lib/types';
-import { EmptyState, ErrorState, LiveIndicator, LoadingSkeleton, StatusBadge } from '@/components/ui';
+import { ActionButton, EmptyState, ErrorState, KpiCard, LiveIndicator, LoadingSkeleton, PageHeader, StatusBadge } from '@/components/ui';
 import { useLiveEvents } from '@/lib/useLiveEvents';
 
 const inputStyle: React.CSSProperties = {
@@ -44,21 +44,17 @@ export default function AgentsPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-        <div>
-          <div className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Activity size={32} color="var(--brand-primary)" />
-            <h1>Edge Agents</h1>
-          </div>
-          <p className="page-subtitle">Registered monitoring appliances, heartbeat health, and revocation controls.</p>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <PageHeader
+        title="Edge Agents"
+        subtitle="Registered monitoring appliances, heartbeat health, ingestion status, and token controls."
+        icon={<Activity size={30} color="var(--brand-primary)" />}
+        actions={<>
           <LiveIndicator state={live.state} lastUpdated={live.lastUpdated} />
-          <button onClick={() => setShowForm(!showForm)} style={buttonStyle(showForm ? '#ef4444' : 'var(--brand-primary)')}>
+          <ActionButton onClick={() => setShowForm(!showForm)} color={showForm ? '#ef4444' : 'var(--brand-primary)'}>
             {showForm ? <><X size={18}/> Cancel</> : <><Plus size={18}/> Register Agent</>}
-          </button>
-        </div>
-      </div>
+          </ActionButton>
+        </>}
+      />
 
       {issuedToken && (
         <div className="card" style={{ padding: '16px', border: '1px solid rgba(245,158,11,0.35)', marginBottom: '18px' }}>
@@ -87,6 +83,13 @@ export default function AgentsPage() {
       {agents && agents.length === 0 && <EmptyState title="No edge agents registered" message="Register an appliance agent to start heartbeats and authenticated ingestion." />}
 
       {agents && agents.length > 0 && (
+        <>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 14, marginBottom: 18 }}>
+          <KpiCard label="Healthy" value={agents.filter(agent => agent.status === 'healthy' && !agent.revoked_at).length} toneColor="#10b981" />
+          <KpiCard label="Degraded" value={agents.filter(agent => agent.status === 'degraded').length} toneColor="#f59e0b" />
+          <KpiCard label="Offline" value={agents.filter(agent => agent.status === 'offline').length} toneColor="#ef4444" />
+          <KpiCard label="Revoked" value={agents.filter(agent => agent.revoked_at).length} toneColor="#64748b" />
+        </div>
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
@@ -100,7 +103,12 @@ export default function AgentsPage() {
                   <td style={{ padding: '14px', fontWeight: 800 }}>{agent.name}</td>
                   <td style={{ padding: '14px' }}><StatusBadge status={agent.revoked_at ? 'revoked' : agent.status} /></td>
                   <td style={{ padding: '14px', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{agent.agent_uid}</td>
-                  <td style={{ padding: '14px', color: 'var(--text-secondary)' }}>{agent.hostname || agent.ip_address || '—'}</td>
+                  <td style={{ padding: '14px', color: 'var(--text-secondary)' }}>
+                    {agent.hostname || agent.ip_address || '—'}
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: 3 }}>
+                      CPU {agent.health_metadata?.cpu ?? '—'} · Memory {agent.health_metadata?.memory ?? '—'} · Queue {agent.health_metadata?.queue_size ?? '—'}
+                    </div>
+                  </td>
                   <td style={{ padding: '14px', color: 'var(--text-secondary)' }}>{agent.last_seen ? new Date(agent.last_seen).toLocaleString() : '—'}</td>
                   <td style={{ padding: '14px', color: 'var(--text-secondary)' }}>{agent.version || '—'}</td>
                   <td style={{ padding: '14px' }}>
@@ -114,6 +122,7 @@ export default function AgentsPage() {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </div>
   );

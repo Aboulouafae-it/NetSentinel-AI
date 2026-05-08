@@ -3,6 +3,7 @@ NetSentinel AI — Incident Schemas
 """
 
 from datetime import datetime
+from uuid import UUID
 from pydantic import BaseModel, Field
 
 
@@ -11,7 +12,7 @@ class IncidentCreate(BaseModel):
     description: str | None = None
     severity: str = "medium"
     assigned_to: str | None = None
-    organization_id: str | None = None
+    organization_id: str | UUID | None = None
 
 
 class IncidentUpdate(BaseModel):
@@ -50,7 +51,7 @@ class IncidentResolveRequest(BaseModel):
 
 
 class IncidentResponse(BaseModel):
-    id: str
+    id: UUID
     title: str
     description: str | None = None
     severity: str
@@ -61,7 +62,7 @@ class IncidentResponse(BaseModel):
     timeline_events: list | None = None
     tasks: list | None = None
     impacted_services: list | None = None
-    organization_id: str | None = None
+    organization_id: UUID | None = None
     created_at: datetime
     updated_at: datetime
 

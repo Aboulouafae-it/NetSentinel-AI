@@ -17,6 +17,9 @@ depends_on = None
 
 
 def upgrade() -> None:
+    # Retained as historical revision marker. The public-alpha baseline
+    # revision creates latest adapter snapshot columns directly.
+    return
     op.add_column("radio_devices", sa.Column("latest_device_info", postgresql.JSONB(astext_type=sa.Text()), nullable=True))
     op.add_column("radio_devices", sa.Column("latest_interface_status", postgresql.JSONB(astext_type=sa.Text()), nullable=True))
     op.add_column("radio_devices", sa.Column("latest_wireless_metrics", postgresql.JSONB(astext_type=sa.Text()), nullable=True))
@@ -24,6 +27,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    return
     op.drop_column("radio_devices", "adapter_capabilities")
     op.drop_column("radio_devices", "latest_wireless_metrics")
     op.drop_column("radio_devices", "latest_interface_status")

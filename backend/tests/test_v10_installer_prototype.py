@@ -44,6 +44,11 @@ def test_appliance_scripts_exist_and_pass_bash_syntax():
         root / "deploy" / "update-netsentinel.sh",
         root / "deploy" / "uninstall-netsentinel.sh",
         root / "deploy" / "desktop" / "launch-netsentinel.sh",
+        root / "deploy" / "live-image" / "build-live-prototype.sh",
+        root / "deploy" / "live-image" / "scripts" / "first-boot.sh",
+        root / "deploy" / "live-image" / "scripts" / "appliance-status.sh",
+        root / "deploy" / "live-image" / "scripts" / "qemu-smoke-test.sh",
+        root / "scripts" / "validate_clean_migrations.sh",
         root / "scripts" / "backup.sh",
         root / "scripts" / "restore.sh",
     ]

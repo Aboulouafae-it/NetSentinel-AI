@@ -1,0 +1,5 @@
+NetSentinel AI Live Appliance Prototype
+
+Open http://localhost:3000/setup after services start.
+No secrets are baked into this image. First-run setup is required.
+

@@ -16,8 +16,12 @@ depends_on = None
 
 
 def upgrade() -> None:
+    # Retained as historical revision marker. The public-alpha baseline
+    # revision creates assets.last_seen directly.
+    return
     op.add_column("assets", sa.Column("last_seen", sa.DateTime(timezone=True), nullable=True))
 
 
 def downgrade() -> None:
+    return
     op.drop_column("assets", "last_seen")

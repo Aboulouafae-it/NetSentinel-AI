@@ -7,7 +7,7 @@ import { api, fetcher } from '@/lib/api';
 import type { Asset } from '@/lib/types';
 import StatusBadge from '@/components/StatusBadge';
 import { Network, Plus, Search, Server } from 'lucide-react';
-import { EmptyState, ErrorState, LiveIndicator, LoadingSkeleton } from '@/components/ui';
+import { ActionButton, EmptyState, ErrorState, FilterBar, LiveIndicator, LoadingSkeleton, PageHeader } from '@/components/ui';
 import { useLiveEvents } from '@/lib/useLiveEvents';
 
 const inputStyle: React.CSSProperties = {
@@ -63,23 +63,19 @@ function AssetsPageContent() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-        <div>
-          <div className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {typeFilter === 'server' ? <Server size={32} color="var(--brand-secondary)" /> : <Network size={32} color="var(--status-warning)" />}
-            <h1>{title}</h1>
-          </div>
-          <p className="page-subtitle">{subtitle}</p>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <PageHeader
+        title={title}
+        subtitle={subtitle}
+        icon={typeFilter === 'server' ? <Server size={30} color="var(--brand-primary)" /> : <Network size={30} color="var(--status-medium)" />}
+        actions={<>
           <LiveIndicator state={live.state} lastUpdated={live.lastUpdated} />
-          <button style={{ ...inputStyle, display: 'flex', gap: '8px', alignItems: 'center', fontWeight: 800, cursor: 'pointer' }} title="MVP manual asset creation remains available through the API.">
+          <ActionButton color="#64748b" onClick={() => undefined}>
             <Plus size={16} /> Add Asset
-          </button>
-        </div>
-      </div>
+          </ActionButton>
+        </>}
+      />
 
-      <div className="card" style={{ padding: '14px', marginBottom: '16px', display: 'grid', gridTemplateColumns: '2fr repeat(4, 1fr)', gap: '10px' }}>
+      <FilterBar>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Search size={16} color="var(--text-muted)" />
           <input style={{ ...inputStyle, width: '100%' }} placeholder="Search hostname, IP, vendor..." value={search} onChange={e => { setPage(0); setSearch(e.target.value); }} />
@@ -94,7 +90,7 @@ function AssetsPageContent() {
         <select style={inputStyle} value={risk} onChange={e => { setPage(0); setRisk(e.target.value); }}>
           <option value="">All risk</option><option value="normal">Normal</option><option value="warning">Warning</option><option value="at_risk">At risk</option><option value="offline">Offline</option><option value="unknown">Unknown</option>
         </select>
-      </div>
+      </FilterBar>
 
       {error && <ErrorState message="Unable to load assets." />}
       {isLoading && <LoadingSkeleton label="Loading assets..." />}

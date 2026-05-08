@@ -3,6 +3,7 @@ NetSentinel AI — Site Schemas
 """
 
 from datetime import datetime
+from uuid import UUID
 from pydantic import BaseModel, Field
 
 
@@ -11,7 +12,7 @@ class SiteCreate(BaseModel):
     location: str | None = None
     description: str | None = None
     subnet: str | None = None
-    organization_id: str
+    organization_id: str | UUID
 
 
 class SiteUpdate(BaseModel):
@@ -22,12 +23,12 @@ class SiteUpdate(BaseModel):
 
 
 class SiteResponse(BaseModel):
-    id: str
+    id: UUID
     name: str
     location: str | None = None
     description: str | None = None
     subnet: str | None = None
-    organization_id: str
+    organization_id: UUID
     created_at: datetime
     updated_at: datetime
 

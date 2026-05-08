@@ -1,0 +1,12 @@
+NetSentinel AI Live Appliance Prototype
+
+Status:
+  sudo netsentinel-appliance-status
+
+First run:
+  http://localhost:3000/setup
+
+Security:
+  No real .env, customer captures, tokens, or private keys should be baked into
+  this live image. Use the installer to generate appliance secrets.
+

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+install -D -m 0755 /opt/netsentinel/deploy/live-image/scripts/first-boot.sh /usr/local/bin/netsentinel-first-boot || true
+install -D -m 0755 /opt/netsentinel/deploy/live-image/scripts/appliance-status.sh /usr/local/bin/netsentinel-appliance-status || true
+chmod +x /usr/local/bin/netsentinel-first-boot /usr/local/bin/netsentinel-appliance-status 2>/dev/null || true
