@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Wireless Diagnostics
+Comment=Open NetSentinel outdoor wireless and RF diagnostics workspace
+Exec=open-netsentinel-console /wireless
+Icon=network-wireless
+Terminal=false
+Categories=Network;Security;
+Keywords=NetSentinel;Wireless;Radio;RF;Diagnostics;

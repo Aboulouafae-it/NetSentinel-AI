@@ -1,0 +1,32 @@
+# NetSentinel AI OS GRUB Theme Specification
+# Status: Concept/Prototype
+# Graphical background placeholder: replace with an original reviewed asset.
+# desktop-image: "background.png"
+
+title-text: "NetSentinel AI OS"
+title-color: "#0EA5E9" # Technical Cyan
+title-font: "DejaVu Sans Bold 24"
+desktop-color: "#05070A" # Deep Black
+terminal-font: "DejaVu Sans Mono Regular 14"
+
++ boot_menu {
+  left = 12%
+  top = 30%
+  width = 76%
+  height = 42%
+  item_font = "DejaVu Sans Regular 16"
+  item_color = "#E5E7EB" # Main Text
+  selected_item_color = "#FFFFFF"
+  selected_item_pixmap_style = "select_*.png" # Replace with custom cyan selector
+}
+
++ label {
+  left = 12%
+  top = 78%
+  width = 76%
+  height = 40
+  text = "Network Operations • Cybersecurity • Wireless Diagnostics • Hybrid Cloud"
+  color = "#94A3B8" # Muted Text
+  font = "DejaVu Sans Regular 12"
+  align = "center"
+}

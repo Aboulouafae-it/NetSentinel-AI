@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Cloud & Hybrid
+Comment=Open NetSentinel Cloud and Hybrid foundation workspace
+Exec=open-netsentinel-console /cloud-hybrid
+Icon=network-server
+Terminal=false
+Categories=Network;Security;
+Keywords=NetSentinel;Cloud;Hybrid;VPN;Topology;

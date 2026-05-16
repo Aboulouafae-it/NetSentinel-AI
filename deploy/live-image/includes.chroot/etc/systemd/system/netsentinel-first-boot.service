@@ -1,0 +1,15 @@
+[Unit]
+Description=NetSentinel AI OS First Boot Setup
+After=network-online.target systemd-user-sessions.service plymouth-quit-wait.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sh -c 'cp /etc/issue.net-sentinel /etc/issue'
+ExecStart=/usr/local/bin/netsentinel-first-boot
+RemainAfterExit=yes
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target

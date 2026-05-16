@@ -1,5 +1,11 @@
-NetSentinel AI Live Appliance Prototype
+NetSentinel AI OS
+Live Appliance for Network Operations, Cybersecurity & Outdoor Wireless Diagnostics
 
-Open http://localhost:3000/setup after services start.
-No secrets are baked into this image. First-run setup is required.
+Dashboard:
+  http://localhost:3000/setup
 
+LAN Access:
+  http://<appliance-ip>:3000/setup
+
+Status:
+  appliance-status

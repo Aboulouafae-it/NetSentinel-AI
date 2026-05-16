@@ -9,8 +9,10 @@ from app.config import Settings
 from app.models.edge_agent import EdgeAgent, EdgeAgentStatus
 from app.models.organization import Organization
 from app.models.user import UserRole
+from app.routers.auth import register
 from app.routers.agents import authenticate_agent, rotate_agent_token
 from app.routers.setup import FirstRunSetupRequest, first_run_setup, setup_status
+from app.schemas.auth import UserRegister
 from app.services.agent_security import hash_agent_token
 
 
@@ -110,6 +112,21 @@ def test_production_config_rejects_unsafe_defaults():
     settings = Settings(environment="production", debug=False, cors_origins=["https://netsentinel.local"])
 
     assert any("SECRET_KEY" in item for item in settings.production_config_errors())
+
+
+@pytest.mark.asyncio
+async def test_public_registration_is_disabled_for_appliance_setup():
+    with pytest.raises(HTTPException) as exc:
+        await register(
+            UserRegister(
+                email="operator@netsentinel.ai",
+                password="very-secure-password",
+                full_name="Operator",
+            ),
+            FakeSession(),
+        )
+
+    assert exc.value.status_code == 403
 
 
 def test_backup_restore_scripts_exist_and_are_executable():

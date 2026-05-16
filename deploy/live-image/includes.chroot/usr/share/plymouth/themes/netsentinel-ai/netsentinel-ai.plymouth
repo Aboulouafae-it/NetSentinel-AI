@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=NetSentinel AI OS
+Description=NetSentinel AI OS boot splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/netsentinel-ai
+ScriptFile=/usr/share/plymouth/themes/netsentinel-ai/netsentinel-ai.script

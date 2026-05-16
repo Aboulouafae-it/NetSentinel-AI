@@ -1,5 +1,40 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- v3.1 Control Center Dashboard.
+- v3.2 Network Operations workspace.
+- v3.3 Wireless Diagnostics Pro workspace.
+- v3.4 Security Operations Center workspace.
+- v3.5 AI Copilot foundation with privacy-first documentation.
+- v3.6 Cloud & Hybrid foundation workspace.
+- v3.8/v3.9 XFCE Desktop Appliance Experience and cleanup.
+- v3.10 Reports, Backup & Export Center workspace.
+- v3.11 Desktop ISO preflight docs and VM test plan.
+- v3.12 backend validation helper and desktop wallpaper binding verification.
+- GitHub presentation docs, screenshot rules, diagram guide, docs portal, and
+  release prep checklist.
+
+### Changed
+
+- README now presents NetSentinel AI as a public-alpha platform and OS vision
+  with explicit limitations.
+- Live-image package profile includes Desktop Appliance packages and both modern
+  Compose plugin and legacy compose compatibility package.
+- Documentation now emphasizes no kiosk default and no automatic browser launch.
+
+### Known Limitations
+
+- Not production-ready.
+- No production ISO is claimed.
+- Cloud connectors are roadmap/foundation.
+- AI provider calls are not active by default.
+- Vendor adapters remain partial/foundation pending reviewed real captures.
+- Report export generation is foundation work.
+- License has not been selected.
+
 ## v2.0.0-alpha
 
 Public Alpha preparation.
@@ -11,8 +46,8 @@ Public Alpha preparation.
 - Dashboard APIs and polished NOC/SOC UI for operations overview.
 - Asset monitoring, polling freshness, and deterministic status/risk helpers.
 - Alert lifecycle: open, acknowledged, escalated, resolved.
-- Incident workflow with owner assignment, notes, timeline, tasks, linked alerts,
-  and resolution.
+- Incident workflow with owner assignment, notes, timeline events, tasks, linked
+  alerts, and resolution.
 - Field measurements, wireless link relationships, diagnosis output, and alert
   deduplication for degraded wireless health.
 - Edge Agent registration, heartbeat, token rotation, authenticated telemetry,
@@ -29,15 +64,12 @@ Public Alpha preparation.
 - Appliance installer/update/uninstall scripts, systemd examples,
   backup/restore scripts, production Docker Compose, reverse proxy examples, and
   hardening docs.
-- Debian live appliance scaffold, first-boot/status scripts, live-build wrapper,
-  and VM test plan.
+- Live appliance scaffold, first-boot/status scripts, live-build wrapper, and VM
+  test plan.
 - Public alpha documentation, release checklist, known limitations, demo
-  workflow, and real RC3 screenshots captured from the running app.
+  workflow, and real screenshots captured from the running app.
 - Clean Alembic public-alpha baseline so `alembic upgrade head` creates the
   current schema on a fresh database.
-- Polished UI for Dashboard, Assets, Alerts, Incidents, Logs, Agents, Radio
-  Devices, Field Measurements, Wireless Link detail, Login, Setup, and
-  Appliance Status.
 
 ### Known Limitations
 

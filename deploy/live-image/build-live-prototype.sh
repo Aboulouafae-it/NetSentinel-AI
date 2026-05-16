@@ -33,6 +33,8 @@ required_files=(
   "${ROOT_DIR}/package-lists/netsentinel.list.chroot"
   "${ROOT_DIR}/scripts/first-boot.sh"
   "${ROOT_DIR}/scripts/appliance-status.sh"
+  "${ROOT_DIR}/scripts/open-netsentinel-console.sh"
+  "${ROOT_DIR}/scripts/netsentinel-menu.sh"
   "${ROOT_DIR}/../../deploy/install-netsentinel.sh"
   "${ROOT_DIR}/../../docker-compose.prod.yml"
 )
@@ -40,7 +42,7 @@ required_files=(
 required_packages=(
   systemd
   docker.io
-  docker-compose-plugin
+  docker-compose
   git
   curl
   jq
@@ -58,9 +60,30 @@ required_packages=(
   dnsutils
   whois
   ethtool
+  iputils-ping
+  pciutils
+  usbutils
+  iw
+  wireless-tools
+  rfkill
   lldpd
   rsyslog
   chrony
+  xorg
+  lightdm
+  xfce4
+  xfce4-terminal
+  thunar
+  chromium
+  firefox-esr
+  dbus-x11
+  xdg-utils
+  network-manager-gnome
+  polkitd
+  fonts-dejavu
+  fonts-noto-core
+  open-vm-tools
+  firmware-linux-free
 )
 
 forbidden_patterns=(
@@ -78,12 +101,35 @@ forbidden_patterns=(
   "*capture*"
 )
 
+brand_binary_boot_menus() {
+  local boot_dirs=()
+
+  for dir in binary/boot binary/isolinux; do
+    if [[ -d "${dir}" ]]; then
+      boot_dirs+=("${dir}")
+    fi
+  done
+
+  if [[ "${#boot_dirs[@]}" -eq 0 ]]; then
+    echo "No binary boot menu directories found to brand."
+    return 0
+  fi
+
+  echo "Applying NetSentinel AI OS boot menu labels in binary image tree."
+  find "${boot_dirs[@]}" -type f -name "*.cfg" -exec sed -i 's/Live system (amd64 fail-safe mode)/Start NetSentinel AI Live Appliance (safe mode)/g' {} +
+  find "${boot_dirs[@]}" -type f -name "*.cfg" -exec sed -i 's/\^Live system (amd64)/\^Start NetSentinel AI Live Appliance/g' {} +
+  find "${boot_dirs[@]}" -type f -name "*.cfg" -exec sed -i 's/Live system (amd64)/Start NetSentinel AI Live Appliance/g' {} +
+  find "${boot_dirs[@]}" -type f -name "*.cfg" -exec sed -i 's/menu title Boot menu/menu title NetSentinel AI OS/g' {} +
+}
+
 for file in "${required_files[@]}"; do
   [[ -f "${file}" ]] || { echo "Missing required file: ${file}" >&2; exit 1; }
 done
 
 bash -n "${ROOT_DIR}/scripts/first-boot.sh"
 bash -n "${ROOT_DIR}/scripts/appliance-status.sh"
+bash -n "${ROOT_DIR}/scripts/open-netsentinel-console.sh"
+bash -n "${ROOT_DIR}/scripts/netsentinel-menu.sh"
 bash -n "${ROOT_DIR}/auto/config"
 
 package_file="${ROOT_DIR}/package-lists/netsentinel.list.chroot"
@@ -111,7 +157,7 @@ fi
 if ! command -v lb >/dev/null 2>&1; then
   echo "live-build is not installed."
   echo "Install on Debian with: sudo apt-get update && sudo apt-get install -y live-build"
-  echo "Prototype validation passed; build skipped."
+  echo "Prototype validation passed for NetSentinel AI OS; build skipped."
   exit 0
 fi
 
@@ -131,15 +177,18 @@ if [[ "${DO_CLEAN}" == "true" ]]; then
 fi
 
 if [[ "${CHECK_ONLY}" == "true" || "${DO_BUILD}" != "true" ]]; then
-  echo "Prototype validation passed. Re-run with --build to invoke live-build."
+  echo "Prototype validation passed for NetSentinel AI OS. Re-run with --build to invoke live-build."
   exit 0
 fi
 
 cat <<SUMMARY
-NetSentinel AI Live Image Prototype Build
+NetSentinel AI OS Live Appliance Prototype Build
 =========================================
 Root: ${ROOT_DIR}
-Base: Debian Bookworm live-build scaffold
+Technical base: Debian Bookworm live-build scaffold
+User-facing OS identity: NetSentinel AI OS
+ISO label: NETSENTINEL_AI
+Default hostname: netsentinel-ai
 Payload strategy: installer/bootstrap only; no .env, database, tokens, or real captures
 Expected artifact: ${ROOT_DIR}/live-image-amd64.hybrid.iso or live-image-amd64.iso
 SUMMARY
@@ -152,6 +201,76 @@ if [[ "${answer}" != "yes" ]]; then
   exit 0
 fi
 
-cd "${ROOT_DIR}"
-lb config
+BUILD_ROOT="${ROOT_DIR}"
+TEMP_BUILD_ROOT=""
+
+if [[ "${ROOT_DIR}" == *" "* ]]; then
+  TEMP_BUILD_ROOT="/tmp/netsentinel-live-build-$$"
+  echo "live-build cannot build from a path containing spaces."
+  echo "Staging NetSentinel AI OS live-image tree in ${TEMP_BUILD_ROOT}."
+  mkdir -p "${TEMP_BUILD_ROOT}"
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a \
+      --exclude '/chroot/' \
+      --exclude '/binary/' \
+      --exclude '/cache/' \
+        \
+      --exclude '/local/' \
+      --exclude '/live-image-*.iso' \
+      --exclude '/*.hybrid.iso' \
+      --exclude '/*.img' \
+      "${ROOT_DIR}/" "${TEMP_BUILD_ROOT}/"
+  else
+    cp -a "${ROOT_DIR}/." "${TEMP_BUILD_ROOT}/"
+  fi
+  BUILD_ROOT="${TEMP_BUILD_ROOT}"
+fi
+
+cd "${BUILD_ROOT}"
+./auto/config
+
+if [ -d "${ROOT_DIR}/package-lists" ]; then
+    mkdir -p config/package-lists
+    cp -a "${ROOT_DIR}/package-lists/"* config/package-lists/ || true
+fi
+
+if [ -d "${ROOT_DIR}/includes.chroot" ]; then
+    mkdir -p config/includes.chroot_after_packages
+    cp -a "${ROOT_DIR}/includes.chroot/." config/includes.chroot_after_packages/
+fi
+
+if [ -d "${ROOT_DIR}/hooks/normal" ]; then
+    mkdir -p config/hooks/normal
+    cp -a "${ROOT_DIR}/hooks/normal/"* config/hooks/normal/ || true
+fi
+
+if [ -d "${ROOT_DIR}/hooks/live" ]; then
+    mkdir -p config/hooks/live
+    cp -a "${ROOT_DIR}/hooks/live/"* config/hooks/live/ || true
+fi
+
+if [ -d "${ROOT_DIR}/bootloaders" ]; then
+    cp -r "${ROOT_DIR}/bootloaders/"* config/bootloaders/ || true
+fi
+
 lb build
+
+brand_binary_boot_menus
+if [[ -d binary ]]; then
+  lb binary_iso --force
+fi
+
+if [[ -n "${TEMP_BUILD_ROOT}" ]]; then
+  found_artifact=false
+  for artifact in "${BUILD_ROOT}"/live-image-amd64*.iso "${BUILD_ROOT}"/live-image-amd64*.hybrid.iso; do
+    if [[ -f "${artifact}" ]]; then
+      cp "${artifact}" "${ROOT_DIR}/"
+      found_artifact=true
+    fi
+  done
+  if [[ "${found_artifact}" != "true" ]]; then
+    echo "Build completed, but no expected ISO artifact was found in ${BUILD_ROOT}." >&2
+    exit 1
+  fi
+  echo "Copied ISO artifact(s) back to ${ROOT_DIR}."
+fi

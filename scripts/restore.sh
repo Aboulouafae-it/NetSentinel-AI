@@ -25,11 +25,22 @@ cleanup() {
 }
 trap cleanup EXIT
 
+validate_archive_paths() {
+  local entry
+  while IFS= read -r entry; do
+    if [[ "${entry}" == /* || "${entry}" == *".."* ]]; then
+      echo "Refusing backup archive with unsafe path: ${entry}" >&2
+      exit 5
+    fi
+  done < <(tar -tzf "${ARCHIVE}")
+}
+
 if [[ "${CONFIRM}" != "--yes" ]]; then
   echo "Restore will replace the current PostgreSQL database. Re-run with --yes to continue." >&2
   exit 3
 fi
 
+validate_archive_paths
 tar -xzf "${ARCHIVE}" -C "${RESTORE_DIR}"
 BACKUP_ROOT="$(find "${RESTORE_DIR}" -maxdepth 1 -type d -name 'netsentinel-backup-*' | head -n 1)"
 if [[ ! -f "${BACKUP_ROOT}/postgres.sql" ]]; then

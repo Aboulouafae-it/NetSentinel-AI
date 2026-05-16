@@ -6,9 +6,8 @@ import { fetcher } from '@/lib/api';
 import type { FieldMeasurement, RadioDevice, WirelessLink, WirelessMetric } from '@/lib/types';
 import StatusBadge from '@/components/StatusBadge';
 import { HealthScoreGauge, SourceConfidenceBadge } from '@/components/ui';
-import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Bot } from 'lucide-react';
+import { Stethoscope } from 'lucide-react';
 
 export default function WirelessLinkDashboard() {
   const params = useParams();
@@ -19,22 +18,6 @@ export default function WirelessLinkDashboard() {
   const { data: measurements } = useSWR<FieldMeasurement[]>(`/wireless/links/${linkId}/measurements`, fetcher);
   const { data: radios } = useSWR<RadioDevice[]>('/radio-devices/', fetcher);
   
-  const [aiBrief, setAiBrief] = useState<string | null>(null);
-  const [isGeneratingBrief, setIsGeneratingBrief] = useState(false);
-
-  const generateAIBrief = async () => {
-    setIsGeneratingBrief(true);
-    try {
-        const data = await fetcher(`/wireless/links/${linkId}/ai-brief`);
-        setAiBrief(data.brief);
-    } catch (err) {
-        console.error("Failed to generate AI brief", err);
-        setAiBrief("An error occurred while communicating with NetSentinel Copilot.");
-    } finally {
-        setIsGeneratingBrief(false);
-    }
-  };
-
   if (!link) return <div style={{ padding: '40px', color: 'var(--text-secondary)' }}>Loading link dashboard...</div>;
 
   const latestMetric = metrics && metrics.length > 0 ? metrics[0] : null;
@@ -217,69 +200,49 @@ export default function WirelessLinkDashboard() {
         )}
       </div>
 
-      {/* AI Copilot Field Brief Section */}
-      <div className="card" style={{ 
-        padding: '24px', 
-        border: '1px solid rgba(139, 92, 246, 0.4)', 
-        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(24, 24, 27, 0.6) 100%)',
-        boxShadow: '0 0 30px rgba(139, 92, 246, 0.15)'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-primary)' }}>
-                <Bot size={28} color="var(--brand-secondary)" />
-                AI Copilot: Pre-visit Field Brief
-            </h3>
-            <button 
-                onClick={generateAIBrief} 
-                disabled={isGeneratingBrief}
-                style={{
-                    padding: '10px 20px',
-                    backgroundColor: 'var(--brand-secondary)',
-                    backgroundImage: 'linear-gradient(to right, #8b5cf6, #6d28d9)',
-                    color: '#fff',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    borderRadius: '8px',
-                    fontWeight: 600,
-                    cursor: isGeneratingBrief ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    boxShadow: '0 4px 15px rgba(139, 92, 246, 0.4)',
-                    transition: 'all 0.2s',
-                    opacity: isGeneratingBrief ? 0.7 : 1
-                }}
-                onMouseOver={(e) => { if(!isGeneratingBrief) e.currentTarget.style.transform = 'translateY(-2px)' }}
-                onMouseOut={(e) => { if(!isGeneratingBrief) e.currentTarget.style.transform = 'translateY(0)' }}
-            >
-                {isGeneratingBrief ? 'Analyzing Telemetry...' : 'Generate Field Brief'}
-            </button>
-        </div>
-        
-        {aiBrief && (
-            <div style={{ 
-                marginTop: '20px', 
-                padding: '24px', 
-                backgroundColor: 'rgba(0,0,0,0.2)', 
-                borderRadius: '8px',
-                borderLeft: '4px solid var(--brand-secondary)',
-                lineHeight: '1.6',
-                color: 'var(--text-primary)',
-                whiteSpace: 'pre-wrap'
-            }}>
-                {aiBrief}
+      <div className="card" style={{ padding: '24px', border: '1px solid rgba(14,165,233,0.28)', background: 'rgba(14,165,233,0.05)' }}>
+        <h3 style={{ margin: '0 0 16px', fontSize: '1.2rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Stethoscope size={22} color="var(--brand-cyan)" />
+          Rule-Based Field Brief
+        </h3>
+        {latestMeasurement ? (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+            <div>
+              <div style={briefLabel}>Likely Root Cause</div>
+              <div style={briefText}>{latestMeasurement.diagnosis.likely_root_cause}</div>
+              <div style={{ marginTop: 12 }}><HealthScoreGauge score={latestMeasurement.diagnosis.health_score} /></div>
             </div>
-        )}
-        
-        {!aiBrief && !isGeneratingBrief && (
-            <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', fontStyle: 'italic' }}>
-                Click "Generate Field Brief" to have the AI Copilot analyze the deterministic baseline deviations and recommend a field action plan.
+            <div>
+              <div style={briefLabel}>Recommended Actions</div>
+              {latestMeasurement.diagnosis.recommended_actions.map(action => (
+                <div key={action} style={briefText}>{action}</div>
+              ))}
             </div>
+            <div>
+              <div style={briefLabel}>Evidence</div>
+              {latestMeasurement.diagnosis.evidence.length ? latestMeasurement.diagnosis.evidence.map(item => (
+                <div key={item} style={briefText}>{item}</div>
+              )) : <div style={briefText}>No deterministic evidence list returned.</div>}
+            </div>
+            <div>
+              <div style={briefLabel}>Source</div>
+              <div style={briefText}>Manual field measurement · {new Date(latestMeasurement.created_at).toLocaleString()}</div>
+              <div style={briefText}>This is deterministic rule output, not AI-generated analysis.</div>
+            </div>
+          </div>
+        ) : (
+          <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+            No field measurement is linked to this wireless link yet. Save a manual measurement to generate deterministic root cause and recommended actions.
+          </div>
         )}
       </div>
 
     </div>
   );
 }
+
+const briefLabel: React.CSSProperties = { color: 'var(--text-muted)', fontSize: '0.72rem', textTransform: 'uppercase', fontWeight: 800, marginBottom: 6 };
+const briefText: React.CSSProperties = { color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.55, marginBottom: 6 };
 
 function RadioSummary({ title, radio }: { title: string; radio?: RadioDevice }) {
   const capabilities = radio?.adapter_capabilities;

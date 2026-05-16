@@ -1,7 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=NetSentinel AI
-Comment=Open the local NetSentinel AI appliance console
-Exec=/usr/local/bin/netsentinel-first-boot
-Terminal=true
+Name=NetSentinel AI Console
+Comment=Open the local NetSentinel AI web console when services are running
+Exec=open-netsentinel-console
+# Note: Final icon replacement path: Install placeholder SVG to /usr/share/icons/hicolor/scalable/apps/netsentinel-ai.svg
+Icon=network-server
+Terminal=false
 Categories=Network;Security;
+Keywords=NetSentinel;Console;Dashboard;Setup;Appliance;

@@ -4,14 +4,17 @@ from uuid import uuid4
 
 import pytest
 from fastapi import HTTPException
+from pydantic import ValidationError
 
 from app.models.asset import Asset, AssetStatus
 from app.models.edge_agent import ActivityEvent, ActivitySeverity, EdgeAgent, EdgeAgentStatus
 from app.models.site import Site
+from app.ingestion.telemetry import TelemetryPayload
 from app.routers.agents import authenticate_agent, heartbeat, register_agent
 from app.routers.dashboard import dashboard_recent_activity
 from app.routers.syslog import SyslogIngestRequest, ingest_syslog
 from app.schemas.agent import AgentHeartbeatRequest, AgentRegisterRequest
+from app.services.activity import scrub_sensitive_metadata
 from app.services.agent_security import hash_agent_token
 from app.services.scheduled_polling import mark_stale_assets
 from app.services.telemetry_processor import process_asset_telemetry
@@ -158,6 +161,29 @@ async def test_syslog_ingestion_saves_log_and_creates_alert_activity(monkeypatch
     assert any(item.__class__.__name__ == "LogEntry" for item in session.added)
     assert any(item.__class__.__name__ == "Alert" for item in session.added)
     assert any(isinstance(item, ActivityEvent) for item in session.added)
+
+
+def test_syslog_payload_rejects_oversized_message():
+    with pytest.raises(ValidationError):
+        SyslogIngestRequest(source_ip="10.0.0.5", severity="error", message="x" * 8193)
+
+
+def test_telemetry_payload_rejects_oversized_agent_id():
+    with pytest.raises(ValidationError):
+        TelemetryPayload(agent_id="a" * 129, metric_type="latency_ms", value=1.0, timestamp=datetime.now(timezone.utc).isoformat())
+
+
+def test_activity_metadata_scrubs_token_like_values():
+    scrubbed = scrub_sensitive_metadata({
+        "token": "abc123",
+        "nested": {"routeros_password": "secret", "status": "healthy"},
+        "message": "Bearer abc123",
+    })
+
+    assert scrubbed["token"] == "[redacted]"
+    assert scrubbed["nested"]["routeros_password"] == "[redacted]"
+    assert scrubbed["nested"]["status"] == "healthy"
+    assert scrubbed["message"] == "[redacted]"
 
 
 @pytest.mark.asyncio

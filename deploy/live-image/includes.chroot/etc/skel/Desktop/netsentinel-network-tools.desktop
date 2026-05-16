@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Network Tools
+Comment=Open NetSentinel network diagnostics guidance and tool list
+Exec=sh -c 'if command -v xfce4-terminal >/dev/null 2>&1; then xfce4-terminal --title="NetSentinel Network Tools" --command="bash -lc '\''printf \"NetSentinel Network Tools\\n\\nUse netsentinel-menu for guided checks or run authorized tools manually.\\n\\nCore tools: ip, ping, traceroute, mtr, nmap, fping, arp-scan, snmpwalk, ethtool, lldpcli, dig, whois.\\n\\nDo not run active scans without authorization.\\n\\n\"; netsentinel-menu'\''"; elif command -v x-terminal-emulator >/dev/null 2>&1; then x-terminal-emulator -e netsentinel-menu; else netsentinel-menu; fi'
+Icon=network-workgroup
+Terminal=false
+Categories=Network;System;
+Keywords=NetSentinel;Network;Tools;Diagnostics;NOC;

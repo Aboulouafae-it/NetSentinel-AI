@@ -1,6 +1,6 @@
 # NetSentinel AI Known Limitations
 
-NetSentinel AI v2.0.0-alpha is not production-ready.
+NetSentinel AI public alpha is not production-ready.
 
 ## Platform
 
@@ -15,7 +15,10 @@ NetSentinel AI v2.0.0-alpha is not production-ready.
 
 ## Appliance / Live Image
 
-- Live ISO has not been built and boot-tested as a production artifact.
+- Live ISO validation is pending for the current Desktop Appliance profile.
+- Desktop ISO validation is pending; no production ISO is claimed.
+- XFCE Desktop Appliance staging exists, but VMware/QEMU visual validation still
+  must be completed for release artifacts.
 - Live USB persistence partition support is not implemented.
 - The installer is a prototype and should be tested in a VM before field use.
 - Production hardening is documented but not fully automated.
@@ -32,7 +35,8 @@ NetSentinel AI v2.0.0-alpha is not production-ready.
 - Ubiquiti UniFi is not supported by the airMAX adapter.
 - Fortinet support is syslog-only; there is no FortiGate/FortiManager API
   integration and no configuration changes.
-- Cambium, Cisco, Aruba, Juniper, AWS, Azure, and GCP are planned/future only.
+- Cambium, Cisco, Aruba, Juniper, AWS, Azure, GCP, and Cloudflare connectors are
+  planned/future only unless explicitly documented elsewhere.
 
 ## Operations
 

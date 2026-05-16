@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-lb config \
+lb config noauto \
   --distribution bookworm \
   --architectures amd64 \
   --archive-areas "main contrib non-free-firmware" \
   --debian-installer false \
-  --iso-application "NetSentinel AI Live Appliance Prototype" \
+  --iso-application "NetSentinel AI OS Live Appliance" \
   --iso-publisher "NetSentinel AI" \
-  --iso-volume "NetSentinel-AI-Live"
+  --iso-volume "NETSENTINEL_AI" \
+  --bootappend-live "boot=live components hostname=netsentinel-ai username=user"

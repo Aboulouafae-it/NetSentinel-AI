@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- 
+    NetSentinel AI OS - Logo Placeholder
+    Status: Placeholder Only
+    Description: A simple geometric composition representing a shield and radar waves.
+    Do NOT use as final commercial artwork without review. 
+  -->
+  <rect width="256" height="256" fill="transparent"/>
+  
+  <!-- Outer Shield Concept -->
+  <path d="M128 24 L216 64 L216 136 C216 184 176 224 128 240 C80 224 40 184 40 136 L40 64 Z" 
+        fill="none" stroke="#0EA5E9" stroke-width="12" stroke-linejoin="round"/>
+        
+  <!-- Inner Node / Eye -->
+  <circle cx="128" cy="120" r="24" fill="#0EA5E9"/>
+  
+  <!-- Abstract Radar / RF Waves -->
+  <path d="M128 64 A 56 56 0 0 1 184 120" fill="none" stroke="#2563EB" stroke-width="8" stroke-linecap="round"/>
+  <path d="M128 176 A 56 56 0 0 1 72 120" fill="none" stroke="#2563EB" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Network Connection Line -->
+  <line x1="128" y1="144" x2="128" y2="200" stroke="#0EA5E9" stroke-width="8" stroke-linecap="round"/>
+</svg>

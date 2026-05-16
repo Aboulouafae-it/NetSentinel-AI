@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Replace GRUB menu labels
+if [ -f binary/boot/grub/grub.cfg ]; then
+    sed -i 's/Live system (amd64 fail-safe mode)/Start NetSentinel AI Live Appliance (safe mode)/g' binary/boot/grub/grub.cfg
+    sed -i 's/Live system (amd64)/Start NetSentinel AI Live Appliance/g' binary/boot/grub/grub.cfg
+fi
+
+# Replace ISOLINUX menu labels
+if [ -d binary/isolinux ]; then
+    for cfg in binary/isolinux/*.cfg; do
+        if [ -f "$cfg" ]; then
+            sed -i 's/Live system (amd64 fail-safe mode)/Start NetSentinel AI Live Appliance (safe mode)/g' "$cfg"
+            sed -i 's/\^Live system (amd64)/\^Start NetSentinel AI Live Appliance/g' "$cfg"
+            sed -i 's/Live system (amd64)/Start NetSentinel AI Live Appliance/g' "$cfg"
+            sed -i 's/menu title Boot menu/menu title NetSentinel AI OS/g' "$cfg"
+        fi
+    done
+fi
+
+# We also have syslinux_common that might generate some files. Replace recursively
+# in any boot directories that exist for this live-build phase.
+boot_dirs=()
+for dir in binary/boot binary/isolinux; do
+    if [ -d "$dir" ]; then
+        boot_dirs+=("$dir")
+    fi
+done
+
+if [ "${#boot_dirs[@]}" -gt 0 ]; then
+    find "${boot_dirs[@]}" -type f -name "*.cfg" -exec sed -i 's/Live system (amd64 fail-safe mode)/Start NetSentinel AI Live Appliance (safe mode)/g' {} +
+    find "${boot_dirs[@]}" -type f -name "*.cfg" -exec sed -i 's/\^Live system (amd64)/\^Start NetSentinel AI Live Appliance/g' {} +
+    find "${boot_dirs[@]}" -type f -name "*.cfg" -exec sed -i 's/Live system (amd64)/Start NetSentinel AI Live Appliance/g' {} +
+    find "${boot_dirs[@]}" -type f -name "*.cfg" -exec sed -i 's/menu title Boot menu/menu title NetSentinel AI OS/g' {} +
+fi

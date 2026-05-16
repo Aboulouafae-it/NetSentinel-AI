@@ -1,6 +1,49 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-install -D -m 0755 /opt/netsentinel/deploy/live-image/scripts/first-boot.sh /usr/local/bin/netsentinel-first-boot || true
-install -D -m 0755 /opt/netsentinel/deploy/live-image/scripts/appliance-status.sh /usr/local/bin/netsentinel-appliance-status || true
-chmod +x /usr/local/bin/netsentinel-first-boot /usr/local/bin/netsentinel-appliance-status 2>/dev/null || true
+if [[ -f /opt/netsentinel/deploy/live-image/scripts/first-boot.sh ]]; then
+  install -D -m 0755 /opt/netsentinel/deploy/live-image/scripts/first-boot.sh /usr/local/bin/netsentinel-first-boot || true
+fi
+
+if [[ -f /opt/netsentinel/deploy/live-image/scripts/appliance-status.sh ]]; then
+  install -D -m 0755 /opt/netsentinel/deploy/live-image/scripts/appliance-status.sh /usr/local/bin/netsentinel-appliance-status || true
+fi
+
+if [[ -f /opt/netsentinel/deploy/live-image/scripts/open-netsentinel-console.sh ]]; then
+  install -D -m 0755 /opt/netsentinel/deploy/live-image/scripts/open-netsentinel-console.sh /usr/local/bin/open-netsentinel-console || true
+fi
+
+if [[ -f /opt/netsentinel/deploy/live-image/scripts/netsentinel-menu.sh ]]; then
+  install -D -m 0755 /opt/netsentinel/deploy/live-image/scripts/netsentinel-menu.sh /usr/local/bin/netsentinel-menu || true
+fi
+
+chmod +x /usr/local/bin/netsentinel-first-boot /usr/local/bin/netsentinel-appliance-status /usr/local/bin/open-netsentinel-console /usr/local/bin/netsentinel-menu 2>/dev/null || true
+
+ln -sf /usr/local/bin/netsentinel-appliance-status /usr/local/bin/appliance-status || true
+
+printf 'netsentinel-ai\n' >/etc/hostname || true
+if [[ -f /etc/hosts ]] && ! grep -q 'netsentinel-ai' /etc/hosts; then
+  printf '127.0.1.1 netsentinel-ai\n' >>/etc/hosts || true
+fi
+
+if [[ -d /opt/netsentinel/deploy/live-image/branding/plymouth/netsentinel-ai && -d /usr/share/plymouth/themes ]]; then
+  mkdir -p /usr/share/plymouth/themes/netsentinel-ai
+  cp -a /opt/netsentinel/deploy/live-image/branding/plymouth/netsentinel-ai/. /usr/share/plymouth/themes/netsentinel-ai/ || true
+fi
+
+if [[ -d /opt/netsentinel/deploy/live-image/branding/grub && -d /boot/grub/themes ]]; then
+  mkdir -p /boot/grub/themes/netsentinel-ai
+  cp -a /opt/netsentinel/deploy/live-image/branding/grub/. /boot/grub/themes/netsentinel-ai/ || true
+fi
+
+if command -v plymouth-set-default-theme >/dev/null 2>&1 && [[ -f /usr/share/plymouth/themes/netsentinel-ai/netsentinel-ai.plymouth ]]; then
+  plymouth-set-default-theme netsentinel-ai || true
+  if command -v update-initramfs >/dev/null 2>&1; then
+    update-initramfs -u || true
+  fi
+fi
+
+if command -v systemctl >/dev/null 2>&1; then
+  systemctl enable lightdm >/dev/null 2>&1 || true
+  systemctl enable NetworkManager >/dev/null 2>&1 || true
+fi

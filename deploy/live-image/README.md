@@ -1,8 +1,16 @@
-# NetSentinel AI Debian Live Appliance Prototype
+# NetSentinel AI OS Live Appliance Prototype
 
-This directory is a prototype live-build style scaffold. It is intentionally
-small and conservative: it documents the future ISO path and validates the
-required files without pretending to be a finished distribution.
+This directory is the NetSentinel AI OS prototype live-build scaffold. It is
+intentionally small and conservative: it documents the future ISO path and
+validates the required files without pretending to be a finished distribution.
+
+User-facing identity:
+
+- OS name: NetSentinel AI OS
+- Live edition: NetSentinel AI Live Appliance
+- Console: NetSentinel AI Console
+- ISO label: `NETSENTINEL_AI`
+- Default hostname: `netsentinel-ai`
 
 The existing installer remains the source of truth:
 
@@ -28,7 +36,7 @@ No secrets, `.env.production`, customer captures, database dumps, or private
 keys belong in this image tree. First boot or install must generate secrets on
 the target system.
 
-## Debian VM Build Workflow
+## Build VM Workflow
 
 Recommended build OS: Debian Stable.
 
@@ -71,7 +79,7 @@ Clean build artifacts:
 sudo ./build-live-prototype.sh --clean
 ```
 
-The build path is still experimental. Prefer testing the installer on a Debian
+The build path is still experimental. Prefer testing the installer in a clean
 VM before producing bootable media.
 
 ## Payload Strategy
@@ -80,3 +88,9 @@ The v1.9 prototype uses a bootstrap-only approach. It includes live-image
 helpers, documentation, and installer references, but it must not include real
 `.env.production`, customer data, backups, databases, private keys, tokens, or
 raw captures.
+
+## Technical Base Attribution
+
+NetSentinel AI OS is an independent Debian-based system. Debian is a trademark
+of Software in the Public Interest, Inc. NetSentinel AI is not produced by,
+endorsed by, or affiliated with the Debian Project.

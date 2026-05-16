@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=NetSentinel Documentation
+Comment=Open local NetSentinel documentation or README
+Exec=sh -c 'DOC="/opt/netsentinel/README.md"; if [ -d /opt/netsentinel/docs ]; then DOC="/opt/netsentinel/docs"; fi; if command -v thunar >/dev/null 2>&1; then thunar "$DOC"; elif command -v xdg-open >/dev/null 2>&1; then xdg-open "$DOC"; else printf "Documentation path: %s\\n" "$DOC"; fi'
+Icon=help-browser
+Terminal=false
+Categories=Documentation;Network;
+Keywords=NetSentinel;Documentation;README;Help;

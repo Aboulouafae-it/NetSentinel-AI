@@ -1,0 +1,14 @@
+Window.SetBackgroundTopColor(0.02, 0.03, 0.04); # Approx #05070A
+Window.SetBackgroundBottomColor(0.04, 0.07, 0.12); # Approx #0B1220
+
+title = Text("NetSentinel AI OS");
+title.SetColor(0.85, 0.97, 1.0);
+title.SetPosition(Window.GetWidth() / 2 - title.GetWidth() / 2, Window.GetHeight() / 2 - 45, 10000);
+
+subtitle = Text("Network Operations • Cybersecurity • Wireless Diagnostics • Hybrid Cloud");
+subtitle.SetColor(0.45, 0.85, 1.0);
+subtitle.SetPosition(Window.GetWidth() / 2 - subtitle.GetWidth() / 2, Window.GetHeight() / 2, 10000);
+
+status = Text("Starting NetSentinel AI Live Appliance...");
+status.SetColor(0.62, 0.72, 0.78);
+status.SetPosition(Window.GetWidth() / 2 - status.GetWidth() / 2, Window.GetHeight() / 2 + 40, 10000);

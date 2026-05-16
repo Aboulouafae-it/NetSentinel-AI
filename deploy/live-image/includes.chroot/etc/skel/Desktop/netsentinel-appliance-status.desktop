@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=NetSentinel Appliance Status
+Comment=Show NetSentinel AI OS appliance health and service status
+Exec=sh -c 'if command -v xfce4-terminal >/dev/null 2>&1; then xfce4-terminal --title="NetSentinel Appliance Status" --command="bash -lc '\''appliance-status; printf \"\\nPress Enter to close...\"; read -r _'\''"; elif command -v x-terminal-emulator >/dev/null 2>&1; then x-terminal-emulator -e appliance-status; else appliance-status; fi'
+Icon=utilities-system-monitor
+Terminal=false
+Categories=Network;Security;System;
+Keywords=NetSentinel;Status;Health;Appliance;

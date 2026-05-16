@@ -91,7 +91,7 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
         <Sidebar />
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           <TopBar />
-          <main style={{ flex: 1, padding: 'var(--spacing-xl)', overflowY: 'auto' }}>
+          <main className="app-main">
             {children}
           </main>
         </div>

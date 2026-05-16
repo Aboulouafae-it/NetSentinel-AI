@@ -1,16 +1,42 @@
-# NetSentinel AI Real ISO Build Test
+# NetSentinel AI OS Real ISO Build Test
 
-This document describes how to validate whether the Debian live appliance
-scaffold can produce a real prototype ISO. A successful build does not make the
-ISO production-ready; boot and persistence testing are separate checks.
+This document describes how to validate whether the NetSentinel AI OS live
+appliance scaffold can produce a real prototype ISO. A successful build does not
+make the ISO production-ready; boot and persistence testing are separate checks.
 
-## Current v2.1 Status
+## Current v2.9 Status
 
-Status: **Pending in this environment**.
+Status: **Built and content-verified**.
 
-The current host does not have `live-build` installed, so only
-`deploy/live-image/build-live-prototype.sh --check-only` was run locally. The
-real ISO build should be run in a clean Debian Stable build VM.
+The v2.9 visual-test ISO was built successfully from:
+
+```text
+/home/emorphi/netsentinel-build/NetSentinel-AI/deploy/live-image
+```
+
+Final artifact:
+
+```text
+/home/emorphi/netsentinel-build/NetSentinel-AI/deploy/live-image/NetSentinel-AI-OS-Live-v2.9-visual-test.iso
+Size: 815792128 bytes
+SHA256: c1747ee48ff336840ec66adc3353187facf2c211837bbc9336afea26cce913b2
+```
+
+Build and verification summary:
+
+- `./build-live-prototype.sh --check-only`: passed.
+- Bash syntax checks for live image scripts/hooks: passed.
+- Forbidden payload scan: passed for live image includes.
+- Real ISO build: passed.
+- ISO bootloader config verification: passed.
+- SquashFS identity files and helper binaries: passed.
+- QEMU visual boot validation: passed.
+- VMware validation: not run in this environment.
+
+The build wrapper now stages live-build package lists, chroot includes, hooks,
+and bootloader assets into `config/`, then post-processes generated binary boot
+menus before regenerating the ISO. This prevents live-build timing from leaving
+generic boot labels in the final ISO.
 
 ## Recommended Build Host
 
@@ -70,6 +96,12 @@ Expected artifact:
 deploy/live-image/live-image-amd64.hybrid.iso
 ```
 
+Expected ISO label:
+
+```text
+NETSENTINEL_AI
+```
+
 Some `live-build` configurations may produce:
 
 ```text
@@ -83,6 +115,13 @@ ls -lh live-image-amd64*.iso live-image-amd64*.hybrid.iso 2>/dev/null
 ```
 
 Do not claim ISO build success unless the artifact exists.
+
+For the v2.9 visual-test release, also copy the successful build artifact to:
+
+```bash
+cp live-image-amd64.hybrid.iso NetSentinel-AI-OS-Live-v2.9-visual-test.iso
+sha256sum NetSentinel-AI-OS-Live-v2.9-visual-test.iso > SHA256SUMS
+```
 
 ## Cleanup
 
@@ -125,11 +164,17 @@ Builds usually need root:
 sudo ./build-live-prototype.sh --build
 ```
 
-### Docker inside live image limitations
+### Docker inside NetSentinel AI OS image limitations
 
 The prototype image includes Docker packages, but Docker behavior must be
 validated after boot. Do not assume nested Docker or appliance services are
 healthy until `appliance-status.sh` confirms them inside a VM.
+
+## Technical Base Attribution
+
+NetSentinel AI OS is an independent Debian-based system. Debian is a trademark
+of Software in the Public Interest, Inc. NetSentinel AI is not produced by,
+endorsed by, or affiliated with the Debian Project.
 
 ## Result Template
 

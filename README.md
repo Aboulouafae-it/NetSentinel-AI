@@ -1,148 +1,189 @@
 # NetSentinel AI
 
-**Local-First Network Observability, Cybersecurity & Outdoor Wireless Diagnostics Platform**
+**NetSentinel AI OS / Platform**  
+**Network Operations • Cybersecurity • Wireless Diagnostics • Hybrid Cloud**
 
-NetSentinel AI is a public-alpha appliance-style platform for local NOC/SOC
-operations, network observability, security event monitoring, and outdoor
-wireless diagnostics.
+![Status](https://img.shields.io/badge/status-public%20alpha-F59E0B)
+![Frontend](https://img.shields.io/badge/frontend-Next.js%2014-0EA5E9)
+![Backend](https://img.shields.io/badge/backend-FastAPI-22C55E)
+![Database](https://img.shields.io/badge/database-PostgreSQL%2016-2563EB)
+![Runtime](https://img.shields.io/badge/runtime-Docker%20Compose-0B1220)
+![License](https://img.shields.io/badge/license-not%20selected-DC2626)
 
-It brings assets, alerts, incidents, logs, Edge Agents, syslog, ICMP/SNMP
-polling, wireless field measurements, Fortinet security events, and early
-vendor adapter intelligence into one local operator console.
+NetSentinel AI is a professional network operations, cybersecurity monitoring,
+outdoor wireless diagnostics, and hybrid cloud observability platform designed
+to evolve into a dedicated desktop appliance OS.
 
-> **Status:** Public Alpha / MVP / Work in Progress.
+The project combines a local-first NetSentinel AI Console, a FastAPI backend,
+PostgreSQL, Redis/worker foundations, Edge Agent telemetry, syslog ingestion,
+wireless field measurements, vendor adapter foundations, and a staged XFCE
+Desktop Appliance Experience for future ISO validation.
+
+> **Status: Public Alpha / Active Development**
 >
-> NetSentinel AI is **not production-ready**. Use it for evaluation,
-> development, local lab testing, appliance prototyping, and contributor
-> feedback.
+> NetSentinel AI is **not production-ready**. Use it for local labs,
+> engineering evaluation, documentation review, appliance prototyping, and
+> contributor feedback.
+>
+> The Desktop Appliance / ISO path is under validation. Cloud and AI connectors
+> are foundation/roadmap unless explicitly documented as implemented. No default
+> production credentials are provided.
 
 ## Screenshots
 
-These screenshots were captured from a real local v2.0.0-alpha RC3 app
-instance. They are not generated mockups or marketing images.
+These screenshots are real captures from a local NetSentinel AI app instance.
+They are not generated mockups. New screenshots must be captured from the
+running app or OS and reviewed before being linked here.
 
-| Login | Dashboard |
+| Login | First-Run Setup |
 | --- | --- |
-| ![NetSentinel AI login](docs/assets/screenshots/login.png) | ![NetSentinel AI dashboard](docs/assets/screenshots/dashboard.png) |
+| ![NetSentinel AI login](docs/assets/screenshots/login.png) | ![NetSentinel AI setup](docs/assets/screenshots/setup.png) |
 
-| Assets | Alerts |
+| Control Center Dashboard | Assets / Network Inventory |
 | --- | --- |
-| ![Assets inventory](docs/assets/screenshots/assets.png) | ![Alerts triage](docs/assets/screenshots/alerts.png) |
+| ![Control Center dashboard](docs/assets/screenshots/dashboard.png) | ![Assets inventory](docs/assets/screenshots/assets.png) |
 
-| Incidents | Logs / Fortinet |
+| Alerts | Incidents |
 | --- | --- |
-| ![Incidents workflow](docs/assets/screenshots/incidents.png) | ![Logs with Fortinet fields](docs/assets/screenshots/logs.png) |
+| ![Alerts triage](docs/assets/screenshots/alerts.png) | ![Incidents workflow](docs/assets/screenshots/incidents.png) |
 
-| Agents | Wireless Link Detail |
+| Logs / Security Events | Wireless Link Detail |
 | --- | --- |
-| ![Edge Agents](docs/assets/screenshots/agents.png) | ![Wireless link detail](docs/assets/screenshots/wireless-link-detail.png) |
+| ![Logs and syslog](docs/assets/screenshots/logs.png) | ![Wireless link detail](docs/assets/screenshots/wireless-link-detail.png) |
 
-More captures:
-[setup](docs/assets/screenshots/setup.png),
-[radio devices](docs/assets/screenshots/radio-devices.png),
-[field measurements](docs/assets/screenshots/field-measurements.png), and
-[appliance status](docs/assets/screenshots/appliance-status.png).
+| Radio Devices | Field Measurements |
+| --- | --- |
+| ![Radio devices](docs/assets/screenshots/radio-devices.png) | ![Field measurements](docs/assets/screenshots/field-measurements.png) |
 
-## Core Capabilities
+| Agents | Appliance Status |
+| --- | --- |
+| ![Edge Agents](docs/assets/screenshots/agents.png) | ![Appliance status](docs/assets/screenshots/appliance-status.png) |
 
-### Operations Dashboard
+Pending real screenshots:
 
-- Real organization-scoped dashboard APIs.
-- KPI cards for assets, alerts, incidents, agents, wireless links, and security
-  activity.
-- Recent activity, logs preview, topology summary, wireless health, and appliance
-  status visibility.
+- Network Operations v3 workspace
+- Wireless Diagnostics v3 workspace
+- Security Operations v3 workspace
+- AI Copilot foundation workspace
+- Cloud & Hybrid foundation workspace
+- Reports & Export Center
+- XFCE Desktop Appliance
+- NetSentinel AI OS boot menu
 
-### Asset Inventory
+## What NetSentinel AI Provides
 
-- Asset list, filters, status/risk badges, last seen tracking, and polling
-  freshness.
-- ICMP reachability foundation and SNMP polling integration.
+### Control Center
 
-### Alerts & Incidents
+- Real dashboard APIs for assets, alerts, incidents, agents, wireless health,
+  recent activity, topology summary, and appliance/system status.
+- Operator-first loading, empty, and error states.
+- Roadmap-safe Cloud & Hybrid and AI Copilot panels without fake production data.
 
-- Alert lifecycle: open, acknowledged, escalated, resolved.
-- Incident workflow with owner assignment, notes, timeline events, tasks, linked
-  alerts, and resolution.
+### Network Operations
 
-### Logs & Syslog
+- Asset inventory, discovery, polling, topology summary, reachability signals,
+  and network alert context.
+- ICMP and SNMP foundations where supported by current adapters.
+- No fake topology graph; summary views are based on available inventory data.
 
-- Authenticated HTTP syslog ingestion.
-- Log storage, asset linking where possible, activity events, and security event
-  classification.
+### Wireless Diagnostics
 
-### Fortinet Security Profile
+- Radio devices, wireless links, field measurements, and RF health visibility.
+- RSSI, SNR, noise floor, CCQ, latency, packet loss, TX/RX capacity, and missing
+  RF fields when data is unavailable.
+- Rule-based health scoring, deterministic root-cause hints, recommended
+  technician actions, source confidence labels, and Poor/Critical alert creation.
+- MikroTik, TP-Link, and Ubiquiti adapter foundations with real capture
+  validation still required.
 
-- FortiGate-style key/value syslog parsing.
-- Normalized fields for source/destination, action, service, user, VDOM,
-  severity, and category.
-- Deduped high-value alert candidates for events such as VPN/admin failures,
-  IPS/malware hits, HA failover, interface down, and suspicious patterns.
+### Security Operations
 
-### Edge Agents
+- Authenticated syslog ingestion foundation.
+- Fortinet/FortiGate-style syslog parsing and normalized security fields.
+- Alerts, incidents, evidence drawer patterns, lifecycle status, and safe
+  investigation workflow.
+- No full SIEM, EDR, XDR, SOAR, auto-blocking, or destructive response claims.
 
-- Edge Agent registration, heartbeat, token rotation, telemetry ingestion, and
-  appliance status visibility.
-- Telemetry-to-asset update foundation.
+### AI Copilot
 
-### Wireless Field Measurements
+- Privacy-first troubleshooting workspace foundation.
+- No external AI provider calls by default.
+- No provider keys or cloud credentials in the repository.
+- Local deterministic summaries where available; Claude, OpenAI, local models,
+  and enterprise endpoints remain future provider options behind redaction and
+  operator approval.
 
-- Wireless link field measurement capture.
-- Deterministic wireless health scoring and diagnosis.
-- Poor/Critical measurement alert creation with deduplication.
+### Cloud & Hybrid
 
-### Radio Devices
+- Professional foundation workspace for AWS, Azure, Google Cloud, Cloudflare,
+  VPN tunnel health, public exposure, cloud logs, and hybrid topology planning.
+- No cloud credentials configured by default.
+- No external cloud API calls are made by the current foundation page.
 
-- Radio device polling, last seen tracking, adapter metadata, and manual RF
-  fallback.
-- Wireless link relationships between near/far radios.
+### Reports & Export Center
 
-### Vendor Adapters
+- Report foundation for network, wireless, security, incident, cloud/hybrid
+  future, and appliance health reporting.
+- Backup/restore status posture and safe sharing/redaction policy.
+- PDF/HTML/CSV/JSON export generation remains future backend work unless a
+  specific export is explicitly implemented.
 
-- Generic SNMP foundation.
-- MikroTik RouterOS adapter foundation.
-- TP-Link CPE / outdoor radio adapter foundation.
-- Ubiquiti airMAX / UISP adapter foundation.
-- Fixture lab and real-device capture redaction workflow.
+### Desktop Appliance OS
 
-### Appliance Readiness
-
-- First-run setup, production configuration checks, backup/restore scripts,
-  installer/update/uninstall scripts, systemd examples, and production Docker
-  Compose.
-
-### Debian Live Prototype
-
-- Debian live appliance scaffold and build validation workflow.
-- Not a finished ISO; intended as a reproducible prototype path.
+- XFCE + LightDM + NetworkManager Desktop Appliance profile.
+- NetSentinel desktop shortcuts for Console, Control Center, Appliance Status,
+  Network Tools, Packet Tools, Wireless, Security, Cloud, Reports, and Docs.
+- No kiosk default and no automatic browser launch after boot.
+- Network/security/wireless/cloud diagnostic toolset and hardware driver support
+  strategy.
+- Live-image scaffold is ready for future Desktop ISO rebuild and VMware visual
+  validation; no production ISO is claimed here.
 
 ## Architecture
 
-```text
-frontend/        Next.js NOC/SOC console
-backend/         FastAPI API, SQLAlchemy models, Alembic migrations, services
-edge-agent/      Python Edge Agent foundation
-desktop-client/  Electron shell for local appliance launcher workflows
-deploy/          Installer, systemd, reverse proxy, desktop, live image scaffold
-scripts/         Backup, restore, and migration validation helpers
-docs/            Appliance, security, adapter, release, and workflow docs
+```mermaid
+flowchart LR
+  Operator[Operator / Technician] --> Console[Next.js NetSentinel AI Console]
+  Console --> API[FastAPI Backend]
+  API --> DB[(PostgreSQL)]
+  API --> Redis[(Redis / Worker Foundation)]
+  Agent[Python Edge Agent] --> API
+  Syslog[Syslog Sources / Firewalls] --> API
+  Radios[Wireless Radios / Field Measurements] --> API
+  API --> Alerts[Alerts]
+  Alerts --> Incidents[Incidents]
+  API --> Reports[Reports & Export Center Foundation]
+  Desktop[NetSentinel AI OS Desktop Appliance] --> Console
 ```
+
+Project structure:
+
+| Path | Role |
+| --- | --- |
+| `frontend/` | Next.js 14 TypeScript NetSentinel AI Console |
+| `backend/` | FastAPI API, SQLAlchemy models, Alembic migrations, services |
+| `edge-agent/` | Python Edge Agent foundation |
+| `desktop-client/` | Electron local launcher shell |
+| `deploy/` | Appliance scripts, desktop launchers, live-image scaffold |
+| `scripts/` | Backup, restore, backend validation, migration validation |
+| `docs/` | Product, OS, security, wireless, cloud, release, and GitHub docs |
 
 Runtime components:
 
-- Frontend: Next.js
-- Backend: FastAPI
+- Frontend: Next.js 14 + TypeScript
+- Backend: FastAPI + Python
 - Database: PostgreSQL
-- Queue/cache: Redis / worker foundation
+- Cache/worker foundation: Redis / ARQ
 - Agents: Python Edge Agent foundation
-- Deployment: Docker Compose and appliance scripts
-- Image direction: Debian live-build scaffold
+- Runtime: Docker Compose for local deployment
+- OS direction: NetSentinel AI OS Desktop Appliance scaffold
 
-## Quick Start: Docker Compose Lab
+## Quick Start: Local Docker Compose Lab
 
 Prerequisites:
 
 - Docker with Compose v2
+- Git
 
 ```bash
 git clone https://github.com/Aboulouafae-it/NetSentinel-AI.git "NetSentinel AI"
@@ -152,151 +193,150 @@ docker compose up --build -d
 docker compose exec backend alembic upgrade head
 ```
 
-Open:
+Open the first-run setup:
 
 ```text
 http://localhost:3000/setup
 ```
 
-Then create the first organization and admin user. Use a real-looking local
-email such as `admin@netsentinel.local` for demo setup.
+Create the first organization and admin user. Use local lab values only. Do not
+reuse demo secrets, weak JWT secrets, or local test credentials outside a trusted
+development environment.
 
-Development seed data may exist for local-only workflows. Do not use demo
-credentials or default secrets outside a trusted lab.
+Useful local URLs:
 
-## Appliance Install Prototype
+| Service | URL |
+| --- | --- |
+| NetSentinel AI Console | `http://localhost:3000` |
+| First-run setup | `http://localhost:3000/setup` |
+| Backend API | `http://localhost:8000` |
+| Swagger docs | `http://localhost:8000/docs` |
+| ReDoc | `http://localhost:8000/redoc` |
 
-For Debian/Ubuntu-style appliance testing:
-
-```bash
-sudo deploy/install-netsentinel.sh
-```
-
-Then open:
-
-```text
-http://localhost:3000/setup
-```
-
-This installer is a **prototype**. Test it in a VM first and back up any
-existing appliance data before update or uninstall workflows.
-
-See:
-
-- [Install Appliance](docs/INSTALL_APPLIANCE.md)
-- [Appliance Deployment](docs/APPLIANCE_DEPLOYMENT.md)
-- [Deployment Hardening](docs/DEPLOYMENT_HARDENING.md)
-
-## Debian Live Image Prototype
-
-The live image workflow is a scaffold, not a production ISO.
+## Validation Commands
 
 ```bash
+bash scripts/validate_backend.sh
+cd frontend && npx tsc --noEmit --pretty false
+npm --prefix frontend run build
 deploy/live-image/build-live-prototype.sh --check-only
 ```
 
-A real ISO build requires Debian `live-build` in a suitable Debian VM or build
-host.
+`scripts/validate_backend.sh` creates or reuses `.tmp/backend-venv`, installs
+backend requirements, imports `app.main`, and runs `pytest backend/tests -q`.
+
+## Desktop / OS Preview
+
+NetSentinel AI OS is planned as a dedicated desktop appliance experience.
+
+Current state:
+
+- live-image scaffold exists,
+- XFCE Desktop Appliance profile is staged,
+- desktop shortcuts are staged,
+- backend validation and desktop ISO preflight docs exist,
+- future Desktop ISO rebuild and VMware/QEMU validation remain the next packaging
+  phase.
+
+Important behavior:
+
+- the browser does not auto-open on boot,
+- kiosk mode is not the default,
+- the operator opens NetSentinel AI Console from the desktop shortcut,
+- terminal fallback remains available through `netsentinel-menu` and
+  `appliance-status`.
 
 See:
 
+- [Desktop Appliance Experience](docs/DESKTOP_APPLIANCE_EXPERIENCE.md)
 - [Live Appliance Image](docs/LIVE_APPLIANCE_IMAGE.md)
-- [Live Image VM Test Plan](docs/LIVE_IMAGE_VM_TEST_PLAN.md)
-
-## Supported Integrations
-
-| Integration | Status | Notes |
-| --- | --- | --- |
-| Generic SNMP | Partial / supported foundation | Standard system and interface data; no RF claims |
-| MikroTik RouterOS | Partial / adapter foundation | Synthetic fixture coverage; real capture and live transport validation needed |
-| TP-Link CPE | Partial / SNMP fallback | Manual RF fallback; RF metrics need real OIDs/API captures |
-| Ubiquiti airMAX / UISP | Partial / SNMP fallback | Fixture validation; UISP placeholder; UniFi not supported here |
-| Fortinet / FortiGate syslog | Partial / syslog profile | Ingest/parse/classify only; no FortiGate API/configuration changes |
-| Cambium | Planned | Not implemented |
-| Cloud connectors | Future | AWS/Azure/GCP not implemented |
-
-See [Vendor Adapters](docs/VENDOR_ADAPTERS.md) for the full support matrix.
-
-## Testing Status
-
-Latest RC validation in this working tree:
-
-- Backend tests passed.
-- Backend import check passed.
-- Frontend TypeScript check passed.
-- Frontend production build passed.
-- Clean Alembic migration baseline validation passed.
-- RC2 demo workflow passed on a clean isolated migrated database.
-- Docker Compose startup, backup dry-run, live image check-only, and secret scan
-  passed.
-
-Run locally:
-
-```bash
-python -m pytest backend/tests
-cd backend && python -c "import app.main"
-cd frontend && npx tsc --noEmit
-cd frontend && npm run build
-scripts/validate_clean_migrations.sh
-scripts/backup.sh --dry-run
-deploy/live-image/build-live-prototype.sh --check-only
-```
-
-## Documentation
-
-- [Demo Workflow](docs/DEMO_WORKFLOW.md)
-- [Known Limitations](docs/KNOWN_LIMITATIONS.md)
-- [Alpha Release Checklist](docs/ALPHA_RELEASE_CHECKLIST.md)
-- [Deployment Hardening](docs/DEPLOYMENT_HARDENING.md)
-- [Vendor Adapters](docs/VENDOR_ADAPTERS.md)
-- [Outdoor Radio Integrations](docs/OUTDOOR_RADIO_INTEGRATIONS.md)
-- [Real Device Capture Guide](docs/REAL_DEVICE_CAPTURE_GUIDE.md)
-- [Live Appliance Image](docs/LIVE_APPLIANCE_IMAGE.md)
-- [Live Image VM Test Plan](docs/LIVE_IMAGE_VM_TEST_PLAN.md)
-- [Clean VM Install Test](docs/CLEAN_VM_INSTALL_TEST.md)
-- [Real ISO Build Test](docs/REAL_ISO_BUILD_TEST.md)
-- [ISO VM Boot Test](docs/ISO_VM_BOOT_TEST.md)
-- [Database Migration Recovery](docs/DB_MIGRATION_RECOVERY.md)
-- [Syslog Profiles](docs/SYSLOG_PROFILES.md)
-- [Security Policy](SECURITY.md)
-
-## Security Notice
-
-NetSentinel AI public alpha is not production-hardened.
-
-- Do not use default/demo secrets in production-like environments.
-- Do not expose PostgreSQL or Redis publicly.
-- Use a reverse proxy and HTTPS before exposing the UI/API beyond a trusted
-  operator LAN.
-- Treat Edge Agent tokens, credential profiles, backups, and captures as
-  sensitive.
-- Redact real device captures before committing them.
-- Do not commit `.env`, `.env.production`, private keys, database dumps, raw
-  captures, or customer data.
-
-See [SECURITY.md](SECURITY.md), [Deployment Hardening](docs/DEPLOYMENT_HARDENING.md),
-and [Real Device Capture Guide](docs/REAL_DEVICE_CAPTURE_GUIDE.md).
+- [Desktop ISO Preflight Checklist](docs/DESKTOP_ISO_PREFLIGHT_CHECKLIST.md)
+- [Desktop ISO VM Test Plan](docs/DESKTOP_ISO_VM_TEST_PLAN.md)
+- [Hardware Driver Support](docs/HARDWARE_DRIVER_SUPPORT.md)
 
 ## Roadmap
 
-Near-term:
+| Stage | Focus |
+| --- | --- |
+| v3.x Product Experience | Control Center, Network Operations, Wireless Diagnostics, Security Operations, AI Copilot foundation, Cloud & Hybrid foundation, Reports & Export Center, Desktop Appliance preparation. |
+| v4.x Desktop ISO / Appliance Validation | Build Desktop ISO, VMware/QEMU validation, screenshots, checksums, persistence/install planning, release artifact discipline. |
+| v5.x Real Device Validation | Reviewed MikroTik, TP-Link, Ubiquiti, Fortinet, SNMP, syslog, and wireless capture validation with redacted fixtures. |
+| v6.x Cloud / AI / Enterprise | Optional cloud connectors, privacy-controlled AI providers, RBAC hardening, audit trails, report generation, enterprise deployment patterns. |
 
-- Public alpha release hygiene and GitHub presentation.
-- Real device capture validation for MikroTik, TP-Link, Ubiquiti, and Fortinet.
-- Live image VM build/boot testing.
-- Cambium adapter foundation.
-- Stronger RBAC, credential storage hardening, and stream-token hardening.
+## Known Limitations
 
-Longer-term:
+- Not production-ready.
+- Cloud connectors are not implemented as live providers.
+- AI providers are not active and no external AI calls are made by default.
+- Real vendor RF support needs reviewed captures and field validation.
+- Reporting/export generation is foundation work and not a complete compliance
+  reporting system.
+- Persistence/install validation and Desktop ISO visual validation are pending.
+- Vendor adapters are partial/foundation work.
+- Fortinet support is syslog/profile oriented; no firewall configuration API is
+  claimed.
+- Credential storage, RBAC, audit logging, and rate limiting require additional
+  hardening before production use.
+- No formal project license has been selected.
 
-- Vendor-specific device intelligence.
-- Persistent USB/live appliance image.
-- More complete audit trails and reporting.
-- Real-time operational workflows suitable for field pilots.
+## Documentation
+
+Start with the [documentation portal](docs/README.md).
+
+High-value entry points:
+
+- [V3 Master Execution Plan](docs/NETSENTINEL_V3_MASTER_EXECUTION_PLAN.md)
+- [Information Architecture](docs/NETSENTINEL_INFORMATION_ARCHITECTURE.md)
+- [UI Design System](docs/NETSENTINEL_UI_DESIGN_SYSTEM.md)
+- [Wireless Diagnostics Workflow](docs/WIRELESS_DIAGNOSTICS_WORKFLOW.md)
+- [Syslog Profiles](docs/SYSLOG_PROFILES.md)
+- [Reports & Export Center](docs/REPORTS_EXPORT_CENTER.md)
+- [AI Privacy and Prompt Safety](docs/AI_COPILOT_PRIVACY_AND_PROMPT_SAFETY.md)
+- [Cloud & Hybrid Roadmap](docs/CLOUD_HYBRID_ROADMAP.md)
+- [GitHub Release Prep Checklist](docs/GITHUB_RELEASE_PREP_CHECKLIST.md)
+
+## Security
+
+NetSentinel AI public alpha is not production-hardened.
+
+- Do not commit `.env`, private keys, tokens, database dumps, raw captures,
+  backups, or customer data.
+- Do not expose PostgreSQL or Redis publicly.
+- Use strong unique secrets for any non-local deployment.
+- Redact device captures and logs before sharing.
+- Treat agent tokens, credential profiles, backups, and syslog data as sensitive.
+- Report vulnerabilities privately.
+
+See:
+
+- [SECURITY.md](SECURITY.md)
+- [Deployment Hardening](docs/DEPLOYMENT_HARDENING.md)
+- [Asset Licensing Policy](docs/ASSET_LICENSING_POLICY.md)
+- [AI Privacy and Prompt Safety](docs/AI_COPILOT_PRIVACY_AND_PROMPT_SAFETY.md)
+
+## Contributing
+
+Contributions should preserve the project’s local-first, safety-first posture.
+
+- Keep feature claims honest.
+- Add or update tests for backend behavior.
+- Run frontend build/type checks for UI changes.
+- Never commit secrets, dumps, raw captures, or customer data.
+- Keep destructive network/security actions out of the product unless explicitly
+  designed, reviewed, and approved.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## OS Base Attribution
+
+NetSentinel AI OS is an independent Debian-based system. Debian is a trademark
+of Software in the Public Interest, Inc. NetSentinel AI is not produced by,
+endorsed by, or affiliated with the Debian Project. Debian is used as a
+technical base, not as the NetSentinel product identity.
 
 ## License
 
-License: Not yet selected. All rights reserved until a license is added.
+License not yet selected. All rights reserved until a license is added.
 
-Before public production use, distribution, or external contribution, a formal
-license decision is required.
+Before public production use, distribution, packaging, or broad external
+contribution, a formal license decision is required.

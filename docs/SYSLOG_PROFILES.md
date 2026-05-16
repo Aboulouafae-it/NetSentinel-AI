@@ -78,3 +78,15 @@ from an Edge Agent. UDP syslog daemon support remains future work.
   time-window aggregation.
 - Fixture validation uses synthetic samples until real redacted captures are
   added.
+## v3.4 SOC Workspace Note
+
+The `/security` page now surfaces syslog and Fortinet/FortiGate activity in the Security Operations Center workspace. Categories are displayed only when present in normalized log metadata or dashboard counters.
+
+Current behavior:
+
+- Latest syslog events are loaded from the existing logs API.
+- Fortinet profile activity is identified from `vendor_profile`, category, parsed flow fields, action, and user metadata when present.
+- Classification summaries are based on the currently loaded log page, not a full SIEM index.
+- The evidence drawer redacts token, secret, password, credential, authorization, and API key fields before rendering metadata.
+- No external threat intelligence APIs are called.
+- No automatic blocking, isolation, or destructive response action is exposed.

@@ -7,9 +7,10 @@ or timeseries stores.
 """
 
 from datetime import datetime, timezone
-from fastapi import APIRouter, Depends, Header, HTTPException, status
-from pydantic import BaseModel
-from typing import List
+from typing import Annotated
+
+from fastapi import APIRouter, Body, Depends, Header, HTTPException, status
+from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
@@ -21,16 +22,16 @@ from app.services.telemetry_processor import process_asset_telemetry
 router = APIRouter(prefix="/ingestion", tags=["Telemetry Ingestion"])
 
 class TelemetryPayload(BaseModel):
-    agent_id: str
-    asset_id: str | None = None
-    ip_address: str | None = None
-    metric_type: str
+    agent_id: str = Field(min_length=1, max_length=128)
+    asset_id: str | None = Field(default=None, max_length=64)
+    ip_address: str | None = Field(default=None, max_length=128)
+    metric_type: str = Field(min_length=1, max_length=128)
     value: float | str
-    timestamp: str
+    timestamp: str = Field(min_length=1, max_length=64)
 
 @router.post("/metrics", status_code=status.HTTP_202_ACCEPTED)
 async def ingest_metrics(
-    payloads: List[TelemetryPayload],
+    payloads: Annotated[list[TelemetryPayload], Body(min_length=1, max_length=250)],
     db: AsyncSession = Depends(get_db),
     x_agent_id: str | None = Header(default=None),
     x_agent_token: str | None = Header(default=None),

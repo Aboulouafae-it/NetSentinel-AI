@@ -43,7 +43,7 @@ def test_live_image_package_list_includes_required_network_tools():
     }
     required = {
         "docker.io",
-        "docker-compose-plugin",
+        "docker-compose",
         "git",
         "curl",
         "jq",

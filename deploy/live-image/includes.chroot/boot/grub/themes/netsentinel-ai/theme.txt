@@ -1,0 +1,31 @@
+# NetSentinel AI OS GRUB theme prototype.
+# Background placeholder: replace with an original reviewed asset, for example:
+# desktop-image: "background.png"
+
+title-text: "NetSentinel AI OS"
+title-color: "#d9f7ff"
+title-font: "DejaVu Sans Bold 24"
+desktop-color: "#061017"
+terminal-font: "DejaVu Sans Mono Regular 14"
+
++ boot_menu {
+  left = 12%
+  top = 30%
+  width = 76%
+  height = 42%
+  item_font = "DejaVu Sans Regular 16"
+  item_color = "#9fb8c3"
+  selected_item_color = "#ffffff"
+  selected_item_pixmap_style = "select_*.png"
+}
+
++ label {
+  left = 12%
+  top = 78%
+  width = 76%
+  height = 40
+  text = "Start NetSentinel AI Live Appliance"
+  color = "#70e0ff"
+  font = "DejaVu Sans Regular 14"
+  align = "center"
+}

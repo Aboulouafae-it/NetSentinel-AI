@@ -8,7 +8,7 @@ openssl
 
 # Container runtime
 docker.io
-docker-compose-plugin
+docker-compose
 
 # Networking and discovery tools
 network-manager
@@ -23,6 +23,12 @@ traceroute
 dnsutils
 whois
 ethtool
+iputils-ping
+pciutils
+usbutils
+iw
+wireless-tools
+rfkill
 lldpd
 rsyslog
 chrony
@@ -31,5 +37,31 @@ chrony
 nginx
 tshark
 
+# Professional lightweight desktop appliance experience
+xorg
+lightdm
+lightdm-gtk-greeter
+xfce4
+xfce4-terminal
+thunar
+chromium
+firefox-esr
+dbus-x11
+xdg-utils
+network-manager-gnome
+polkitd
+fonts-dejavu
+fonts-noto-core
+open-vm-tools
+
+# Hardware/driver support
+firmware-linux-free
+firmware-iwlwifi
+firmware-realtek
+firmware-atheros
+firmware-brcm80211
+
 # Note: snmp-mibs-downloader is optional and may require non-free repository
 # availability depending on Debian release/repository policy.
+# Note: non-free firmware packages require Debian non-free-firmware repository
+# availability and must be reviewed against redistribution/legal policy.

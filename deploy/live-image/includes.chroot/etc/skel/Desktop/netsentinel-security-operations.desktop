@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Security Operations
+Comment=Open NetSentinel Security Operations Center workspace
+Exec=open-netsentinel-console /security
+Icon=security-high
+Terminal=false
+Categories=Network;Security;
+Keywords=NetSentinel;Security;SOC;Alerts;Incidents;Syslog;

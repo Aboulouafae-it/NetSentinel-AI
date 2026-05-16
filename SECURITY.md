@@ -5,36 +5,60 @@ prototype. Do not treat the current repository as production-hardened software.
 
 ## Supported Versions
 
-| Version | Status |
-|---------|--------|
-| 2.0.0-alpha | Public alpha / active development |
+| Version / Track | Status |
+| --- | --- |
+| Public alpha / active development | Security issues accepted and reviewed |
+| Desktop ISO / appliance builds | Validation track only unless a release says otherwise |
 
 ## Reporting A Vulnerability
 
-If you find a security issue, please open a private report or contact the repository owner directly instead of publishing exploit details in a public issue.
+If you find a security issue, use private reporting when available or contact
+the repository owner directly. Do not publish exploit details, customer data,
+tokens, or vulnerable endpoints in public issues.
 
-When reporting, include:
+Include:
 
 - affected component,
 - reproduction steps,
 - expected impact,
-- logs or screenshots when useful,
+- relevant logs or screenshots after redaction,
 - suggested mitigation if known.
+
+Do not include:
+
+- secrets,
+- `.env` content,
+- private keys,
+- raw captures,
+- customer data,
+- live cloud credentials,
+- exploit weaponization beyond what is needed to prove impact.
 
 ## Local Deployment Notes
 
 - Never use default/demo secrets outside a trusted lab.
 - Generate a unique `SECRET_KEY` before any non-local use.
-- Keep `.env` and `.env.production` private. Only examples should be committed.
+- Keep `.env` and `.env.production` private. Only example files should be
+  committed.
 - Do not expose PostgreSQL or Redis publicly.
 - Put any non-local UI/API exposure behind HTTPS, a reverse proxy, and firewall
   rules.
-- Treat Edge Agent tokens, credential profiles, backups, and syslog data as
-  sensitive.
-- Redact real device captures with `tools/redact_device_capture.py` and review
-  manually before committing reviewed fixtures.
+- Treat Edge Agent tokens, credential profiles, backups, syslog data, and device
+  captures as sensitive.
+- Redact real device captures and review them manually before committing any
+  fixture.
 - Rotate agent tokens and credentials after demos or suspected exposure.
-- Review dependencies regularly before production deployment.
+- Review dependencies before production deployment.
+
+## Current Security Limitations
+
+- Public alpha, not production-ready.
+- RBAC, audit logging, credential storage hardening, rate limiting, and API abuse
+  protection require further work.
+- AI provider integration is disabled/foundation by default and must include
+  redaction and operator approval before future external use.
+- Cloud connectors are roadmap/foundation and must not store credentials until a
+  secure credential design is implemented.
 
 ## Responsible Disclosure
 

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=NetSentinel AI Control Center
+Comment=NetSentinel AI OS Control Center — Network Operations, Cybersecurity, Wireless Diagnostics & Hybrid Cloud
+Exec=sh -c 'if command -v xfce4-terminal >/dev/null 2>&1; then xfce4-terminal --title="NetSentinel AI Control Center" --command="netsentinel-menu"; elif command -v x-terminal-emulator >/dev/null 2>&1; then x-terminal-emulator -e netsentinel-menu; else echo "No terminal emulator found. Run netsentinel-menu from a shell."; fi'
+Icon=utilities-terminal
+Terminal=false
+Categories=Network;Security;System;
+Keywords=NetSentinel;Control;Center;Network;Security;Wireless;

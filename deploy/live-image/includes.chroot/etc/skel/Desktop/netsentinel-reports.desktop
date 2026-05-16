@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Reports & Export Center
+Comment=Open NetSentinel reports, backup status, export planning, and safe sharing workspace
+Exec=open-netsentinel-console /reports
+Icon=x-office-document
+Terminal=false
+Categories=Network;Security;Documentation;
+Keywords=NetSentinel;Reports;Export;Backup;Audit;

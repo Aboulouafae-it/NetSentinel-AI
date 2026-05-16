@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Packet Tools
+Comment=Open packet analysis guidance for tcpdump and tshark
+Exec=sh -c 'if command -v xfce4-terminal >/dev/null 2>&1; then xfce4-terminal --title="NetSentinel Packet Tools" --command="bash -lc '\''printf \"NetSentinel Packet Tools\\n\\nTools: tcpdump, tshark.\\n\\nExamples:\\n  tcpdump -D\\n  tcpdump -i eth0 -c 100 -w /tmp/netsentinel.pcap\\n  tcpdump -i any -c 50 port 53\\n\\nPacket files may contain sensitive data. Save temporary files to /tmp and redact before sharing.\\n\\n\"; exec bash'\''"; elif command -v x-terminal-emulator >/dev/null 2>&1; then x-terminal-emulator; else sh; fi'
+Icon=utilities-terminal
+Terminal=false
+Categories=Network;Security;
+Keywords=NetSentinel;Packet;tcpdump;tshark;PCAP;

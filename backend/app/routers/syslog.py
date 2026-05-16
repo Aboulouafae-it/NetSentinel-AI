@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, Header, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,14 +26,14 @@ router = APIRouter(prefix="/syslog", tags=["Syslog"])
 
 
 class SyslogIngestRequest(BaseModel):
-    source_ip: str
-    hostname: str | None = None
-    facility: str | None = None
-    severity: str
-    message: str
-    timestamp: str | None = None
-    agent_id: str | None = None
-    raw: str | None = None
+    source_ip: str = Field(min_length=1, max_length=128)
+    hostname: str | None = Field(default=None, max_length=255)
+    facility: str | None = Field(default=None, max_length=64)
+    severity: str = Field(min_length=1, max_length=64)
+    message: str = Field(min_length=1, max_length=8192)
+    timestamp: str | None = Field(default=None, max_length=64)
+    agent_id: str | None = Field(default=None, max_length=128)
+    raw: str | None = Field(default=None, max_length=16384)
 
 
 def syslog_level(severity: str) -> LogLevel:
@@ -101,7 +101,10 @@ async def ingest_syslog(
     agent = await authenticate_agent(db, x_agent_uid or data.agent_id, x_agent_token)
     timestamp = datetime.now(timezone.utc)
     if data.timestamp:
-        timestamp = datetime.fromisoformat(data.timestamp.replace("Z", "+00:00"))
+        try:
+            timestamp = datetime.fromisoformat(data.timestamp.replace("Z", "+00:00"))
+        except ValueError:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid syslog timestamp")
         if timestamp.tzinfo is None:
             timestamp = timestamp.replace(tzinfo=timezone.utc)
     fortinet_event = normalize_fortinet_syslog(data.message) if looks_like_fortinet(data.message) else None

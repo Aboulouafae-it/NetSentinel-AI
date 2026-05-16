@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="2160" viewBox="0 0 3840 2160">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#05070A"/>
+      <stop offset="0.45" stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#061017"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0EA5E9" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#0EA5E9" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#2563EB" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="3840" height="2160" fill="url(#bg)"/>
+  <g opacity="0.24" stroke="#0EA5E9" stroke-width="2" fill="none">
+    <path d="M420 520h520l180 180h540"/>
+    <path d="M680 1420h420l160-160h740"/>
+    <path d="M2080 620h520l220 220h560"/>
+    <path d="M2200 1540h460l160-160h520"/>
+  </g>
+  <g opacity="0.16">
+    <rect x="0" y="720" width="3840" height="2" fill="url(#line)"/>
+    <rect x="0" y="1440" width="3840" height="2" fill="url(#line)"/>
+    <rect x="960" y="0" width="2" height="2160" fill="#0EA5E9"/>
+    <rect x="2880" y="0" width="2" height="2160" fill="#2563EB"/>
+  </g>
+  <g transform="translate(180 1720)">
+    <text x="0" y="0" fill="#E5E7EB" font-family="DejaVu Sans, Arial, sans-serif" font-size="86" font-weight="700">NetSentinel AI OS</text>
+    <text x="4" y="70" fill="#94A3B8" font-family="DejaVu Sans, Arial, sans-serif" font-size="34">Network Operations • Security Monitoring • Wireless Diagnostics • Hybrid Infrastructure</text>
+  </g>
+  <g transform="translate(3200 170)">
+    <circle cx="120" cy="120" r="92" fill="none" stroke="#0EA5E9" stroke-width="8" opacity="0.7"/>
+    <path d="M120 44v152M44 120h152" stroke="#0EA5E9" stroke-width="8" opacity="0.7"/>
+    <circle cx="120" cy="120" r="22" fill="#0EA5E9" opacity="0.8"/>
+  </g>
+</svg>
